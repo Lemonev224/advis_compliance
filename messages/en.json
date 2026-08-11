@@ -1,0 +1,184 @@
+{
+  "nav": {
+    "platform": "Platform",
+    "industries": "Industries",
+    "howItWorks": "How It Works",
+    "company": "Company",
+    "contact": "Contact",
+    "bookDemo": "Book a Demo"
+  },
+  "hero": {
+    "eyebrow": "Compliance Infrastructure",
+    "headlinePart1": "Compliance,",
+    "headlineHighlight": "built into",
+    "headlinePart2": "the business.",
+    "subtext": "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
+    "ctaPrimary": "Get in Touch"
+  },
+  "heroDashboard": {
+    "complianceStatus": "Compliance status",
+    "onTrack": "On track",
+    "controls": "Controls",
+    "evidence": "Evidence",
+    "openRisks": "Open risks"
+  },
+  "problem": {
+    "headline": "Compliance shouldn't live in spreadsheets.",
+    "subtext": "Regulations are complex. Requirements change. Evidence is scattered across systems. Teams spend valuable time manually tracking controls, documents, risks and obligations.",
+    "points": {
+      "manual": {
+        "title": "Manual processes",
+        "description": "Controls, policies and reviews tracked by hand, one spreadsheet update at a time."
+      },
+      "fragmented": {
+        "title": "Fragmented evidence",
+        "description": "Proof of compliance scattered across tools, tickets, inboxes and shared drives."
+      },
+      "changing": {
+        "title": "Changing regulations",
+        "description": "Requirements shift while the process built to satisfy them stays static."
+      },
+      "disconnected": {
+        "title": "Disconnected systems",
+        "description": "Compliance sits apart from the systems where the actual work happens."
+      }
+    }
+  },
+  "architecture": {
+    "headline": "Built once. Adapted across industries.",
+    "subtext": "The same compliance infrastructure adapts to different regulatory environments, extending into industry-specific modules and, over time, industry-specific products.",
+    "layerInfrastructure": "Compliance Infrastructure",
+    "coreModules": {
+      "controls": "Controls",
+      "evidence": "Evidence",
+      "risk": "Risk"
+    },
+    "layerIndustryModules": "Industry Modules",
+    "industries": {
+      "hospitality": "Hospitality",
+      "logistics": "Logistics",
+      "retail": "Retail",
+      "construction": "Construction"
+    },
+    "layerSaasProducts": "SaaS Products",
+    "disclaimer": "Industry modules are designed to support these sectors as the platform expands — not a reflection of current customers."
+  },
+  "dashboard": {
+    "eyebrow": "Product",
+    "headline": "Your compliance command center.",
+    "subtext": "Controls, evidence, risk and monitoring, unified in a single operational view.",
+    "illustrativeLabel": "Illustrative mockup data",
+    "tabs": {
+      "overview": "Overview",
+      "controls": "Controls",
+      "evidence": "Evidence",
+      "risk": "Risk"
+    },
+    "complianceStatus": "Compliance status",
+    "onTrack": "On track",
+    "controlsLabel": "Controls",
+    "evidenceLabel": "Evidence",
+    "evidenceCaption": "items collected",
+    "openRisksLabel": "Open risks",
+    "openRisksCaption": "2 flagged this week",
+    "frameworksLabel": "Frameworks",
+    "coverage": "coverage",
+    "recentActivity": "Recent activity",
+    "live": "Live",
+    "activity": {
+      "evidenceVerified": { "label": "Evidence verified", "detail": "Access review Q3 · automated", "time": "2m ago" },
+      "controlUpdated": { "label": "Control updated", "detail": "Encryption at rest · CC6.1", "time": "18m ago" },
+      "riskIdentified": { "label": "Risk identified", "detail": "Vendor access scope · Medium", "time": "41m ago" },
+      "policyReviewed": { "label": "Policy reviewed", "detail": "Data retention policy · v3.2", "time": "1h ago" }
+    },
+    "footnote": "Product mockup shown with illustrative data for demonstration purposes only."
+  },
+  "industries": {
+    "headline": "Compliance infrastructure for regulated industries.",
+    "subtext": "The same core infrastructure is designed to support a range of regulatory environments as the platform expands.",
+    "moduleLabels": {
+      "controls": "Controls",
+      "evidence": "Evidence",
+      "risk": "Risk",
+      "monitoring": "Monitoring"
+    },
+    "list": {
+      "logistics": {
+        "name": "Logistics",
+        "note": "Built to support supply chains, transport operations and fleet management.",
+        "focus": ["Carrier compliance", "Fleet documentation", "Route audits"]
+      },
+      "construction": {
+        "name": "Construction",
+        "note": "Designed for project delivery, contractors, site operations and compliance.",
+        "focus": ["Site safety records", "Contractor vetting", "Permit tracking"]
+      },
+      "retail": {
+        "name": "Retail",
+        "note": "Built to support stores, ecommerce, inventory and customer operations.",
+        "focus": ["Data protection", "Supplier audits", "Consumer regulations"]
+      },
+      "hospitality": {
+        "name": "Hospitality",
+        "note": "Designed for hotels, restaurants, venues and guest-focused operations.",
+        "focus": ["Guest data handling", "Health & safety", "Licensing"]
+      },
+      "tourism": {
+        "name": "Tourism",
+        "note": "Built to support travel businesses, tour operators and visitor experiences.",
+        "focus": ["Cross-border rules", "Booking data", "Operator licensing"]
+      },
+      "other": {
+        "name": "Other Industries",
+        "note": "Flexible infrastructure designed to adapt to new sectors and business models.",
+        "focus": ["Custom control sets", "New frameworks", "Emerging regulation"]
+      }
+    }
+  },
+  "howItWorks": {
+    "headline": "From regulation to operational infrastructure.",
+    "steps": {
+      "understand": { "title": "Understand", "description": "Translate regulatory requirements into structured controls." },
+      "build": { "title": "Build", "description": "Turn controls into policies, workflows and operational processes." },
+      "monitor": { "title": "Monitor", "description": "Continuously track compliance and collect evidence." },
+      "scale": { "title": "Scale", "description": "Extend the same infrastructure across new requirements, entities and industries." }
+    }
+  },
+  "about": {
+    "headline": "Building the infrastructure behind the next generation of regulated businesses.",
+    "subtext": "We're building a new approach to compliance: software infrastructure that can adapt to different regulatory environments, industries and business models. Based in Andorra, at the heart of Europe.",
+    "markers": {
+      "andorra": "Built in Andorra",
+      "europe": "Designed for Europe",
+      "global": "Built to scale globally"
+    }
+  },
+  "contact": {
+    "headline": "Ready to build compliance into your business?",
+    "subtext": "Talk to us about the compliance infrastructure your business needs.",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Jane Doe",
+      "email": "Work email",
+      "emailPlaceholder": "jane@company.com",
+      "company": "Company",
+      "companyPlaceholder": "Company name",
+      "message": "What are you looking to solve?",
+      "messagePlaceholder": "Tell us a bit about your compliance needs",
+      "submit": "Send message",
+      "submitting": "Sending…",
+      "success": "Thanks — we'll be in touch shortly.",
+      "genericError": "Something went wrong. Please try again."
+    }
+  },
+  "footer": {
+    "location": "Andorra · Europe",
+    "links": {
+      "industries": "Industries",
+      "howItWorks": "How It Works",
+      "terms": "Terms of Use",
+      "privacy": "Privacy Policy"
+    },
+    "rights": "All rights reserved."
+  }
+}

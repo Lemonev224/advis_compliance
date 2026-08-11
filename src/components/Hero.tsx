@@ -1,11 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { HeroDashboard } from "./HeroDashboard";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export function Hero() {
+  const t = useTranslations("hero");
+
   return (
     <section id="top" className="relative overflow-hidden pt-[68px]">
       {/* ambient backdrop */}
@@ -30,16 +33,15 @@ export function Hero() {
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-16 lg:gap-8 items-center">
           {/* Left column */}
           <div>
-
             <motion.h1
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.08, ease }}
               className="text-balance text-[44px] sm:text-[56px] lg:text-[68px] leading-[1.04] font-semibold tracking-[-0.02em] text-navy"
             >
-              Compliance,{" "}
+              {t("headlinePart1")}{" "}
               <span className="relative inline-block">
-                built into
+                {t("headlineHighlight")}
                 <svg
                   className="absolute left-0 -bottom-1 w-full"
                   height="10"
@@ -65,7 +67,7 @@ export function Hero() {
                   </defs>
                 </svg>
               </span>{" "}
-              the business.
+              {t("headlinePart2")}
             </motion.h1>
 
             <motion.p
@@ -74,8 +76,7 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.2, ease }}
               className="mt-7 text-[18px] leading-[1.6] text-navy/65 max-w-[480px]"
             >
-              We turn complex regulatory requirements into scalable software
-              infrastructure for regulated industries.
+              {t("subtext")}
             </motion.p>
 
             <motion.div
@@ -89,7 +90,7 @@ export function Hero() {
                 className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-md bg-navy px-6 py-3.5 text-[15px] font-medium text-white transition-transform active:scale-[0.98]"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-blue to-cyan opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative">Get in Touch</span>
+                <span className="relative">{t("ctaPrimary")}</span>
                 <svg
                   className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5"
                   viewBox="0 0 16 16"

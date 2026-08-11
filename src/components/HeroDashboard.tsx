@@ -2,9 +2,12 @@
 
 import { motion } from "framer-motion";
 import { ShieldCheck, Database, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { AnimatedNumber } from "./AnimatedNumber";
 
 export function HeroDashboard() {
+  const t = useTranslations("heroDashboard");
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -28,7 +31,6 @@ export function HeroDashboard() {
             <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
             <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
           </div>
-
         </div>
 
         <div className="p-5">
@@ -55,9 +57,9 @@ export function HeroDashboard() {
               </div>
             </div>
             <div>
-              <div className="text-[12px] font-medium text-navy/50 mb-0.5">Compliance status</div>
+              <div className="text-[12px] font-medium text-navy/50 mb-0.5">{t("complianceStatus")}</div>
               <div className="text-[13px] text-navy/70 flex items-center gap-1.5">
-                <CheckCircle2 className="h-3.5 w-3.5 text-cyan" /> On track
+                <CheckCircle2 className="h-3.5 w-3.5 text-cyan" /> {t("onTrack")}
               </div>
             </div>
           </div>
@@ -68,21 +70,21 @@ export function HeroDashboard() {
               <div className="text-[17px] font-semibold text-navy tracking-tight">
                 <AnimatedNumber value={184} delay={0.7} />
               </div>
-              <div className="text-[10.5px] text-navy/45">Controls</div>
+              <div className="text-[10.5px] text-navy/45">{t("controls")}</div>
             </div>
             <div className="rounded-lg border border-navy/10 p-3.5">
               <Database className="h-4 w-4 text-blue mb-2" strokeWidth={1.75} />
               <div className="text-[17px] font-semibold text-navy tracking-tight">
                 <AnimatedNumber value={1248} delay={0.75} format={(n) => Math.round(n).toLocaleString("en-US")} />
               </div>
-              <div className="text-[10.5px] text-navy/45">Evidence</div>
+              <div className="text-[10.5px] text-navy/45">{t("evidence")}</div>
             </div>
             <div className="rounded-lg border border-navy/10 p-3.5">
               <AlertTriangle className="h-4 w-4 text-[#B8722F] mb-2" strokeWidth={1.75} />
               <div className="text-[17px] font-semibold text-navy tracking-tight">
                 <AnimatedNumber value={8} delay={0.8} />
               </div>
-              <div className="text-[10.5px] text-navy/45">Open risks</div>
+              <div className="text-[10.5px] text-navy/45">{t("openRisks")}</div>
             </div>
           </div>
         </div>

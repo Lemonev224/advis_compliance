@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export function ContactSection() {
+  const t = useTranslations("contact");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
@@ -35,7 +37,7 @@ export function ContactSection() {
       const data = await res.json();
 
       if (!data.success) {
-        throw new Error(data.message || "Something went wrong. Please try again.");
+        throw new Error(data.message || t("form.genericError"));
       }
 
       setStatus("success");
@@ -45,10 +47,9 @@ export function ContactSection() {
       setMessage("");
     } catch (err) {
       setStatus("error");
-      setErrorMsg(err instanceof Error ? err.message : "Something went wrong.");
+      setErrorMsg(err instanceof Error ? err.message : t("form.genericError"));
     }
   }
-
 
   return (
     <section
@@ -83,7 +84,7 @@ export function ContactSection() {
               transition={{ duration: 0.6, ease }}
               className="text-balance text-[32px] sm:text-[44px] leading-[1.12] font-semibold tracking-[-0.015em] text-white"
             >
-              Ready to build compliance into your business?
+              {t("headline")}
             </motion.h2>
 
             <motion.p
@@ -93,10 +94,8 @@ export function ContactSection() {
               transition={{ duration: 0.6, delay: 0.1, ease }}
               className="mt-6 text-[17px] leading-[1.7] text-white/70 max-w-[420px]"
             >
-              Talk to us about the compliance infrastructure your business needs.
+              {t("subtext")}
             </motion.p>
-
-
           </div>
 
           {/* Right: form */}
@@ -111,7 +110,7 @@ export function ContactSection() {
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-[13px] font-medium text-white/80 mb-1.5" htmlFor="name">
-                  Name
+                  {t("form.name")}
                 </label>
                 <input
                   id="name"
@@ -119,12 +118,12 @@ export function ContactSection() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full rounded-md border border-white/20 bg-white/[0.06] px-3.5 py-2.5 text-[14.5px] text-white placeholder:text-white/40 outline-none focus:border-cyan/70 transition-colors"
-                  placeholder="Jane Doe"
+                  placeholder={t("form.namePlaceholder")}
                 />
               </div>
               <div>
                 <label className="block text-[13px] font-medium text-white/80 mb-1.5" htmlFor="email">
-                  Work email
+                  {t("form.email")}
                 </label>
                 <input
                   id="email"
@@ -133,27 +132,27 @@ export function ContactSection() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full rounded-md border border-white/20 bg-white/[0.06] px-3.5 py-2.5 text-[14.5px] text-white placeholder:text-white/40 outline-none focus:border-cyan/70 transition-colors"
-                  placeholder="jane@company.com"
+                  placeholder={t("form.emailPlaceholder")}
                 />
               </div>
             </div>
 
             <div className="mt-4">
               <label className="block text-[13px] font-medium text-white/80 mb-1.5" htmlFor="company">
-                Company
+                {t("form.company")}
               </label>
               <input
                 id="company"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
                 className="w-full rounded-md border border-white/20 bg-white/[0.06] px-3.5 py-2.5 text-[14.5px] text-white placeholder:text-white/40 outline-none focus:border-cyan/70 transition-colors"
-                placeholder="Company name"
+                placeholder={t("form.companyPlaceholder")}
               />
             </div>
 
             <div className="mt-4">
               <label className="block text-[13px] font-medium text-white/80 mb-1.5" htmlFor="message">
-                What are you looking to solve?
+                {t("form.message")}
               </label>
               <textarea
                 id="message"
@@ -161,26 +160,26 @@ export function ContactSection() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full rounded-md border border-white/20 bg-white/[0.06] px-3.5 py-2.5 text-[14.5px] text-white placeholder:text-white/40 outline-none focus:border-cyan/70 transition-colors resize-none"
-                placeholder="Tell us a bit about your compliance needs"
+                placeholder={t("form.messagePlaceholder")}
               />
             </div>
             <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} />
 
-           <motion.button
-  type="submit"
-  disabled={status === "loading"}
-  whileTap={{ scale: 0.98 }}
-  className="mt-6 inline-flex items-center justify-center rounded-md bg-white px-6 py-3 text-[14.5px] font-medium text-navy w-full sm:w-auto disabled:opacity-60"
->
-  {status === "loading" ? "Sending…" : "Send message"}
-</motion.button>
+            <motion.button
+              type="submit"
+              disabled={status === "loading"}
+              whileTap={{ scale: 0.98 }}
+              className="mt-6 inline-flex items-center justify-center rounded-md bg-white px-6 py-3 text-[14.5px] font-medium text-navy w-full sm:w-auto disabled:opacity-60"
+            >
+              {status === "loading" ? t("form.submitting") : t("form.submit")}
+            </motion.button>
 
-{status === "success" && (
-  <p className="mt-4 text-[14px] text-cyan">Thanks — we&apos;ll be in touch shortly.</p>
-)}
-{status === "error" && (
-  <p className="mt-4 text-[14px] text-red-400">{errorMsg}</p>
-)}
+            {status === "success" && (
+              <p className="mt-4 text-[14px] text-cyan">{t("form.success")}</p>
+            )}
+            {status === "error" && (
+              <p className="mt-4 text-[14px] text-red-400">{errorMsg}</p>
+            )}
           </motion.form>
         </div>
       </div>

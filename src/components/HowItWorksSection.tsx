@@ -1,39 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const steps = [
-  {
-    number: "01",
-    title: "Understand",
-    description: "Translate regulatory requirements into structured controls.",
-  },
-  {
-    number: "02",
-    title: "Build",
-    description: "Turn controls into policies, workflows and operational processes.",
-  },
-  {
-    number: "03",
-    title: "Monitor",
-    description: "Continuously track compliance and collect evidence.",
-  },
-  {
-    number: "04",
-    title: "Scale",
-    description:
-      "Extend the same infrastructure across new requirements, entities and industries.",
-  },
-];
+const stepKeys = ["understand", "build", "monitor", "scale"] as const;
 
 export function HowItWorksSection() {
+  const t = useTranslations("howItWorks");
+
   return (
     <section id="how-it-works" className="relative py-24 lg:py-32 bg-white">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
         <div className="max-w-[640px] mb-20">
-        
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -41,7 +21,7 @@ export function HowItWorksSection() {
             transition={{ duration: 0.6, delay: 0.05, ease }}
             className="text-balance text-[32px] sm:text-[40px] leading-[1.12] font-semibold tracking-[-0.015em] text-navy"
           >
-            From regulation to operational infrastructure.
+            {t("headline")}
           </motion.h2>
         </div>
 
@@ -58,9 +38,9 @@ export function HowItWorksSection() {
           </div>
 
           <div className="grid lg:grid-cols-4 gap-10 lg:gap-8">
-            {steps.map((step, i) => (
+            {stepKeys.map((key, i) => (
               <motion.div
-                key={step.number}
+                key={key}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
@@ -69,19 +49,19 @@ export function HowItWorksSection() {
               >
                 <div className="relative shrink-0 lg:mb-6">
                   {/* connecting line — mobile */}
-                  {i !== steps.length - 1 && (
+                  {i !== stepKeys.length - 1 && (
                     <span className="lg:hidden absolute left-1/2 top-8 -translate-x-1/2 w-px h-[calc(100%+2.5rem)] bg-navy/10" />
                   )}
                   <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border border-navy/15 bg-white text-[12px] font-semibold text-navy">
-                    {step.number}
+                    {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
                 <div>
                   <h3 className="text-[18px] font-semibold text-navy tracking-tight mb-2">
-                    {step.title}
+                    {t(`steps.${key}.title`)}
                   </h3>
                   <p className="text-[14.5px] leading-[1.65] text-navy/55 max-w-[240px]">
-                    {step.description}
+                    {t(`steps.${key}.description`)}
                   </p>
                 </div>
               </motion.div>
