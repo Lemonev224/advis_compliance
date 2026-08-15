@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { Logo } from "./Logo";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { Globe, ChevronDown } from "lucide-react";
 
 const locales = [
   { code: "en", label: "EN" },
@@ -18,21 +19,15 @@ export function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // mobile menu
+  const [langOpen, setLangOpen] = useState(false); // globe dropdown
 
   const links = [
-    { label: t("platform"), href: "/#architecture" },
+
     { label: t("industries"), href: "/#industries" },
     { label: t("howItWorks"), href: "/#how-it-works" },
+    { label: t("company"), href: "#company" },
   ];
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Lock body scroll while the mobile menu is open
   useEffect(() => {
@@ -42,7 +37,7 @@ export function Navigation() {
     };
   }, [open]);
 
-  // Close the mobile menu on route change or resize back to desktop
+  // Close the mobile menu on resize back to desktop
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth >= 768) setOpen(false);
@@ -52,91 +47,93 @@ export function Navigation() {
   }, []);
 
   return (
-    <motion.header
-      initial={{ y: -24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 inset-x-0 z-50"
-    >
-      <div
-        className={`transition-all duration-300 ${
-          scrolled || open
-            ? "bg-white/80 backdrop-blur-md border-b border-navy/8 shadow-[0_1px_0_0_rgba(7,27,58,0.04)]"
-            : "bg-transparent border-b border-transparent"
-        }`}
-      >
-        <nav className="mx-auto max-w-[1280px] px-6 lg:px-8 h-[68px] flex items-center justify-between">
-          <Link href="/#top" className="flex items-center -ml-2" onClick={() => setOpen(false)}>
-            <Logo />
-          </Link>
+    // Coupa's nav is a solid white bar, not transparent-over-hero — it sits
+    // above the image hero, so it's always opaque instead of scroll-triggered.
+    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-navy/8">
+      <nav className="mx-auto max-w-[1320px] px-6 lg:px-8 h-[72px] flex items-center justify-between">
+        <Link href="/#top" className="flex items-center -ml-2" onClick={() => setOpen(false)}>
+          <Logo />
+        </Link>
 
-          <ul className="hidden md:flex items-center gap-9">
-            {links.map((link) => (
-              <li key={link.label}>
-                <Link
-                  href={link.href}
-                  className="group relative text-[14.5px] font-medium text-navy/70 hover:text-navy transition-colors"
-                >
-                  {link.label}
-                  <span className="absolute left-0 -bottom-1.5 h-px w-0 bg-cyan transition-all duration-300 group-hover:w-full" />
-                </Link>
-              </li>
-            ))}
-          </ul>
+        {/* Center links, each with a Coupa-style dropdown chevron */}
+        <ul className="hidden lg:flex items-center gap-8">
+          {links.map((link) => (
+            <li key={link.label}>
+              <Link
+                href={link.href}
+                className="group flex items-center gap-1 text-[15px] font-semibold text-navy/80 hover:text-navy transition-colors"
+              >
+                {link.label}
 
-          <div className="hidden md:flex items-center gap-5">
-            {/* language switcher */}
-            <div className="flex items-center gap-1 text-[13px] font-medium text-navy/50">
-              {locales.map((l, i) => (
-                <span key={l.code} className="flex items-center">
-                  <button
-                    onClick={() => router.replace(pathname, { locale: l.code })}
-                    className={`px-1.5 transition-colors ${
-                      locale === l.code ? "text-navy" : "hover:text-navy/80"
-                    }`}
-                  >
-                    {l.label}
-                  </button>
-                  {i < locales.length - 1 && <span className="text-navy/20">/</span>}
-                </span>
-              ))}
-            </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
 
-            <Link
-              href="/#contact"
-              className="relative inline-flex items-center justify-center rounded-md bg-navy px-4 py-2.5 text-[14.5px] font-medium text-white overflow-hidden group transition-transform active:scale-[0.98]"
+        <div className="hidden lg:flex items-center gap-4">
+          {/* language switcher, Coupa uses a plain globe icon in this slot */}
+          <div className="relative">
+            <button
+              onClick={() => setLangOpen((v) => !v)}
+              aria-label="Change language"
+              className="flex items-center justify-center h-9 w-9 rounded-full text-navy/60 hover:text-navy hover:bg-pale transition-colors"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-blue to-cyan opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <span className="relative">{t("contact")}</span>
-            </Link>
+              <Globe className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            </button>
+            <AnimatePresence>
+              {langOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-11 w-28 rounded-lg border border-navy/10 bg-white py-1.5 shadow-[0_12px_32px_-12px_rgba(7,27,58,0.25)]"
+                >
+                  {locales.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        router.replace(pathname, { locale: l.code });
+                        setLangOpen(false);
+                      }}
+                      className={`block w-full px-3.5 py-2 text-left text-[13.5px] font-medium transition-colors ${
+                        locale === l.code
+                          ? "text-navy bg-pale"
+                          : "text-navy/60 hover:text-navy hover:bg-pale/60"
+                      }`}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="md:hidden text-navy relative z-10"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
+          {/* Solid pill CTA — now the only button, labeled "Contact" */}
+          <Link
+            href="/#contact"
+            className="inline-flex items-center justify-center rounded-full bg-cyan px-5 py-2.5 text-[14px] font-semibold text-navy hover:bg-cyan/85 transition-colors"
           >
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              {open ? (
-                <path
-                  d="M5 5L17 17M17 5L5 17"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-              ) : (
-                <path
-                  d="M3 6h16M3 11h16M3 16h16"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-              )}
-            </svg>
-          </button>
-        </nav>
-      </div>
+            {t("contact")}
+          </Link>
+        </div>
+
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="lg:hidden text-navy relative z-10"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+        >
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            {open ? (
+              <path d="M5 5L17 17M17 5L5 17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            ) : (
+              <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            )}
+          </svg>
+        </button>
+      </nav>
 
       {/* mobile menu panel */}
       <AnimatePresence>
@@ -146,7 +143,7 @@ export function Navigation() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden overflow-hidden bg-white border-b border-navy/8"
+            className="lg:hidden overflow-hidden bg-white border-b border-navy/8"
           >
             <div className="px-6 py-6 flex flex-col gap-1">
               {links.map((link) => (
@@ -154,40 +151,37 @@ export function Navigation() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="py-3 text-[16px] font-medium text-navy/80 border-b border-navy/5"
+                  className="py-3 text-[16px] font-semibold text-navy/80 border-b border-navy/5"
                 >
                   {link.label}
                 </Link>
               ))}
 
+              <div className="mt-4 flex items-center gap-1.5 text-[13px] font-medium text-navy/50">
+                {locales.map((l, i) => (
+                  <span key={l.code} className="flex items-center">
+                    <button
+                      onClick={() => router.replace(pathname, { locale: l.code })}
+                      className={`px-1.5 ${locale === l.code ? "text-navy" : ""}`}
+                    >
+                      {l.label}
+                    </button>
+                    {i < locales.length - 1 && <span className="text-navy/20">/</span>}
+                  </span>
+                ))}
+              </div>
+
               <Link
                 href="/#contact"
                 onClick={() => setOpen(false)}
-                className="mt-5 inline-flex items-center justify-center rounded-md bg-navy px-4 py-3 text-[15px] font-medium text-white"
+                className="mt-5 inline-flex items-center justify-center rounded-full bg-cyan px-5 py-3 text-[15px] font-semibold text-navy"
               >
                 {t("contact")}
               </Link>
-
-              <div className="mt-6 flex items-center gap-3 text-[13px] font-medium text-navy/50">
-                {locales.map((l) => (
-                  <button
-                    key={l.code}
-                    onClick={() => {
-                      router.replace(pathname, { locale: l.code });
-                      setOpen(false);
-                    }}
-                    className={`px-2 py-1 rounded border ${
-                      locale === l.code ? "border-cyan/40 text-navy bg-pale" : "border-navy/10"
-                    }`}
-                  >
-                    {l.label}
-                  </button>
-                ))}
-              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }

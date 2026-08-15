@@ -1,4 +1,5 @@
 import { Navigation } from "@/components/Navigation";
+import MaintenancePage from "@/components/MaintanacePage";
 import { Hero } from "@/components/Hero";
 import { ProblemSection } from "@/components/ProblemSection";
 import { DashboardSection } from "@/components/DashboardSection";
@@ -16,11 +17,11 @@ export default function Home() {
       <Hero />
       <ProblemSection />
       <ArchitectureSection />
-      <IndustriesSection />
       <HowItWorksSection />
       <AboutSection />
       <ContactSection />
       <Footer />
     </main>
+    
   );
 }
