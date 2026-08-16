@@ -2,30 +2,30 @@
 
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { AnimatedNumber } from "./AnimatedNumber";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-// Same four industries the old diagram surfaced — descriptions are pulled
-// from the existing "industries" translation namespace (list.{key}.note),
-// so no new translation keys are required.
-const industryKeys = ["hospitality", "logistics", "retail", "construction"] as const;
+const statKeys = ["modules", "frameworks", "industries"] as const;
+const statValues: Record<(typeof statKeys)[number], { value: number; suffix: string }> = {
+  modules: { value: 4, suffix: "" },
+  frameworks: { value: 4, suffix: "+" },
+  industries: { value: 5, suffix: "" },
+};
 
-export function ArchitectureSection() {
-  const t = useTranslations("architecture");
-  const tIndustries = useTranslations("industries");
+export function ProofSection() {
+  const t = useTranslations("proof");
 
   return (
-    <section id="industries" className="relative py-16 lg:py-20 bg-white">
+    <section className="relative py-24 lg:py-32 bg-white">
       <div className="mx-auto max-w-[1120px] px-6 lg:px-8">
-        {/* Header */}
-        <div className="max-w-[640px] mb-10 lg:mb-12">
-
+        <div className="max-w-[600px] mb-14 lg:mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.05, ease }}
-            className="text-balance text-[26px] sm:text-[32px] leading-[1.15] font-semibold tracking-[-0.015em] text-navy mb-3"
+            transition={{ duration: 0.6, ease }}
+            className="text-balance text-[32px] sm:text-[40px] leading-[1.15] font-semibold tracking-[-0.015em] text-navy mb-5"
           >
             {t("headline")}
           </motion.h2>
@@ -34,77 +34,39 @@ export function ArchitectureSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, delay: 0.1, ease }}
-            className="text-[15px] leading-[1.6] text-navy/55 max-w-[480px]"
+            className="text-[17px] leading-[1.7] text-navy/60"
           >
             {t("subtext")}
           </motion.p>
         </div>
 
-        {/* Industry register — full-width rows, hairline dividers, no cards */}
-        <div className="border-t border-navy/15">
-          {industryKeys.map((key, i) => (
-            <IndustryRow
-              key={key}
-              index={i + 1}
-              name={t(`industries.${key}`)}
-              description={tIndustries(`list.${key}.note`)}
-              delay={i * 0.06}
-            />
-          ))}
+        <div className="grid sm:grid-cols-3 gap-10 sm:gap-8">
+          {statKeys.map((key, i) => {
+            const s = statValues[key];
+            return (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease }}
+                className="border-t border-navy/15 pt-6"
+              >
+                <div className="font-tabular text-[44px] sm:text-[52px] leading-none font-semibold tracking-[-0.02em] text-navy mb-3">
+                  <AnimatedNumber
+                    value={s.value}
+                    format={(n) => `${Math.round(n)}${s.suffix}`}
+                    delay={0.15 + i * 0.1}
+                  />
+                </div>
+                <p className="text-[14.5px] leading-[1.6] text-navy/55 max-w-[220px]">
+                  {t(`stats.${key}.caption`)}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6, delay: 0.2, ease }}
-          className="mt-6 text-[12.5px] leading-[1.55] text-navy/40 max-w-[520px]"
-        >
-          {t("disclaimer")}
-        </motion.p>
       </div>
     </section>
-  );
-}
-
-function IndustryRow({
-  index,
-  name,
-  description,
-  delay,
-}: {
-  index: number;
-  name: string;
-  description: string;
-  delay: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay, ease }}
-      className="group border-b border-navy/15 transition-colors duration-300 hover:bg-pale/70"
-    >
-      <div className="grid grid-cols-[auto_1fr_auto] items-start gap-x-5 lg:gap-x-8 px-2 sm:px-4 py-5 lg:py-6">
-
-
-        <div className="max-w-[640px]">
-          <h3 className="text-[19px] sm:text-[21px] leading-[1.2] font-semibold tracking-[-0.01em] text-navy mb-1.5">
-            {name}
-          </h3>
-          <p className="text-[13.5px] leading-[1.55] text-navy/55 max-w-[440px]">
-            {description}
-          </p>
-        </div>
-
-        <span
-          aria-hidden
-          className="mt-1.5 shrink-0 text-navy/30 transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-blue"
-        >
-
-        </span>
-      </div>
-    </motion.div>
   );
 }

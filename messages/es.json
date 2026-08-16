@@ -96,6 +96,7 @@
   "industries": {
     "headline": "Infraestructura de cumplimiento para sectores regulados.",
     "subtext": "La misma infraestructura central está diseñada para dar soporte a diversos entornos normativos a medida que la plataforma se amplíe.",
+    "ctaTalkToUs": "Habla con nosotros",
     "moduleLabels": {
       "controls": "Controles",
       "evidence": "Evidencias",
@@ -137,6 +138,8 @@
   },
   "howItWorks": {
     "headline": "De la normativa a la infraestructura operativa.",
+    "subtext": "El cumplimiento normativo no es una configuración puntual. Cada ciclo —entender, construir, monitorear, escalar— alimenta el siguiente, de modo que la infraestructura mantiene el ritmo a medida que cambian los requisitos y las operaciones.",
+    "cta": "Más información",
     "steps": {
       "understand": { "title": "Entender", "description": "Traducir los requisitos normativos en controles estructurados." },
       "build": { "title": "Construir", "description": "Convertir los controles en políticas, flujos de trabajo y procesos operativos." },
@@ -144,6 +147,15 @@
       "scale": { "title": "Escalar", "description": "Ampliar la misma infraestructura a nuevos requisitos, entidades y sectores." }
     }
   },
+    "proof": {
+  "headline": "Construido una vez. Construido para durar.",
+  "subtext": "No añadimos el cumplimiento normativo sobre software antiguo. La infraestructura —controles, evidencias, riesgo y monitoreo— se construyó primero, para que cada módulo sectorial herede el mismo rigor.",
+  "stats": {
+    "modules": { "caption": "módulos principales: controles, evidencias, riesgo y monitoreo" },
+    "frameworks": { "caption": "marcos normativos de referencia, desde ISO 27001 hasta la EU AI Act" },
+    "industries": { "caption": "sectores que la plataforma está diseñada para soportar" }
+  }
+},
   "about": {
     "headline": "Construyendo la infraestructura detrás de la próxima generación de negocios regulados.",
     "subtext": "Estamos construyendo un nuevo enfoque para el cumplimiento normativo: infraestructura de software que puede adaptarse a diferentes entornos normativos, sectores y modelos de negocio. Con sede en Andorra, en el corazón de Europa.",

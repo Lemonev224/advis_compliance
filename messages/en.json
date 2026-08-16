@@ -96,6 +96,7 @@
   "industries": {
     "headline": "Compliance infrastructure for regulated industries.",
     "subtext": "The same core infrastructure is designed to support a range of regulatory environments as the platform expands.",
+      "ctaTalkToUs": "Talk to us",
     "moduleLabels": {
       "controls": "Controls",
       "evidence": "Evidence",
@@ -137,6 +138,8 @@
   },
   "howItWorks": {
     "headline": "From regulation to operational infrastructure.",
+    "subtext": "Compliance isn't a one-time setup. Each cycle — understand, build, monitor, scale — feeds the next, so the infrastructure keeps pace as requirements and operations change.",
+    "cta": "Learn more",
     "steps": {
       "understand": { "title": "Understand", "description": "Translate regulatory requirements into structured controls." },
       "build": { "title": "Build", "description": "Turn controls into policies, workflows and operational processes." },
@@ -144,6 +147,14 @@
       "scale": { "title": "Scale", "description": "Extend the same infrastructure across new requirements, entities and industries." }
     }
   },
+    "proof": {
+  "headline": "Built once. Built to hold up.",
+  "subtext": "We didn't bolt compliance onto old software. The infrastructure — controls, evidence, risk and monitoring — was built first, so every industry module inherits the same rigor.",
+  "stats": {
+    "modules": { "caption": "core modules — controls, evidence, risk and monitoring" },
+    "frameworks": { "caption": "regulatory frameworks referenced, from ISO 27001 to the EU AI Act" },
+    "industries": { "caption": "industries the platform is designed to support" }
+  }},
   "about": {
     "headline": "Building the infrastructure behind the next generation of regulated businesses.",
     "subtext": "We're building a new approach to compliance: software infrastructure that can adapt to different regulatory environments, industries and business models. Based in Andorra, at the heart of Europe.",
@@ -181,4 +192,6 @@
     },
     "rights": "All rights reserved."
   }
+  
+  
 }

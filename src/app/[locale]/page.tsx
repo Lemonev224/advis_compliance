@@ -3,7 +3,7 @@ import MaintenancePage from "@/components/MaintanacePage";
 import { Hero } from "@/components/Hero";
 import { ProblemSection } from "@/components/ProblemSection";
 import { DashboardSection } from "@/components/DashboardSection";
-import { ArchitectureSection } from "@/components/ArchitectureSection";
+import { ProofSection } from "@/components/ArchitectureSection";      
 import { IndustriesSection } from "@/components/IndustriesSection";
 import { HowItWorksSection } from "@/components/HowItWorksSection";
 import { AboutSection } from "@/components/AboutSection";
@@ -16,7 +16,8 @@ export default function Home() {
       <Navigation />
       <Hero />
       <ProblemSection />
-      <ArchitectureSection />
+      <ProofSection />
+      <IndustriesSection />
       <HowItWorksSection />
       <AboutSection />
       <ContactSection />

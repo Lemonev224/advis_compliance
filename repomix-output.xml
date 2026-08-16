@@ -46,6 +46,9 @@ messages/
   es.json
 public/
   andorra.png
+  andorra2.jpeg
+  andorra3.jpg
+  dash_hero.png
   file.svg
   globe.svg
   icon.png
@@ -100,114 +103,6 @@ tsconfig.json
 
 <files>
 This section contains the contents of the repository's files.
-
-<file path="src/components/MaintanacePage.tsx">
-import { GeistSans } from "geist/font/sans";
-
-export default function MaintenancePage() {
-  return (
-    <main
-      className={`${GeistSans.className} relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-6`}
-    >
-      {/* Ambient background accents, echoing the dashboard glow from the live site */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-40 top-1/2 h-[520px] w-[520px] -translate-y-1/2 rounded-full bg-blue-100 opacity-60 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -left-32 -top-32 h-[360px] w-[360px] rounded-full bg-cyan-100 opacity-50 blur-3xl"
-      />
-
-      <div className="relative z-10 flex w-full max-w-xl flex-col items-center text-center">
-        {/* Logo mark */}
-        <div className="mb-10 flex flex-col items-center gap-2">
-          <svg
-            width="34"
-            height="34"
-            viewBox="0 0 34 34"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M17 2 L30 9.5 V24.5 L17 32 L4 24.5 V9.5 Z"
-              stroke="url(#grad)"
-              strokeWidth="2"
-            />
-            <path
-              d="M17 9 L24 13 V21 L17 25 L10 21 V13 Z"
-              stroke="url(#grad)"
-              strokeWidth="1.5"
-            />
-            <defs>
-              <linearGradient id="grad" x1="4" y1="2" x2="30" y2="32">
-                <stop offset="0%" stopColor="#2563EB" />
-                <stop offset="100%" stopColor="#22D3EE" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <span className="text-sm font-semibold uppercase tracking-[0.2em] text-[#0B1120]">
-            Advisorly
-          </span>
-        </div>
-
-        {/* Status pill */}
-        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-1.5">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-500 opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-600" />
-          </span>
-          <span className="text-xs font-medium text-blue-700">
-            Scheduled maintenance in progress
-          </span>
-        </div>
-
-        {/* Headline */}
-        <h1 className="text-5xl font-bold leading-[1.05] tracking-tight text-[#0B1120] sm:text-6xl">
-          We&apos;re
-          <br />
-          <span className="relative inline-block">
-            redesigning
-            <svg
-              aria-hidden
-              className="absolute -bottom-2 left-0 w-full"
-              height="10"
-              viewBox="0 0 220 10"
-              fill="none"
-              preserveAspectRatio="none"
-            >
-              <path
-                d="M2 8C60 2 160 2 218 8"
-                stroke="#2563EB"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-            </svg>
-          </span>{" "}
-          the site.
-        </h1>
-
-        <p className="mt-6 max-w-md text-lg text-slate-500">
-          Advisorly is offline for a short while as we rebuild the experience.
-          We&apos;ll be back shortly, better than before.
-        </p>
-
-        <a
-          href="mailto:hello@advisorly.com"
-          className="mt-10 inline-flex items-center gap-2 rounded-lg bg-[#0B1120] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#182238]"
-        >
-          Get in touch
-          <span aria-hidden>→</span>
-        </a>
-
-        <p className="mt-16 text-xs uppercase tracking-[0.15em] text-slate-400">
-          &copy; {new Date().getFullYear()} Advisorly. All rights reserved.
-        </p>
-      </div>
-    </main>
-  );
-}
-</file>
 
 <file path="messages/ca.json">
 {
@@ -1210,38 +1105,6 @@ export default async function RootLayout({
 }
 </file>
 
-<file path="src/app/[locale]/page.tsx">
-import { Navigation } from "@/components/Navigation";
-import MaintenancePage from "@/components/MaintanacePage";
-import { Hero } from "@/components/Hero";
-import { ProblemSection } from "@/components/ProblemSection";
-import { DashboardSection } from "@/components/DashboardSection";
-import { ArchitectureSection } from "@/components/ArchitectureSection";
-import { IndustriesSection } from "@/components/IndustriesSection";
-import { HowItWorksSection } from "@/components/HowItWorksSection";
-import { AboutSection } from "@/components/AboutSection";
-import { ContactSection } from "@/components/ContactSection";
-import { Footer } from "@/components/Footer";
-
-export default function Home() {
-  return (
-    <main className="min-h-screen bg-white">
-      <Navigation />
-      <Hero />
-      <ProblemSection />
-      <ArchitectureSection />
-      <IndustriesSection />
-      <HowItWorksSection />
-      <AboutSection />
-      <ContactSection />
-      <Footer />
-      <MaintenancePage />
-    </main>
-    
-  );
-}
-</file>
-
 <file path="src/app/robots.ts">
 import type { MetadataRoute } from "next";
 
@@ -1437,6 +1300,114 @@ export function AnimatedNumber({
 }
 </file>
 
+<file path="src/components/MaintanacePage.tsx">
+import { GeistSans } from "geist/font/sans";
+
+export default function MaintenancePage() {
+  return (
+    <main
+      className={`${GeistSans.className} relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-6`}
+    >
+      {/* Ambient background accents, echoing the dashboard glow from the live site */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-40 top-1/2 h-[520px] w-[520px] -translate-y-1/2 rounded-full bg-blue-100 opacity-60 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-32 -top-32 h-[360px] w-[360px] rounded-full bg-cyan-100 opacity-50 blur-3xl"
+      />
+
+      <div className="relative z-10 flex w-full max-w-xl flex-col items-center text-center">
+        {/* Logo mark */}
+        <div className="mb-10 flex flex-col items-center gap-2">
+          <svg
+            width="34"
+            height="34"
+            viewBox="0 0 34 34"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M17 2 L30 9.5 V24.5 L17 32 L4 24.5 V9.5 Z"
+              stroke="url(#grad)"
+              strokeWidth="2"
+            />
+            <path
+              d="M17 9 L24 13 V21 L17 25 L10 21 V13 Z"
+              stroke="url(#grad)"
+              strokeWidth="1.5"
+            />
+            <defs>
+              <linearGradient id="grad" x1="4" y1="2" x2="30" y2="32">
+                <stop offset="0%" stopColor="#2563EB" />
+                <stop offset="100%" stopColor="#22D3EE" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span className="text-sm font-semibold uppercase tracking-[0.2em] text-[#0B1120]">
+            Advisorly
+          </span>
+        </div>
+
+        {/* Status pill */}
+        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-1.5">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-500 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-600" />
+          </span>
+          <span className="text-xs font-medium text-blue-700">
+            Scheduled maintenance in progress
+          </span>
+        </div>
+
+        {/* Headline */}
+        <h1 className="text-5xl font-bold leading-[1.05] tracking-tight text-[#0B1120] sm:text-6xl">
+          We&apos;re
+          <br />
+          <span className="relative inline-block">
+            redesigning
+            <svg
+              aria-hidden
+              className="absolute -bottom-2 left-0 w-full"
+              height="10"
+              viewBox="0 0 220 10"
+              fill="none"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M2 8C60 2 160 2 218 8"
+                stroke="#2563EB"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>{" "}
+          the site.
+        </h1>
+
+        <p className="mt-6 max-w-md text-lg text-slate-500">
+          Advisorly is offline for a short while as we rebuild the experience.
+          We&apos;ll be back shortly, better than before.
+        </p>
+
+        <a
+          href="mailto:hello@advisorly.com"
+          className="mt-10 inline-flex items-center gap-2 rounded-lg bg-[#0B1120] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#182238]"
+        >
+          Get in touch
+          <span aria-hidden>→</span>
+        </a>
+
+        <p className="mt-16 text-xs uppercase tracking-[0.15em] text-slate-400">
+          &copy; {new Date().getFullYear()} Advisorly. All rights reserved.
+        </p>
+      </div>
+    </main>
+  );
+}
+</file>
+
 <file path="src/i18n/navigation.ts">
 import { createNavigation } from "next-intl/navigation";
 import { routing } from "./routing";
@@ -1580,6 +1551,37 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 </file>
 
+<file path="src/app/[locale]/page.tsx">
+import { Navigation } from "@/components/Navigation";
+import MaintenancePage from "@/components/MaintanacePage";
+import { Hero } from "@/components/Hero";
+import { ProblemSection } from "@/components/ProblemSection";
+import { DashboardSection } from "@/components/DashboardSection";
+import { ProofSection } from "@/components/ArchitectureSection";      
+import { IndustriesSection } from "@/components/IndustriesSection";
+import { HowItWorksSection } from "@/components/HowItWorksSection";
+import { AboutSection } from "@/components/AboutSection";
+import { ContactSection } from "@/components/ContactSection";
+import { Footer } from "@/components/Footer";
+
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-white">
+      <Navigation />
+      <Hero />
+      <ProblemSection />
+      <ProofSection />
+      <IndustriesSection />
+      <HowItWorksSection />
+      <AboutSection />
+      <ContactSection />
+      <Footer />
+    </main>
+    
+  );
+}
+</file>
+
 <file path="src/app/globals.css">
 @import "tailwindcss";
 
@@ -1655,181 +1657,6 @@ body {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-}
-</file>
-
-<file path="src/components/ArchitectureSection.tsx">
-"use client";
-
-import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import { ShieldCheck, Database, AlertTriangle } from "lucide-react";
-
-const ease = [0.16, 1, 0.3, 1] as const;
-
-const coreModuleKeys = ["controls", "evidence", "risk"] as const;
-const coreModuleIcons = { controls: ShieldCheck, evidence: Database, risk: AlertTriangle };
-
-const industryKeys = ["hospitality", "logistics", "retail", "construction"] as const;
-
-function Connector({ delay = 0 }: { delay?: number }) {
-  return (
-    <div className="relative flex justify-center h-10">
-      <div className="relative w-px bg-navy/12 overflow-hidden">
-        <motion.div
-          className="absolute left-0 top-0 w-px h-4 bg-gradient-to-b from-transparent via-cyan to-transparent"
-          animate={{ y: ["-30%", "260%"] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear", delay }}
-        />
-      </div>
-      <svg
-        className="absolute -bottom-[1px] left-1/2 -translate-x-1/2"
-        width="10"
-        height="6"
-        viewBox="0 0 10 6"
-        fill="none"
-      >
-        <path d="M1 1L5 5L9 1" stroke="rgba(7,27,58,0.28)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </div>
-  );
-}
-
-export function ArchitectureSection() {
-  const t = useTranslations("architecture");
-
-  return (
-    <section id="architecture" className="relative py-24 lg:py-32 bg-pale overflow-hidden">
-      <div aria-hidden className="absolute inset-0 bg-grid bg-grid-fade opacity-70" />
-
-      <div className="relative mx-auto max-w-[1280px] px-6 lg:px-8">
-        {/* Header */}
-        <div className="max-w-[640px] mx-auto text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.05, ease }}
-            className="text-balance text-[32px] sm:text-[40px] leading-[1.12] font-semibold tracking-[-0.015em] text-navy mb-4"
-          >
-            {t("headline")}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.1, ease }}
-            className="text-[17px] leading-[1.7] text-navy/60"
-          >
-            {t("subtext")}
-          </motion.p>
-        </div>
-
-        {/* Diagram */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7, ease }}
-          className="max-w-[760px] mx-auto"
-        >
-          {/* Layer 1 — Compliance Infrastructure */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, ease }}
-            className="rounded-xl border border-navy/10 py-4 text-center"
-            style={{
-              background: "linear-gradient(135deg, #071B3A 0%, #16326b 55%, #2451B8 100%)",
-            }}
-          >
-            <span className="text-[13px] font-semibold tracking-[0.06em] text-white uppercase">
-              {t("layerInfrastructure")}
-            </span>
-          </motion.div>
-
-          <Connector delay={0} />
-
-          {/* Layer 2 — Controls / Evidence / Risk */}
-          <div className="grid grid-cols-3 gap-3">
-            {coreModuleKeys.map((key, i) => {
-              const Icon = coreModuleIcons[key];
-              return (
-                <motion.div
-                  key={key}
-                  initial={{ opacity: 0, y: 14 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.5, delay: 0.1 + i * 0.08, ease }}
-                  className="flex flex-col items-center gap-2 rounded-xl border border-navy/10 bg-white py-5"
-                >
-                  <Icon className="h-4 w-4 text-blue" strokeWidth={1.75} />
-                  <span className="text-[13px] font-medium text-navy">
-                    {t(`coreModules.${key}`)}
-                  </span>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          <Connector delay={0.3} />
-
-          {/* Layer 3 — Industry Modules */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: 0.35, ease }}
-            className="rounded-xl border border-dashed border-navy/20 bg-white/60 py-4 text-center"
-          >
-            <span className="text-[12px] font-semibold tracking-[0.08em] text-navy/50 uppercase">
-              {t("layerIndustryModules")}
-            </span>
-          </motion.div>
-
-          <Connector delay={0.6} />
-
-          {/* Layer 4 — Industries */}
-          <div className="flex flex-wrap justify-center gap-2.5">
-            {industryKeys.map((key, i) => (
-              <motion.div
-                key={key}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.5, delay: 0.42 + i * 0.06, ease }}
-                className="rounded-full border border-navy/10 bg-white px-4 py-2"
-              >
-                <span className="text-[12.5px] font-medium text-navy/70">
-                  {t(`industries.${key}`)}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-
-          <Connector delay={0.9} />
-
-          {/* Layer 5 — SaaS Products */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: 0.55, ease }}
-            className="rounded-xl border border-cyan/30 bg-gradient-to-r from-cyan/10 to-blue/10 py-4 text-center"
-          >
-            <span className="text-[13px] font-semibold tracking-[0.06em] text-navy uppercase">
-              {t("layerSaasProducts")}
-            </span>
-          </motion.div>
-        </motion.div>
-
-        <p className="mt-8 text-center text-[13px] text-navy/40 max-w-[480px] mx-auto">
-          {t("disclaimer")}
-        </p>
-      </div>
-    </section>
-  );
 }
 </file>
 
@@ -2482,126 +2309,6 @@ export function Footer() {
 }
 </file>
 
-<file path="src/components/Hero.tsx">
-"use client";
-
-import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import { HeroDashboard } from "./HeroDashboard";
-
-const ease = [0.16, 1, 0.3, 1] as const;
-
-export function Hero() {
-  const t = useTranslations("hero");
-
-  return (
-    <section id="top" className="relative overflow-hidden pt-[68px]">
-      {/* ambient backdrop */}
-      <div className="absolute inset-0 -z-10 bg-pale" />
-      <div className="absolute inset-0 -z-10 bg-grid bg-grid-fade" />
-      <motion.div
-        aria-hidden
-        className="absolute -z-10 top-[-160px] right-[-120px] h-[520px] w-[520px] rounded-full opacity-40 blur-[110px]"
-        style={{ background: "radial-gradient(circle, #18C6D1, transparent 70%)" }}
-        animate={{ x: [0, 20, 0], y: [0, 16, 0] }}
-        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        aria-hidden
-        className="absolute -z-10 top-[220px] left-[-160px] h-[420px] w-[420px] rounded-full opacity-30 blur-[110px]"
-        style={{ background: "radial-gradient(circle, #2451B8, transparent 70%)" }}
-        animate={{ x: [0, -16, 0], y: [0, -12, 0] }}
-        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      <div className="mx-auto max-w-[1280px] px-6 lg:px-8 py-20 lg:py-28">
-        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-16 lg:gap-8 items-center">
-          {/* Left column */}
-          <div>
-            <motion.h1
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.08, ease }}
-              className="text-balance text-[44px] sm:text-[56px] lg:text-[68px] leading-[1.04] font-semibold tracking-[-0.02em] text-navy"
-            >
-              {t("headlinePart1")}{" "}
-              <span className="relative inline-block">
-                {t("headlineHighlight")}
-                <svg
-                  className="absolute left-0 -bottom-1 w-full"
-                  height="10"
-                  viewBox="0 0 220 10"
-                  fill="none"
-                  preserveAspectRatio="none"
-                  aria-hidden
-                >
-                  <motion.path
-                    d="M2 7C40 2 120 2 218 7"
-                    stroke="url(#underline-grad)"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 1, delay: 0.9, ease }}
-                  />
-                  <defs>
-                    <linearGradient id="underline-grad" x1="0" y1="0" x2="220" y2="0">
-                      <stop stopColor="#2451B8" />
-                      <stop offset="1" stopColor="#18C6D1" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </span>{" "}
-              {t("headlinePart2")}
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease }}
-              className="mt-7 text-[18px] leading-[1.6] text-navy/65 max-w-[480px]"
-            >
-              {t("subtext")}
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3, ease }}
-              className="mt-9 flex flex-wrap items-center gap-4"
-            >
-              <a
-                href="#contact"
-                className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-md bg-navy px-6 py-3.5 text-[15px] font-medium text-white transition-transform active:scale-[0.98]"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-blue to-cyan opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative">{t("ctaPrimary")}</span>
-                <svg
-                  className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                >
-                  <path
-                    d="M3.5 8h9M8.5 3.5L13 8l-4.5 4.5"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
-            </motion.div>
-          </div>
-
-          {/* Right column */}
-          <HeroDashboard />
-        </div>
-      </div>
-    </section>
-  );
-}
-</file>
-
 <file path="src/components/HeroDashboard.tsx">
 "use client";
 
@@ -2853,277 +2560,134 @@ export function HeroVisual() {
 
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { ArrowRight, ChevronRight } from "lucide-react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const stepKeys = ["understand", "build", "monitor", "scale"] as const;
 
+// Compass position for each stage label around the loop, clockwise from the top.
+const positions: Record<(typeof stepKeys)[number], string> = {
+  understand: "top-0 left-1/2 -translate-x-1/2 -translate-y-1/2",
+  build: "top-1/2 right-0 translate-x-1/2 -translate-y-1/2",
+  monitor: "bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2",
+  scale: "top-1/2 left-0 -translate-x-1/2 -translate-y-1/2",
+};
+
+// ChevronRight defaults to pointing East (0deg).
+// To point clockwise along the circle's tangents at these 45-degree corner points:
+const arrows = [
+  { top: "17.5%", left: "82.5%", rotate: "rotate-[45deg]" },   // NE -> pointing SE (down-right)
+  { top: "82.5%", left: "82.5%", rotate: "rotate-[135deg]" },  // SE -> pointing SW (down-left)
+  { top: "82.5%", left: "17.5%", rotate: "rotate-[225deg]" },  // SW -> pointing NW (up-left)
+  { top: "17.5%", left: "17.5%", rotate: "rotate-[315deg]" },  // NW -> pointing NE (up-right)
+];
+
 export function HowItWorksSection() {
   const t = useTranslations("howItWorks");
 
   return (
-    <section id="how-it-works" className="relative py-24 lg:py-32 bg-white">
-      <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-        <div className="max-w-[640px] mb-20">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.05, ease }}
-            className="text-balance text-[32px] sm:text-[40px] leading-[1.12] font-semibold tracking-[-0.015em] text-navy"
-          >
-            {t("headline")}
-          </motion.h2>
-        </div>
-
-        <div className="relative">
-          {/* connecting line — desktop */}
-          <div className="hidden lg:block absolute top-[15px] left-0 right-0 h-px bg-navy/10">
-            <motion.div
-              className="h-full bg-gradient-to-r from-blue to-cyan origin-left"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 1.1, ease, delay: 0.2 }}
-            />
+    <section id="how-it-works" className="relative overflow-hidden py-24 lg:py-32 bg-white">
+      <div className="mx-auto max-w-[1200px] px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-12 items-center">
+          
+          {/* Left: Copy */}
+          <div className="max-w-[440px]">
+            
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.05, ease }}
+              className="text-balance text-[32px] sm:text-[40px] leading-[1.12] font-semibold tracking-[-0.015em] text-navy mb-5"
+            >
+              {t("headline")}
+            </motion.h2>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.1, ease }}
+              className="text-[15.5px] leading-[1.7] text-navy/60 mb-8"
+            >
+              Compliance isn&apos;t a one-time setup. Each cycle understand,
+              build, monitor, scale feeds the next, so the infrastructure
+              keeps pace as requirements and operations change.
+            </motion.p>
+            
+            <motion.a
+              href="#contact"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.15, ease }}
+              className="inline-flex items-center gap-2 rounded-md bg-navy px-6 py-3 text-[14.5px] font-medium text-white transition-colors hover:bg-navy/90"
+            >
+              Learn more
+              <ArrowRight className="h-4 w-4" />
+            </motion.a>
           </div>
 
-          <div className="grid lg:grid-cols-4 gap-10 lg:gap-8">
+          {/* Right: Circular Process Diagram */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease }}
+            className="relative mx-auto my-12 w-full max-w-[340px] aspect-square"
+          >
+            {/* Dashed Track */}
+            <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible">
+              <circle 
+                cx="50" 
+                cy="50" 
+                r="46" 
+                fill="none" 
+                stroke="rgba(7,27,58,0.12)" 
+                strokeWidth="1" 
+                strokeDasharray="2 4" 
+              />
+            </svg>
+
+            {/* Directional Arrows */}
+            {arrows.map((a, i) => (
+              <div
+                key={`arrow-${i}`}
+                className={`absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-white rounded-full ${a.rotate}`}
+                style={{ top: a.top, left: a.left }}
+              >
+                <ChevronRight className="h-4 w-4 text-navy/40" />
+              </div>
+            ))}
+
+            {/* Center Mark / Logo Hub (Restored Scale & Overflow logic) */}
+            <div className="absolute top-1/2 left-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-navy/10 bg-pale overflow-hidden shadow-[0_0_40px_-10px_rgba(0,0,0,0.08)] z-10">
+              <img
+                src="/logo.png"
+                alt="Logo"
+                className="h-10 w-auto object-contain scale-[2.5]" 
+              />
+            </div>
+
+            {/* Stage Labels (Restored original typography, removed dots) */}
             {stepKeys.map((key, i) => (
               <motion.div
                 key={key}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.55, delay: i * 0.12, ease }}
-                className="relative flex lg:flex-col gap-5 lg:gap-0"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.4, delay: 0.3 + i * 0.1, ease }}
+                className={`absolute z-20 flex items-center justify-center whitespace-nowrap rounded-full border border-slate-100 bg-white px-5 py-2 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] ${positions[key]}`}
               >
-                <div className="relative shrink-0 lg:mb-6">
-                  {/* connecting line — mobile */}
-                  {i !== stepKeys.length - 1 && (
-                    <span className="lg:hidden absolute left-1/2 top-8 -translate-x-1/2 w-px h-[calc(100%+2.5rem)] bg-navy/10" />
-                  )}
-                  <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border border-navy/15 bg-white text-[12px] font-semibold text-navy">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-[18px] font-semibold text-navy tracking-tight mb-2">
-                    {t(`steps.${key}.title`)}
-                  </h3>
-                  <p className="text-[14.5px] leading-[1.65] text-navy/55 max-w-[240px]">
-                    {t(`steps.${key}.description`)}
-                  </p>
-                </div>
+                <span className="text-[12.5px] font-semibold tracking-tight text-navy">
+                  {t(`steps.${key}.title`)}
+                </span>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
+          
         </div>
-      </div>
-    </section>
-  );
-}
-</file>
-
-<file path="src/components/IndustriesSection.tsx">
-"use client";
-
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTranslations } from "next-intl";
-import {
-  Truck,
-  HardHat,
-  ShoppingBag,
-  Hotel,
-  Plane,
-  Boxes,
-  type LucideIcon,
-} from "lucide-react";
-
-const ease = [0.16, 1, 0.3, 1] as const;
-
-const industryKeys = [
-  "logistics",
-  "construction",
-  "retail",
-  "hospitality",
-  "tourism",
-  "other",
-] as const;
-
-const icons: Record<(typeof industryKeys)[number], LucideIcon> = {
-  logistics: Truck,
-  construction: HardHat,
-  retail: ShoppingBag,
-  hospitality: Hotel,
-  tourism: Plane,
-  other: Boxes,
-};
-
-const moduleKeys = ["controls", "evidence", "risk", "monitoring"] as const;
-
-export function IndustriesSection() {
-  const t = useTranslations("industries");
-  const [active, setActive] = useState(0);
-  const activeKey = industryKeys[active];
-
-  const focus = t.raw(`list.${activeKey}.focus`) as string[];
-
-  return (
-    <section id="industries" className="relative py-24 lg:py-32 bg-white">
-      <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-        <div className="max-w-[640px] mb-14">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.05, ease }}
-            className="text-balance text-[32px] sm:text-[40px] leading-[1.12] font-semibold tracking-[-0.015em] text-navy mb-4"
-          >
-            {t("headline")}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.1, ease }}
-            className="text-[17px] leading-[1.7] text-navy/60"
-          >
-            {t("subtext")}
-          </motion.p>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, delay: 0.1, ease }}
-          className="grid lg:grid-cols-[0.9fr_1.1fr] rounded-2xl border border-navy/10 overflow-hidden"
-        >
-          {/* Left: industry selector list */}
-          <div className="flex flex-col divide-y divide-navy/10 bg-white">
-            {industryKeys.map((key, i) => {
-              const isActive = i === active;
-              const Icon = icons[key];
-              return (
-                <button
-                  key={key}
-                  onClick={() => setActive(i)}
-                  onMouseEnter={() => setActive(i)}
-                  className={`group relative flex items-center gap-4 px-6 py-5 text-left transition-colors duration-300 ${
-                    isActive ? "bg-pale" : "bg-white hover:bg-pale/60"
-                  }`}
-                >
-                  <span
-                    aria-hidden
-                    className={`absolute left-0 top-0 h-full w-[2px] transition-colors duration-300 ${
-                      isActive ? "bg-cyan" : "bg-transparent"
-                    }`}
-                  />
-                  <div
-                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors duration-300 ${
-                      isActive ? "border-cyan/40 bg-white" : "border-navy/10 bg-pale"
-                    }`}
-                  >
-                    <Icon
-                      className={`h-[16px] w-[16px] transition-colors duration-300 ${
-                        isActive ? "text-cyan" : "text-blue"
-                      }`}
-                      strokeWidth={1.75}
-                    />
-                  </div>
-                  <div>
-                    <div
-                      className={`text-[15px] font-semibold tracking-tight transition-colors duration-300 ${
-                        isActive ? "text-navy" : "text-navy/70"
-                      }`}
-                    >
-                      {t(`list.${key}.name`)}
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Right: live infrastructure panel */}
-          <div className="relative bg-pale px-8 py-10 lg:py-12 flex flex-col justify-between min-h-[380px]">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-[0.35]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(rgba(7,27,58,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(7,27,58,0.05) 1px, transparent 1px)",
-                backgroundSize: "28px 28px",
-              }}
-            />
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeKey}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.35, ease }}
-                className="relative"
-              >
-                <p className="text-[13px] uppercase tracking-[0.08em] text-blue/70 font-medium mb-3">
-                  {t(`list.${activeKey}.name`)}
-                </p>
-                <p className="text-[17px] leading-[1.6] text-navy/70 max-w-[440px] mb-8">
-                  {t(`list.${activeKey}.note`)}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-10">
-                  {focus.map((f) => (
-                    <span
-                      key={f}
-                      className="text-[12.5px] text-navy/60 bg-white border border-navy/10 rounded-full px-3 py-1.5"
-                    >
-                      {f}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* infrastructure -> industry flow */}
-            <div className="relative flex items-center gap-3">
-              <div className="flex flex-wrap gap-2">
-                {moduleKeys.map((key) => (
-                  <span
-                    key={key}
-                    className="text-[12px] font-medium text-navy/50 bg-white border border-navy/10 rounded-md px-2.5 py-1.5"
-                  >
-                    {t(`moduleLabels.${key}`)}
-                  </span>
-                ))}
-              </div>
-              <svg
-                width="28"
-                height="14"
-                viewBox="0 0 28 14"
-                fill="none"
-                aria-hidden
-                className="shrink-0 text-cyan/60"
-              >
-                <path
-                  d="M1 7H25M25 7L19 1M25 7L19 13"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <div className="flex h-9 items-center rounded-md border border-cyan/30 bg-navy px-3">
-                <span className="text-[12.5px] font-medium text-white">
-                  {t(`list.${activeKey}.name`)}
-                </span>
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
@@ -3140,202 +2704,6 @@ export function Logo({ className = "" }: { className?: string }) {
         className="h-12 md:h-14 object-contain scale-[3] md:scale-[4] origin-left" 
       />
     </div>
-  );
-}
-</file>
-
-<file path="src/components/Navigation.tsx">
-"use client";
-
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTranslations, useLocale } from "next-intl";
-import { Logo } from "./Logo";
-import { Link, usePathname, useRouter } from "@/i18n/navigation";
-
-const locales = [
-  { code: "en", label: "EN" },
-  { code: "ca", label: "CA" },
-  { code: "es", label: "ES" },
-];
-
-export function Navigation() {
-  const t = useTranslations("nav");
-  const locale = useLocale();
-  const pathname = usePathname();
-  const router = useRouter();
-
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  const links = [
-    { label: t("platform"), href: "/#architecture" },
-    { label: t("industries"), href: "/#industries" },
-    { label: t("howItWorks"), href: "/#how-it-works" },
-  ];
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Lock body scroll while the mobile menu is open
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  // Close the mobile menu on route change or resize back to desktop
-  useEffect(() => {
-    const onResize = () => {
-      if (window.innerWidth >= 768) setOpen(false);
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  return (
-    <motion.header
-      initial={{ y: -24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 inset-x-0 z-50"
-    >
-      <div
-        className={`transition-all duration-300 ${
-          scrolled || open
-            ? "bg-white/80 backdrop-blur-md border-b border-navy/8 shadow-[0_1px_0_0_rgba(7,27,58,0.04)]"
-            : "bg-transparent border-b border-transparent"
-        }`}
-      >
-        <nav className="mx-auto max-w-[1280px] px-6 lg:px-8 h-[68px] flex items-center justify-between">
-          <Link href="/#top" className="flex items-center -ml-2" onClick={() => setOpen(false)}>
-            <Logo />
-          </Link>
-
-          <ul className="hidden md:flex items-center gap-9">
-            {links.map((link) => (
-              <li key={link.label}>
-                <Link
-                  href={link.href}
-                  className="group relative text-[14.5px] font-medium text-navy/70 hover:text-navy transition-colors"
-                >
-                  {link.label}
-                  <span className="absolute left-0 -bottom-1.5 h-px w-0 bg-cyan transition-all duration-300 group-hover:w-full" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <div className="hidden md:flex items-center gap-5">
-            {/* language switcher */}
-            <div className="flex items-center gap-1 text-[13px] font-medium text-navy/50">
-              {locales.map((l, i) => (
-                <span key={l.code} className="flex items-center">
-                  <button
-                    onClick={() => router.replace(pathname, { locale: l.code })}
-                    className={`px-1.5 transition-colors ${
-                      locale === l.code ? "text-navy" : "hover:text-navy/80"
-                    }`}
-                  >
-                    {l.label}
-                  </button>
-                  {i < locales.length - 1 && <span className="text-navy/20">/</span>}
-                </span>
-              ))}
-            </div>
-
-            <Link
-              href="/#contact"
-              className="relative inline-flex items-center justify-center rounded-md bg-navy px-4 py-2.5 text-[14.5px] font-medium text-white overflow-hidden group transition-transform active:scale-[0.98]"
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-blue to-cyan opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <span className="relative">{t("contact")}</span>
-            </Link>
-          </div>
-
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="md:hidden text-navy relative z-10"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-          >
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              {open ? (
-                <path
-                  d="M5 5L17 17M17 5L5 17"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-              ) : (
-                <path
-                  d="M3 6h16M3 11h16M3 16h16"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-              )}
-            </svg>
-          </button>
-        </nav>
-      </div>
-
-      {/* mobile menu panel */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden overflow-hidden bg-white border-b border-navy/8"
-          >
-            <div className="px-6 py-6 flex flex-col gap-1">
-              {links.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="py-3 text-[16px] font-medium text-navy/80 border-b border-navy/5"
-                >
-                  {link.label}
-                </Link>
-              ))}
-
-              <Link
-                href="/#contact"
-                onClick={() => setOpen(false)}
-                className="mt-5 inline-flex items-center justify-center rounded-md bg-navy px-4 py-3 text-[15px] font-medium text-white"
-              >
-                {t("contact")}
-              </Link>
-
-              <div className="mt-6 flex items-center gap-3 text-[13px] font-medium text-navy/50">
-                {locales.map((l) => (
-                  <button
-                    key={l.code}
-                    onClick={() => {
-                      router.replace(pathname, { locale: l.code });
-                      setOpen(false);
-                    }}
-                    className={`px-2 py-1 rounded border ${
-                      locale === l.code ? "border-cyan/40 text-navy bg-pale" : "border-navy/10"
-                    }`}
-                  >
-                    {l.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
   );
 }
 </file>
@@ -3531,6 +2899,711 @@ export default config;
     "**/*.mts"
   ],
   "exclude": ["node_modules"]
+}
+</file>
+
+<file path="src/components/ArchitectureSection.tsx">
+"use client";
+
+import { motion } from "framer-motion";
+import { AnimatedNumber } from "./AnimatedNumber";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+const stats = [
+  {
+    value: 4,
+    suffix: "",
+    caption: "core modules — controls, evidence, risk and monitoring",
+  },
+  {
+    value: 4,
+    suffix: "+",
+    caption: "regulatory frameworks referenced, from ISO 27001 to the EU AI Act",
+  },
+  {
+    value: 5,
+    suffix: "",
+    caption: "industries the platform is designed to support",
+  },
+];
+
+export function ProofSection() {
+  return (
+    <section className="relative py-24 lg:py-32 bg-white">
+      <div className="mx-auto max-w-[1120px] px-6 lg:px-8">
+        <div className="max-w-[600px] mb-14 lg:mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, ease }}
+            className="text-balance text-[32px] sm:text-[40px] leading-[1.15] font-semibold tracking-[-0.015em] text-navy mb-5"
+          >
+            Built once. Built to hold up.
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, delay: 0.1, ease }}
+            className="text-[17px] leading-[1.7] text-navy/60"
+          >
+            We didn&apos;t bolt compliance onto old software. The
+            infrastructure — controls, evidence, risk and monitoring — was
+            built first, so every industry module inherits the same rigor.
+          </motion.p>
+        </div>
+
+        <div className="grid sm:grid-cols-3 gap-10 sm:gap-8">
+          {stats.map((s, i) => (
+            <motion.div
+              key={s.caption}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease }}
+              className="border-t border-navy/15 pt-6"
+            >
+              <div className="font-tabular text-[44px] sm:text-[52px] leading-none font-semibold tracking-[-0.02em] text-navy mb-3">
+                <AnimatedNumber
+                  value={s.value}
+                  format={(n) => `${Math.round(n)}${s.suffix}`}
+                  delay={0.15 + i * 0.1}
+                />
+              </div>
+              <p className="text-[14.5px] leading-[1.6] text-navy/55 max-w-[220px]">
+                {s.caption}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+</file>
+
+<file path="src/components/Hero.tsx">
+"use client";
+ 
+ {/*"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { Play } from "lucide-react";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+export function Hero() {
+  const t = useTranslations("hero");
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  return (
+    // pt-[72px] clears the fixed white nav (see Navigation.tsx height)
+    <section id="top" className="relative overflow-hidden pt-[72px] bg-navy">
+      <div className="relative min-h-[560px] lg:min-h-[640px] flex items-center">
+        {/* Full-bleed background image. Point this at a real photo — a
+            city skyline (Coupa's look), a compliance-dashboard screenshot,
+            or an Andorra/regulatory shot — dropped into /public. Until you
+            add one, the section just shows solid navy (bg-navy on the
+            <section> above) instead of breaking to white. 
+        <img
+          src="/andorra3.jpg"
+          alt=""
+          aria-hidden
+          ref={(img) => {
+            if (img && img.complete) {
+              setImgLoaded(true);
+            }
+          }}
+          onLoad={() => setImgLoaded(true)}
+          onError={(e) => (e.currentTarget.style.display = "none")}
+          className={`absolute inset-0 h-full w-full object-cover object-[70%_center] transition-opacity duration-500 ${
+            imgLoaded ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+         Navy panel dissolving into the photo — solid under the text,
+            fading to transparent toward the right, Coupa-style. Hardcoded
+            hex values so this never depends on a CSS variable resolving. 
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(90deg, #071b3a 0%, #071b3a 38%, rgba(7,27,58,0.85) 55%, rgba(7,27,58,0.25) 78%, rgba(7,27,58,0) 100%)",
+          }}
+        />
+
+        <div className="relative mx-auto w-full max-w-[1320px] px-6 lg:px-8 py-20 lg:py-28">
+          <div className="max-w-[620px]">
+            <motion.h1
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.08, ease }}
+              className="text-balance text-[38px] sm:text-[48px] lg:text-[56px] leading-[1.08] font-semibold tracking-[-0.02em] text-white"
+            >
+              {t("headlinePart1")} {t("headlineHighlight")} {t("headlinePart2")}
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease }}
+              className="mt-6 text-[17px] leading-[1.6] text-white/75 max-w-[480px]"
+            >
+              {t("subtext")}
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease }}
+              className="mt-9 flex flex-wrap items-center gap-6"
+            >
+              Solid pill CTA — Coupa: "Learn More" 
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center rounded-full bg-cyan px-7 py-3.5 text-[15px] font-semibold text-navy transition-colors hover:bg-cyan/85 active:scale-[0.98]"
+              >
+                {t("ctaPrimary")}
+              </a>
+
+               Ghost play-button CTA — Coupa: "Watch Now" 
+              <a
+                href="#how-it-works"
+                className="group inline-flex items-center gap-3 text-[15px] font-semibold text-white"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm transition-colors group-hover:bg-white/25">
+                  <Play className="h-3.5 w-3.5 fill-white text-white ml-0.5" strokeWidth={0} />
+                </span>
+
+              </a>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+*/}
+
+
+
+import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { Play } from "lucide-react";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+export function Hero() {
+  const t = useTranslations("hero");
+
+  return (
+    // pt-[72px] clears the fixed white nav (see Navigation.tsx height)
+    <section id="top" className="relative overflow-hidden pt-[72px] bg-navy">
+      {/* ambient glow, same treatment as your old HeroVisual */}
+      <div
+        aria-hidden
+        className="absolute -z-10 top-[-160px] right-[-120px] h-[520px] w-[520px] rounded-full opacity-30 blur-[110px]"
+        style={{ background: "radial-gradient(circle, #18c6d1, transparent 70%)" }}
+      />
+      <div
+        aria-hidden
+        className="absolute -z-10 bottom-[-160px] left-[-160px] h-[420px] w-[420px] rounded-full opacity-20 blur-[110px]"
+        style={{ background: "radial-gradient(circle, #2451b8, transparent 70%)" }}
+      />
+      {/* faint technical grid like the rest of the site */}
+      <div className="absolute inset-0 -z-10 bg-grid bg-grid-fade opacity-[0.06]" />
+
+      <div className="mx-auto max-w-[1320px] px-6 lg:px-8 py-20 lg:py-28">
+        <div className="grid lg:grid-cols-[1fr_1.05fr] gap-16 lg:gap-10 items-center">
+          {/* Left column — copy */}
+          <div>
+            <motion.h1
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.08, ease }}
+              className="text-balance text-[38px] sm:text-[48px] lg:text-[56px] leading-[1.08] font-semibold tracking-[-0.02em] text-white"
+            >
+              {t("headlinePart1")} {t("headlineHighlight")} {t("headlinePart2")}
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease }}
+              className="mt-6 text-[17px] leading-[1.6] text-white/70 max-w-[460px]"
+            >
+              {t("subtext")}
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease }}
+              className="mt-9 flex flex-wrap items-center gap-6"
+            >
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center rounded-full bg-cyan px-7 py-3.5 text-[15px] font-semibold text-navy transition-colors hover:bg-cyan/85 active:scale-[0.98]"
+              >
+                {t("ctaPrimary")}
+              </a>
+
+              <a
+                href="#how-it-works"
+                className="group inline-flex items-center gap-3 text-[15px] font-semibold text-white"
+              >
+
+
+              </a>
+            </motion.div>
+          </div>
+
+          {/* Right column — dashboard screenshot in a laptop frame */}
+          <LaptopMockup />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LaptopMockup() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9, delay: 0.35, ease }}
+      className="relative mx-auto w-full max-w-[600px]"
+      style={{ perspective: "1400px" }}
+    >
+      {/* glow behind the laptop */}
+      <div
+        aria-hidden
+        className="absolute -inset-10 -z-10 rounded-[40px] opacity-70 blur-3xl"
+        style={{
+          background:
+            "radial-gradient(closest-side, rgba(24,198,209,0.22), rgba(36,81,184,0.14), transparent)",
+        }}
+      />
+
+      <div
+        className="relative"
+        style={{ transform: "rotateX(6deg) rotateY(-10deg)", transformStyle: "preserve-3d" }}
+      >
+        {/* screen / bezel */}
+        <div className="rounded-t-xl rounded-b-md border-[10px] border-[#0c1e3f] bg-[#0c1e3f] shadow-[0_40px_80px_-24px_rgba(2,10,26,0.6)]">
+          {/* browser chrome */}
+          <div className="flex items-center gap-1.5 bg-[#0c1e3f] px-3 py-2.5 rounded-t-sm">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+            <div className="ml-3 flex-1 rounded-md bg-white/10 px-3 py-1 text-[11px] text-white/50">
+              advisorly.tech/dashboard
+            </div>
+          </div>
+
+          {/* screenshot — naturally scaled to fit the image aspect ratio */}
+          <div className="relative w-full overflow-hidden bg-white">
+            <img
+              src="/dash_hero.png"
+              alt="Advisorly compliance dashboard showing active contracts, expiring documents and alerts"
+              className="block h-auto w-full"
+            />
+
+          </div>
+        </div>
+
+        <div className="mx-auto h-1 w-[70%] rounded-b-md bg-[#0c1e3f]/80" />
+      </div>
+    </motion.div>
+  );
+}
+</file>
+
+<file path="src/components/IndustriesSection.tsx">
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
+import {
+  Truck,
+  HardHat,
+  Store,
+  UtensilsCrossed,
+  Plane,
+  ArrowRight,
+  type LucideIcon,
+} from "lucide-react";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+const industryKeys = [
+  "logistics",
+  "construction",
+  "retail",
+  "hospitality",
+  "tourism",
+] as const;
+type IndustryKey = (typeof industryKeys)[number];
+
+const icons: Record<IndustryKey, LucideIcon> = {
+  logistics: Truck,
+  construction: HardHat,
+  retail: Store,
+  hospitality: UtensilsCrossed,
+  tourism: Plane,
+};
+
+export function IndustriesSection() {
+  const t = useTranslations("architecture");
+  const tIndustries = useTranslations("industries");
+  const [active, setActive] = useState<IndustryKey>("logistics");
+
+  const focus = tIndustries.raw(`list.${active}.focus`) as string[];
+
+  return (
+    <section id="industries" className="relative py-24 lg:py-32 bg-navy overflow-hidden">
+      <div aria-hidden className="absolute inset-0 bg-grid bg-grid-fade opacity-[0.2]" />
+
+      <div className="relative mx-auto max-w-[1200px] px-6 lg:px-8">
+        <div className="max-w-[640px] mb-12 lg:mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, ease }}
+            className="text-balance text-[32px] sm:text-[40px] leading-[1.15] font-semibold tracking-[-0.015em] text-white mb-5"
+          >
+            {t("headline")}
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, delay: 0.1, ease }}
+            className="text-[17px] leading-[1.7] text-white/55 max-w-[520px]"
+          >
+            {t("subtext")}
+          </motion.p>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6, delay: 0.15, ease }}
+          className="grid lg:grid-cols-[0.85fr_1.15fr] rounded-lg border border-white/12 overflow-hidden"
+        >
+          {/* Left: accordion, single accent reserved for the active row */}
+          <div className="divide-y divide-white/10 bg-[#0a2247]">
+            {industryKeys.map((key) => {
+              const isActive = key === active;
+              const Icon = icons[key];
+
+              return (
+                <div
+                  key={key}
+                  className={`relative pl-6 pr-6 lg:pl-8 lg:pr-8 transition-colors duration-300 ${
+                    isActive ? "bg-white/[0.03]" : ""
+                  }`}
+                >
+                  <span
+                    aria-hidden
+                    className={`absolute left-0 top-0 h-full w-[2px] transition-colors duration-300 ${
+                      isActive ? "bg-cyan" : "bg-transparent"
+                    }`}
+                  />
+                  <button
+                    onClick={() => setActive(key)}
+                    className="w-full flex items-center justify-between gap-4 py-5 text-left"
+                  >
+                    <span className="flex items-center gap-3">
+
+                      <span
+                        className={`text-[15px] font-semibold tracking-tight transition-colors duration-300 ${
+                          isActive ? "text-white" : "text-white/60"
+                        }`}
+                      >
+                        {tIndustries(`list.${key}.name`)}
+                      </span>
+                    </span>
+                    <span className="text-[15px] leading-none text-white/30">
+                      {isActive ? "\u2212" : "+"}
+                    </span>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isActive && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.35, ease }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pb-6">
+                          <p className="text-[13.5px] leading-[1.65] text-white/50 mb-5 max-w-[380px]">
+                            {tIndustries(`list.${key}.note`)}
+                          </p>
+                          <a
+                            href="#contact"
+                            className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-cyan hover:text-cyan/80 transition-colors"
+                          >
+                            Talk to us
+                            <ArrowRight className="h-3.5 w-3.5" />
+                          </a>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Right: regulatory scope reference — plain content, not a fake product screenshot */}
+          <div className="relative border-t lg:border-t-0 lg:border-l border-white/10 bg-[#0c1e3f] p-8 sm:p-10 flex flex-col">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, ease }}
+                className="flex-1 flex flex-col"
+              >
+                <h3 className="text-[22px] font-semibold tracking-tight text-white mb-2">
+                  {tIndustries(`list.${active}.name`)}
+                </h3>
+                <p className="text-[14px] leading-[1.65] text-white/50 mb-8 max-w-[420px]">
+                  {tIndustries(`list.${active}.note`)}
+                </p>
+
+                <div className="mt-auto border-t border-white/10">
+                  {focus.map((item, i) => (
+                    <div
+                      key={item}
+                      className="flex items-baseline gap-4 py-4 border-b border-white/10"
+                    >
+                      <span className="text-[13px] text-white/25 tabular-nums">
+                        0{i + 1}
+                      </span>
+                      <span className="text-[14.5px] text-white/85">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, delay: 0.25, ease }}
+          className="mt-8 text-[13px] leading-[1.6] text-white/40 max-w-[560px]"
+        >
+          {t("disclaimer")}
+        </motion.p>
+      </div>
+    </section>
+  );
+}
+</file>
+
+<file path="src/components/Navigation.tsx">
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations, useLocale } from "next-intl";
+import { Logo } from "./Logo";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { Globe, ChevronDown } from "lucide-react";
+
+const locales = [
+  { code: "en", label: "EN" },
+  { code: "ca", label: "CA" },
+  { code: "es", label: "ES" },
+];
+
+export function Navigation() {
+  const t = useTranslations("nav");
+  const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const [open, setOpen] = useState(false); // mobile menu
+  const [langOpen, setLangOpen] = useState(false); // globe dropdown
+
+  const links = [
+
+    { label: t("industries"), href: "/#industries" },
+    { label: t("howItWorks"), href: "/#how-it-works" },
+    { label: t("company"), href: "#company" },
+  ];
+
+  // Lock body scroll while the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  // Close the mobile menu on resize back to desktop
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 768) setOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  return (
+    // Coupa's nav is a solid white bar, not transparent-over-hero — it sits
+    // above the image hero, so it's always opaque instead of scroll-triggered.
+    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-navy/8">
+      <nav className="mx-auto max-w-[1320px] px-6 lg:px-8 h-[72px] flex items-center justify-between">
+        <Link href="/#top" className="flex items-center -ml-2" onClick={() => setOpen(false)}>
+          <Logo />
+        </Link>
+
+        {/* Center links, each with a Coupa-style dropdown chevron */}
+        <ul className="hidden lg:flex items-center gap-8">
+          {links.map((link) => (
+            <li key={link.label}>
+              <Link
+                href={link.href}
+                className="group flex items-center gap-1 text-[15px] font-semibold text-navy/80 hover:text-navy transition-colors"
+              >
+                {link.label}
+
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden lg:flex items-center gap-4">
+          {/* language switcher, Coupa uses a plain globe icon in this slot */}
+          <div className="relative">
+            <button
+              onClick={() => setLangOpen((v) => !v)}
+              aria-label="Change language"
+              className="flex items-center justify-center h-9 w-9 rounded-full text-navy/60 hover:text-navy hover:bg-pale transition-colors"
+            >
+              <Globe className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            </button>
+            <AnimatePresence>
+              {langOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-11 w-28 rounded-lg border border-navy/10 bg-white py-1.5 shadow-[0_12px_32px_-12px_rgba(7,27,58,0.25)]"
+                >
+                  {locales.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        router.replace(pathname, { locale: l.code });
+                        setLangOpen(false);
+                      }}
+                      className={`block w-full px-3.5 py-2 text-left text-[13.5px] font-medium transition-colors ${
+                        locale === l.code
+                          ? "text-navy bg-pale"
+                          : "text-navy/60 hover:text-navy hover:bg-pale/60"
+                      }`}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Solid pill CTA — now the only button, labeled "Contact" */}
+          <Link
+            href="/#contact"
+            className="inline-flex items-center justify-center rounded-full bg-cyan px-5 py-2.5 text-[14px] font-semibold text-navy hover:bg-cyan/85 transition-colors"
+          >
+            {t("contact")}
+          </Link>
+        </div>
+
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="lg:hidden text-navy relative z-10"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+        >
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            {open ? (
+              <path d="M5 5L17 17M17 5L5 17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            ) : (
+              <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            )}
+          </svg>
+        </button>
+      </nav>
+
+      {/* mobile menu panel */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:hidden overflow-hidden bg-white border-b border-navy/8"
+          >
+            <div className="px-6 py-6 flex flex-col gap-1">
+              {links.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="py-3 text-[16px] font-semibold text-navy/80 border-b border-navy/5"
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              <div className="mt-4 flex items-center gap-1.5 text-[13px] font-medium text-navy/50">
+                {locales.map((l, i) => (
+                  <span key={l.code} className="flex items-center">
+                    <button
+                      onClick={() => router.replace(pathname, { locale: l.code })}
+                      className={`px-1.5 ${locale === l.code ? "text-navy" : ""}`}
+                    >
+                      {l.label}
+                    </button>
+                    {i < locales.length - 1 && <span className="text-navy/20">/</span>}
+                  </span>
+                ))}
+              </div>
+
+              <Link
+                href="/#contact"
+                onClick={() => setOpen(false)}
+                className="mt-5 inline-flex items-center justify-center rounded-full bg-cyan px-5 py-3 text-[15px] font-semibold text-navy"
+              >
+                {t("contact")}
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
 }
 </file>
 
