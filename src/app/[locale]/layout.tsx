@@ -9,58 +9,78 @@ import "@/app/globals.css";
 const geistSans = GeistSans;
 const geistMono = GeistMono;
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://advisorly.tech"), // replace with your real domain once you have it
-  title: {
-    default: "Advisorly — Compliance Infrastructure",
-    template: "%s | Advisorly",
-  },
-  description:
-    "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
-  keywords: [
-    "compliance software",
-    "regtech",
-    "regulatory infrastructure",
-    "compliance automation",
-    "andorra",
-    "andorra tech",
-    "andorra startup",
-  ],
-  authors: [{ name: "Advisorly" }],
-  icons: {
-    icon: "/icon.png",
-    shortcut: "/icon.png",
-    apple: "/icon.png",
-  },
-  openGraph: {
-    title: "Advisorly — Compliance Infrastructure",
+const BASE_URL = "https://advisorly.tech";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const url =
+  locale === routing.defaultLocale
+    ? BASE_URL
+    : `${BASE_URL}/${locale}`;
+
+  return {
+    metadataBase: new URL(BASE_URL),
+    title: {
+      default: "Advisorly",
+      template: "%s | Advisorly",
+    },
     description:
       "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
-    url: "https://advisorly.tech",
-    siteName: "Advisorly",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Advisorly — Compliance Infrastructure",
-      },
+    keywords: [
+      "compliance software",
+      "regtech",
+      "regulatory infrastructure",
+      "compliance automation",
+      "andorra",
+      "andorra tech",
+      "andorra startup",
     ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Advisorly — Compliance Infrastructure",
-    description:
-      "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
-    images: ["/og-image.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+    authors: [{ name: "Advisorly" }],
+    icons: {
+      icon: "/icon.png",
+      shortcut: "/icon.png",
+      apple: "/icon.png",
+    },
+    alternates: {
+      canonical: url,
+      languages: Object.fromEntries(
+        routing.locales.map((l) => [l, `${BASE_URL}/${l}`])
+      ),
+    },
+    openGraph: {
+      title: "Advisorly",
+      description:
+        "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
+      url,
+      siteName: "Advisorly",
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: "Advisorly",
+        },
+      ],
+      locale,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Advisorly",
+      description:
+        "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
+      images: ["/og-image.png"],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 const organizationSchema = {
   "@context": "https://schema.org",
