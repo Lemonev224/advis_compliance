@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import {
   Truck,
   HardHat,
@@ -37,26 +38,13 @@ export function IndustriesSection() {
   const tIndustries = useTranslations("industries");
   const [active, setActive] = useState<IndustryKey>("logistics");
   const [imageError, setImageError] = useState<Record<string, boolean>>({});
-  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   const focus = tIndustries.raw(`list.${active}.focus`) as string[];
 
-  // Preload all images when the component mounts
-  useEffect(() => {
-    industryKeys.forEach((key) => {
-      const img = new window.Image();
-      img.src = `/industries/${key}.jpg`;
-      img.onload = () => {
-        setLoadedImages((prev) => ({ ...prev, [key]: true }));
-      };
-      img.onerror = () => {
-        // If the image fails to load, mark it as loaded anyway to avoid infinite loading
-        // but also set the error state so the fallback is shown
-        setImageError((prev) => ({ ...prev, [key]: true }));
-        setLoadedImages((prev) => ({ ...prev, [key]: true }));
-      };
-    });
-  }, []);
+  // No manual preloading needed anymore — next/image handles lazy loading,
+  // resizing, format negotiation (webp/avif) and caching for us. We just
+  // mark the very first tab as `priority` so it's fetched eagerly on
+  // initial paint (it's above the fold), and let the rest load on demand.
 
   return (
     <section id="industries" className="relative py-24 lg:py-32 bg-white overflow-hidden">
@@ -131,26 +119,27 @@ export function IndustriesSection() {
               >
                 {/* Image area */}
                 <div className="relative flex-1 bg-gradient-to-br from-navy/[0.03] to-cyan/[0.03] overflow-hidden">
-                  {/* Show loading skeleton until image is loaded and not error */}
-                  {!loadedImages[active] && !imageError[active] && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan border-t-transparent" />
-                    </div>
+                  {!imageError[active] && (
+                    <Image
+                      src={`/industries/${active}.jpg`}
+                      alt={tIndustries(`list.${active}.name`)}
+                      fill
+                      // Tells the browser/Next how big this image will actually
+                      // render so it fetches an appropriately-sized file instead
+                      // of the full original resolution.
+                      sizes="(max-width: 1024px) 100vw, 900px"
+                      // Only the very first industry loads eagerly (it's the
+                      // default active tab, so it's visible immediately).
+                      // Every other tab's image is fetched on demand when
+                      // clicked, not all at once on page load.
+                      priority={active === industryKeys[0]}
+                      quality={75}
+                      className="object-cover"
+                      onError={() =>
+                        setImageError((prev) => ({ ...prev, [active]: true }))
+                      }
+                    />
                   )}
-
-                  <img
-                    src={`/industries/${active}.jpg`}
-                    alt={tIndustries(`list.${active}.name`)}
-                    className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-                      loadedImages[active] && !imageError[active] ? "opacity-100" : "opacity-0"
-                    }`}
-                    onError={(e) => {
-                      e.currentTarget.style.opacity = "0";
-                      setImageError((prev) => ({ ...prev, [active]: true }));
-                      setLoadedImages((prev) => ({ ...prev, [active]: true })); // hide spinner
-                    }}
-                    // If the image is already preloaded, it will show immediately
-                  />
 
                   {/* Fallback when image fails */}
                   {imageError[active] && (

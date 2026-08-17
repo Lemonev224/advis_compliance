@@ -101,21 +101,23 @@ export function Hero() {
     Mobile: sits in normal flow, full width, below the CTAs.
     lg+: switches to an absolutely-positioned floating card at a fluid width. */}
 {/* floating browser-tab card — coded compliance dashboard mockup (no image asset).
-    Mobile: sits in normal flow, full width, below the CTAs.
-    lg+: switches to an absolutely-positioned floating card at a fluid width. */}
+    Restyled for a sober, institutional / core-banking-software feel:
+    desaturated palette, color used only as a thin accent (border-left /
+    small dot / text tint) rather than solid saturated fills, no pulsing
+    animation on status indicators, tighter tracking on labels. */}
 <motion.div
   initial={{ opacity: 0, y: 24 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.8, delay: 0.4, ease }}
   className="relative mt-10 w-full lg:mt-0 lg:absolute lg:top-[70px] lg:right-[10px] lg:w-[clamp(460px,42vw,700px)] rounded-2xl border border-navy/10 bg-white shadow-[0_30px_60px_-20px_rgba(7,27,58,0.25)] overflow-hidden"
 >
-  {/* browser chrome */}
-  <div className="flex items-center gap-2 border-b border-navy/8 bg-pale/70 px-4 py-2.5">
-    <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
-    <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" />
-    <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
+  {/* browser chrome — muted, uniform tone instead of red/amber/green traffic lights */}
+  <div className="flex items-center gap-2 border-b border-navy/8 bg-slate-50 px-4 py-2.5">
+    <span className="h-2.5 w-2.5 rounded-full bg-navy/15" />
+    <span className="h-2.5 w-2.5 rounded-full bg-navy/15" />
+    <span className="h-2.5 w-2.5 rounded-full bg-navy/15" />
     <div className="ml-3 flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-medium text-navy/50">
-      <span className="h-1.5 w-1.5 rounded-full bg-cyan animate-pulse" />
+      <span className="h-1.5 w-1.5 rounded-full bg-navy/30" />
       advisorly.tech/compliance
     </div>
   </div>
@@ -123,24 +125,18 @@ export function Hero() {
   {/* app shell */}
   <div className="flex text-navy">
     {/* icon rail — hidden on the smallest screens to save width */}
-    <div className="hidden sm:flex w-11 flex-col items-center gap-4 border-r border-navy/8 bg-pale/40 py-4 shrink-0">
-      <span className="h-6 w-6 rounded-md bg-navy" />
-      <span className="h-2 w-2 rounded-full bg-cyan" />
-      <span className="h-2 w-2 rounded-full bg-navy/15" />
-      <span className="h-2 w-2 rounded-full bg-navy/15" />
-      <span className="h-2 w-2 rounded-full bg-navy/15" />
+    <div className="hidden sm:flex w-11 flex-col items-center gap-4 border-r border-navy/8 bg-slate-50/60 py-4 shrink-0">
+
     </div>
 
     <div className="flex-1 min-w-0">
       {/* top bar */}
       <div className="flex items-center justify-between border-b border-navy/8 px-4 py-2.5">
         <div>
-          <span className="text-[11px] font-semibold text-navy">Action Engine</span>
-          <span className="ml-2 text-[10px] text-navy/40">Top priorities</span>
+          <span className="text-[11px] font-semibold text-navy">Dashboard</span>
+          <span className="ml-2 text-[10px] text-navy/40">Alerts</span>
         </div>
-        <span className="text-[9px] font-semibold uppercase tracking-wide text-navy/35">
-          Ranked by risk × urgency
-        </span>
+
       </div>
 
       {/* action queue */}
@@ -179,12 +175,17 @@ export function Hero() {
             cta: "Update profile",
           },
         ].map((row) => (
-          <div key={row.action} className="flex items-center gap-3 px-4 py-2.5">
+          <div
+            key={row.action}
+            className={`flex items-center gap-3 px-4 py-2.5 border-l-2 ${
+              row.slaTone === "critical" ? "border-l-[#7A2E2E]" : "border-l-[#8A6A2E]"
+            }`}
+          >
             <span
-              className={`shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold tracking-wide ${
+              className={`shrink-0 rounded-[3px] border px-1.5 py-0.5 text-[8px] font-bold tracking-wide ${
                 row.severity === "CRITICAL"
-                  ? "bg-red-600 text-white"
-                  : "bg-red-50 text-red-600"
+                  ? "border-[#7A2E2E]/30 text-[#7A2E2E] bg-[#7A2E2E]/[0.04]"
+                  : "border-navy/15 text-navy/55 bg-navy/[0.02]"
               }`}
             >
               {row.severity}
@@ -197,14 +198,14 @@ export function Hero() {
             </div>
             <div className="hidden sm:block shrink-0 text-right">
               <div
-                className={`text-[9px] font-semibold ${
-                  row.slaTone === "critical" ? "text-red-600" : "text-amber-600"
+                className={`text-[9px] font-semibold tabular-nums ${
+                  row.slaTone === "critical" ? "text-[#7A2E2E]" : "text-[#8A6A2E]"
                 }`}
               >
                 {row.sla}
               </div>
             </div>
-            <span className="hidden md:inline-block shrink-0 rounded-md border border-navy/10 bg-pale/60 px-2 py-1 text-[9px] font-semibold text-navy/70">
+            <span className="hidden md:inline-block shrink-0 rounded-md border border-navy/10 bg-slate-50 px-2 py-1 text-[9px] font-semibold text-navy/70">
               {row.cta}
             </span>
           </div>
@@ -212,22 +213,20 @@ export function Hero() {
       </div>
 
       {/* regulatory framework posture strip */}
-      <div className="border-t border-navy/8 bg-pale/30 px-4 py-2.5">
-        <div className="mb-1.5 text-[9px] font-semibold uppercase tracking-wide text-navy/40">
-          Regulatory Framework Posture
-        </div>
+      <div className="border-t border-navy/8 bg-slate-50/60 px-4 py-2.5">
+
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="rounded-full bg-red-50 px-2 py-1 text-[9px] font-medium text-red-600">
+          <span className="rounded-[3px] border border-[#7A2E2E]/25 bg-transparent px-2 py-1 text-[9px] font-medium text-[#7A2E2E]">
             UIFAND Reporting — 2 escalated
           </span>
-          <span className="rounded-full bg-pale px-2 py-1 text-[9px] font-medium text-navy/50">
+          <span className="rounded-[3px] border border-navy/10 px-2 py-1 text-[9px] font-medium text-navy/50">
             KYC / AML
           </span>
-          <span className="rounded-full bg-pale px-2 py-1 text-[9px] font-medium text-navy/50">
+          <span className="rounded-[3px] border border-navy/10 px-2 py-1 text-[9px] font-medium text-navy/50">
             MiFID II
           </span>
-          <span className="ml-auto rounded-md bg-red-600 px-2 py-1 text-[9px] font-bold text-white">
-            CRITICAL
+          <span className="ml-auto rounded-[3px] border border-[#7A2E2E]/30 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-[#7A2E2E]">
+            Critical
           </span>
         </div>
       </div>

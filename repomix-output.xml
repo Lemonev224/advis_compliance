@@ -116,293 +116,6 @@ tsconfig.json
 <files>
 This section contains the contents of the repository's files.
 
-<file path="src/components/IntergrationsSection.tsx">
-"use client";
-
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-
-const ease = [0.16, 1, 0.3, 1] as const;
-
-type Node = {
-  key: string;
-  label: string;
-  x: number;
-  y: number;
-};
-
-const leftNodes: Node[] = [
-  { key: "excel", label: "Excel", x: 100, y: 50 },
-  { key: "salesforce", label: "Salesforce", x: 100, y: 176 },
-  { key: "hubspot", label: "HubSpot", x: 100, y: 302 },
-  { key: "sharepoint", label: "SharePoint", x: 100, y: 428 },
-];
-
-const rightNodes: Node[] = [
-  { key: "sesame", label: "Sesame HR", x: 1000, y: 50 },
-  { key: "bamboo", label: "BambooHR", x: 1000, y: 176 },
-  { key: "procore", label: "Procore", x: 1000, y: 302 },
-  { key: "cloudbeds", label: "Cloudbeds", x: 1000, y: 428 },
-];
-
-const CARD_LEFT = 360;
-const CARD_RIGHT = 740;
-const CARD_MID_Y = 240;
-
-function pathFor(node: Node, side: "left" | "right") {
-  const edgeX = side === "left" ? CARD_LEFT + 20 : CARD_RIGHT - 20;
-  const startX = node.x;
-  const c1x = side === "left" ? startX + 130 : startX - 130;
-  const c2x = side === "left" ? edgeX - 130 : edgeX + 130;
-  return `M${startX},${node.y} C${c1x},${node.y} ${c2x},${CARD_MID_Y} ${edgeX},${CARD_MID_Y}`;
-}
-
-function Pill({ label, index }: { label: string; index: number }) {
-  return (
-    <div className="relative w-[124px] rounded-full border border-navy/10 bg-white px-4 py-2.5 text-center shadow-[0_8px_20px_-10px_rgba(7,27,58,0.25)]">
-      <motion.span
-        className="absolute inset-0 rounded-full border border-cyan/40"
-        animate={{ opacity: [0.5, 0, 0.5] }}
-        transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
-      />
-      <span className="relative text-[13px] font-semibold text-navy whitespace-nowrap">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-// Wrapper that places the pill centered at a given (x,y) coordinate inside SVG
-function PillInSVG({ node, index }: { node: Node; index: number }) {
-  // Pill dimensions – must match the pill's actual size
-  const pillWidth = 124;
-  const pillHeight = 44; // approx from padding + font size
-
-  return (
-    <foreignObject
-      x={node.x - pillWidth / 2}
-      y={node.y - pillHeight / 2}
-      width={pillWidth}
-      height={pillHeight}
-      className="overflow-visible"
-    >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.5, delay: 0.15 + index * 0.08, ease }}
-        className="flex items-center justify-center w-full h-full"
-      >
-        <Pill label={node.label} index={index} />
-      </motion.div>
-    </foreignObject>
-  );
-}
-
-export function IntegrationsSection() {
-  const allNodes = [...leftNodes, ...rightNodes];
-
-  return (
-    <section className="relative py-24 lg:py-32 bg-white overflow-hidden">
-      <div aria-hidden className="absolute inset-0 -z-10 bg-grid bg-grid-fade opacity-[0.03]" />
-      <div
-        aria-hidden
-        className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 h-[480px] w-[900px] opacity-40 blur-[110px]"
-        style={{ background: "radial-gradient(closest-side, rgba(24,198,209,0.14), transparent)" }}
-      />
-
-      <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-        {/* Header */}
-        <div className="max-w-[640px] mx-auto text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.05, ease }}
-            className="text-balance text-[32px] sm:text-[42px] leading-[1.14] font-semibold tracking-[-0.015em] text-navy"
-          >
-            Connect the tools your teams already run on.
-          </motion.h2>
-        </div>
-
-        {/* Desktop: connector diagram */}
-        <div
-          className="relative mx-auto hidden lg:block w-full max-w-[1100px]"
-          style={{ aspectRatio: "1100 / 480" }}
-        >
-          <svg
-            viewBox="0 0 1100 480"
-            preserveAspectRatio="none"
-            className="absolute inset-0 h-full w-full"
-          >
-            <defs>
-              <linearGradient id="integ-line-left" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#18C6D1" stopOpacity="0.75" />
-                <stop offset="100%" stopColor="#2451B8" stopOpacity="0.75" />
-              </linearGradient>
-              <linearGradient id="integ-line-right" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#2451B8" stopOpacity="0.75" />
-                <stop offset="100%" stopColor="#18C6D1" stopOpacity="0.75" />
-              </linearGradient>
-              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-              </filter>
-            </defs>
-
-            {/* Left lines */}
-            {leftNodes.map((n, i) => (
-              <g key={n.key}>
-                <motion.path
-                  d={pathFor(n, "left")}
-                  fill="none"
-                  stroke="url(#integ-line-left)"
-                  strokeWidth="1.5"
-                  strokeDasharray="5 6"
-                  strokeLinecap="round"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.8, delay: 0.1 + i * 0.08, ease }}
-                />
-                <motion.path
-                  d={pathFor(n, "left")}
-                  fill="none"
-                  stroke="#18C6D1"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  filter="url(#glow)"
-                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
-                  whileInView={{
-                    pathOffset: [0, 1],
-                    opacity: [0, 1, 0],
-                  }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{
-                    duration: 2.2,
-                    repeat: Infinity,
-                    ease: "linear",
-                    delay: 0.8 + i * 0.35,
-                  }}
-                />
-              </g>
-            ))}
-
-            {/* Right lines */}
-            {rightNodes.map((n, i) => (
-              <g key={n.key}>
-                <motion.path
-                  d={pathFor(n, "right")}
-                  fill="none"
-                  stroke="url(#integ-line-right)"
-                  strokeWidth="1.5"
-                  strokeDasharray="5 6"
-                  strokeLinecap="round"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.8, delay: 0.1 + i * 0.08, ease }}
-                />
-                <motion.path
-                  d={pathFor(n, "right")}
-                  fill="none"
-                  stroke="#18C6D1"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  filter="url(#glow)"
-                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
-                  whileInView={{
-                    pathOffset: [0, 1],
-                    opacity: [0, 1, 0],
-                  }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{
-                    duration: 2.2,
-                    repeat: Infinity,
-                    ease: "linear",
-                    delay: 1.2 + i * 0.35,
-                  }}
-                />
-              </g>
-            ))}
-
-            {/* Pills inside the SVG using foreignObject */}
-            {allNodes.map((n, i) => (
-              <PillInSVG key={n.key} node={n} index={i} />
-            ))}
-          </svg>
-
-          {/* Center card – still positioned absolutely on top of the SVG */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.2, ease }}
-            className="absolute rounded-2xl border border-navy/10 bg-white shadow-[0_1px_2px_rgba(7,27,58,0.04),0_40px_80px_-28px_rgba(7,27,58,0.22)] flex flex-col items-center justify-center text-center px-10"
-            style={{
-              left: `${(CARD_LEFT / 1100) * 100}%`,
-              top: `${(110 / 480) * 100}%`,
-              width: `${((CARD_RIGHT - CARD_LEFT) / 1100) * 100}%`,
-              height: `${(260 / 480) * 100}%`,
-            }}
-          >
-            <h3 className="text-[22px] leading-[1.25] font-semibold tracking-[-0.01em] text-navy mb-3">
-              Sync controls, evidence and records automatically.
-            </h3>
-            <p className="text-[13.5px] leading-[1.6] text-navy/55 max-w-[320px] mb-6">
-              No rip-and-replace. Statum plugs into the CRM, ERP and HR systems you already use.
-            </p>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-navy/90"
-            >
-              Explore integrations
-              <ArrowRight className="h-3.5 w-3.5" />
-            </a>
-          </motion.div>
-        </div>
-
-        {/* Mobile / tablet: simple pill wrap, no connector lines */}
-        <div className="lg:hidden">
-          <div className="mx-auto max-w-[420px] rounded-2xl border border-navy/10 bg-white shadow-[0_1px_2px_rgba(7,27,58,0.04),0_32px_64px_-28px_rgba(7,27,58,0.2)] px-7 py-9 text-center mb-10">
-            <h3 className="text-[19px] leading-[1.3] font-semibold tracking-[-0.01em] text-navy mb-2.5">
-              Sync controls, evidence and records automatically.
-            </h3>
-            <p className="text-[13.5px] leading-[1.6] text-navy/55 mb-6">
-              No rip and replace. Statum plugs into the CRM, ERP and HR systems you already use.
-            </p>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-navy/90"
-            >
-              Explore integrations
-              <ArrowRight className="h-3.5 w-3.5" />
-            </a>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-2.5 max-w-[440px] mx-auto">
-            {allNodes.map((n, i) => (
-              <motion.div
-                key={n.key}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.4, delay: i * 0.05, ease }}
-                className="rounded-full border border-navy/10 bg-white px-4 py-2 shadow-[0_6px_16px_-8px_rgba(7,27,58,0.2)]"
-              >
-                <span className="text-[12.5px] font-semibold text-navy whitespace-nowrap">
-                  {n.label}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-</file>
-
 <file path="public/file.svg">
 <svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
 </file>
@@ -902,6 +615,292 @@ export function AnimatedNumber({
 }
 </file>
 
+<file path="src/components/IntergrationsSection.tsx">
+"use client";
+
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+type Node = {
+  key: string;
+  label: string;
+  x: number;
+  y: number;
+};
+
+const leftNodes: Node[] = [
+  { key: "excel", label: "Excel", x: 100, y: 50 },
+  { key: "salesforce", label: "Salesforce", x: 100, y: 176 },
+  { key: "hubspot", label: "HubSpot", x: 100, y: 302 },
+  { key: "sharepoint", label: "SharePoint", x: 100, y: 428 },
+];
+
+const rightNodes: Node[] = [
+  { key: "sesame", label: "Sesame HR", x: 1000, y: 50 },
+  { key: "bamboo", label: "BambooHR", x: 1000, y: 176 },
+  { key: "procore", label: "Procore", x: 1000, y: 302 },
+  { key: "cloudbeds", label: "Cloudbeds", x: 1000, y: 428 },
+];
+
+const CARD_LEFT = 360;
+const CARD_RIGHT = 740;
+const CARD_MID_Y = 240;
+
+function pathFor(node: Node, side: "left" | "right") {
+  const edgeX = side === "left" ? CARD_LEFT + 20 : CARD_RIGHT - 20;
+  const startX = node.x;
+  const c1x = side === "left" ? startX + 130 : startX - 130;
+  const c2x = side === "left" ? edgeX - 130 : edgeX + 130;
+  return `M${startX},${node.y} C${c1x},${node.y} ${c2x},${CARD_MID_Y} ${edgeX},${CARD_MID_Y}`;
+}
+
+function Pill({ label, index }: { label: string; index: number }) {
+  return (
+    <div className="relative w-[124px] rounded-full border border-navy/10 bg-white px-4 py-2.5 text-center shadow-[0_8px_20px_-10px_rgba(7,27,58,0.25)]">
+      <motion.span
+        className="absolute inset-0 rounded-full border border-cyan/40"
+        animate={{ opacity: [0.5, 0, 0.5] }}
+        transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
+      />
+      <span className="relative text-[13px] font-semibold text-navy whitespace-nowrap">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function PillInSVG({ node, index }: { node: Node; index: number }) {
+  const pillWidth = 124;
+  const pillHeight = 44;
+
+  return (
+    <foreignObject
+      x={node.x - pillWidth / 2}
+      y={node.y - pillHeight / 2}
+      width={pillWidth}
+      height={pillHeight}
+      className="overflow-visible"
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.5, delay: 0.15 + index * 0.08, ease }}
+        className="flex items-center justify-center w-full h-full"
+      >
+        <Pill label={node.label} index={index} />
+      </motion.div>
+    </foreignObject>
+  );
+}
+
+export function IntegrationsSection() {
+  const t = useTranslations("integrations");
+  const allNodes = [...leftNodes, ...rightNodes];
+
+  return (
+    <section className="relative py-24 lg:py-32 bg-white overflow-hidden">
+      <div aria-hidden className="absolute inset-0 -z-10 bg-grid bg-grid-fade opacity-[0.03]" />
+      <div
+        aria-hidden
+        className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 h-[480px] w-[900px] opacity-40 blur-[110px]"
+        style={{ background: "radial-gradient(closest-side, rgba(24,198,209,0.14), transparent)" }}
+      />
+
+      <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
+        {/* Header */}
+        <div className="max-w-[640px] mx-auto text-center mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, delay: 0.05, ease }}
+            className="text-balance text-[32px] sm:text-[42px] leading-[1.14] font-semibold tracking-[-0.015em] text-navy"
+          >
+            {t("headline")}
+          </motion.h2>
+        </div>
+
+        {/* Desktop: connector diagram */}
+        <div
+          className="relative mx-auto hidden lg:block w-full max-w-[1100px]"
+          style={{ aspectRatio: "1100 / 480" }}
+        >
+          <svg
+            viewBox="0 0 1100 480"
+            preserveAspectRatio="none"
+            className="absolute inset-0 h-full w-full"
+          >
+            <defs>
+              <linearGradient id="integ-line-left" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#18C6D1" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#2451B8" stopOpacity="0.75" />
+              </linearGradient>
+              <linearGradient id="integ-line-right" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#2451B8" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#18C6D1" stopOpacity="0.75" />
+              </linearGradient>
+              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            {/* Left lines */}
+            {leftNodes.map((n, i) => (
+              <g key={n.key}>
+                <motion.path
+                  d={pathFor(n, "left")}
+                  fill="none"
+                  stroke="url(#integ-line-left)"
+                  strokeWidth="1.5"
+                  strokeDasharray="5 6"
+                  strokeLinecap="round"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.8, delay: 0.1 + i * 0.08, ease }}
+                />
+                <motion.path
+                  d={pathFor(n, "left")}
+                  fill="none"
+                  stroke="#18C6D1"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  filter="url(#glow)"
+                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
+                  whileInView={{
+                    pathOffset: [0, 1],
+                    opacity: [0, 1, 0],
+                  }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: 0.8 + i * 0.35,
+                  }}
+                />
+              </g>
+            ))}
+
+            {/* Right lines */}
+            {rightNodes.map((n, i) => (
+              <g key={n.key}>
+                <motion.path
+                  d={pathFor(n, "right")}
+                  fill="none"
+                  stroke="url(#integ-line-right)"
+                  strokeWidth="1.5"
+                  strokeDasharray="5 6"
+                  strokeLinecap="round"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.8, delay: 0.1 + i * 0.08, ease }}
+                />
+                <motion.path
+                  d={pathFor(n, "right")}
+                  fill="none"
+                  stroke="#18C6D1"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  filter="url(#glow)"
+                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
+                  whileInView={{
+                    pathOffset: [0, 1],
+                    opacity: [0, 1, 0],
+                  }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: 1.2 + i * 0.35,
+                  }}
+                />
+              </g>
+            ))}
+
+            {allNodes.map((n, i) => (
+              <PillInSVG key={n.key} node={n} index={i} />
+            ))}
+          </svg>
+
+          {/* Center card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, delay: 0.2, ease }}
+            className="absolute rounded-2xl border border-navy/10 bg-white shadow-[0_1px_2px_rgba(7,27,58,0.04),0_40px_80px_-28px_rgba(7,27,58,0.22)] flex flex-col items-center justify-center text-center px-10"
+            style={{
+              left: `${(CARD_LEFT / 1100) * 100}%`,
+              top: `${(110 / 480) * 100}%`,
+              width: `${((CARD_RIGHT - CARD_LEFT) / 1100) * 100}%`,
+              height: `${(260 / 480) * 100}%`,
+            }}
+          >
+            <h3 className="text-[22px] leading-[1.25] font-semibold tracking-[-0.01em] text-navy mb-3">
+              {t("cardTitle")}
+            </h3>
+            <p className="text-[13.5px] leading-[1.6] text-navy/55 max-w-[320px] mb-6">
+              {t("cardSubtext")}
+            </p>
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-navy/90"
+            >
+              {t("cta")}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          </motion.div>
+        </div>
+
+        {/* Mobile / tablet */}
+        <div className="lg:hidden">
+          <div className="mx-auto max-w-[420px] rounded-2xl border border-navy/10 bg-white shadow-[0_1px_2px_rgba(7,27,58,0.04),0_32px_64px_-28px_rgba(7,27,58,0.2)] px-7 py-9 text-center mb-10">
+            <h3 className="text-[19px] leading-[1.3] font-semibold tracking-[-0.01em] text-navy mb-2.5">
+              {t("cardTitle")}
+            </h3>
+            <p className="text-[13.5px] leading-[1.6] text-navy/55 mb-6">
+              {t("cardSubtext")}
+            </p>
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-navy/90"
+            >
+              {t("cta")}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-2.5 max-w-[440px] mx-auto">
+            {allNodes.map((n, i) => (
+              <motion.div
+                key={n.key}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.4, delay: i * 0.05, ease }}
+                className="rounded-full border border-navy/10 bg-white px-4 py-2 shadow-[0_6px_16px_-8px_rgba(7,27,58,0.2)]"
+              >
+                <span className="text-[12.5px] font-semibold text-navy whitespace-nowrap">
+                  {n.label}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+</file>
+
 <file path="src/components/MaintanacePage.tsx">
 import { GeistSans } from "geist/font/sans";
 
@@ -1142,607 +1141,6 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-</file>
-
-<file path="messages/ca.json">
-{
-  "nav": {
-    "platform": "Plataforma",
-    "industries": "Sectors",
-    "howItWorks": "Com Funciona",
-    "company": "Empresa",
-    "contact": "Contacte",
-    "bookDemo": "Reserva una Demo"
-  },
-  "hero": {
-    "eyebrow": "Infraestructura de Compliment",
-    "headlinePart1": "Compliment normatiu,",
-    "headlineHighlight": "integrat",
-    "headlinePart2": "al negoci.",
-    "subtext": "Convertim requisits normatius complexos en infraestructura de programari escalable per a sectors regulats.",
-    "ctaPrimary": "Contacta amb Nosaltres",
-    "ctaSecondary": "Com Funciona"
-  },
-  "heroDashboard": {
-    "complianceStatus": "Estat de compliment",
-    "onTrack": "Al dia",
-    "controls": "Controls",
-    "evidence": "Evidències",
-    "openRisks": "Riscos oberts"
-  },
-  "problem": {
-    "headline": "El compliment normatiu no hauria de viure en fulls de càlcul.",
-    "subtext": "Les normatives són complexes. Els requisits canvien. Les evidències estan disperses entre sistemes. Els equips dediquen temps valuós a fer seguiment manual de controls, documents, riscos i obligacions.",
-    "points": {
-      "manual": {
-        "title": "Processos manuals",
-        "description": "Controls, polítiques i revisions gestionats a mà, una actualització de full de càlcul rere l'altra."
-      },
-      "fragmented": {
-        "title": "Evidències fragmentades",
-        "description": "Proves de compliment disperses entre eines, tiquets, safates d'entrada i unitats compartides."
-      },
-      "changing": {
-        "title": "Normatives canviants",
-        "description": "Els requisits canvien mentre el procés creat per satisfer-los es manté estàtic."
-      },
-      "disconnected": {
-        "title": "Sistemes desconnectats",
-        "description": "El compliment normatiu queda al marge dels sistemes on realment es fa la feina."
-      }
-    }
-  },
-  "architecture": {
-    "headline": "Creat una vegada. Adaptat a cada sector.",
-    "subtext": "La mateixa infraestructura de compliment s'adapta a diferents entorns normatius, ampliant-se en mòduls específics de cada sector i, amb el temps, en productes específics de cada sector.",
-    "layerInfrastructure": "Infraestructura de Compliment",
-    "coreModules": {
-      "controls": "Controls",
-      "evidence": "Evidències",
-      "risk": "Risc"
-    },
-    "layerIndustryModules": "Mòduls Sectorials",
-    "industries": {
-      "hospitality": "Hostaleria",
-      "logistics": "Logística",
-      "retail": "Comerç",
-      "construction": "Construcció"
-    },
-    "layerSaasProducts": "Productes SaaS",
-    "disclaimer": "Els mòduls sectorials estan dissenyats per donar suport a aquests sectors a mesura que la plataforma s'ampliï — no reflecteixen els clients actuals."
-  },
-  "dashboard": {
-    "eyebrow": "Producte",
-    "headline": "El teu centre de comandament del compliment.",
-    "subtext": "Controls, evidències, risc i monitoratge, unificats en una sola vista operativa.",
-    "illustrativeLabel": "Dades il·lustratives de mostra",
-    "tabs": {
-      "overview": "Resum",
-      "controls": "Controls",
-      "evidence": "Evidències",
-      "risk": "Risc"
-    },
-    "complianceStatus": "Estat de compliment",
-    "onTrack": "Al dia",
-    "controlsLabel": "Controls",
-    "evidenceLabel": "Evidències",
-    "evidenceCaption": "elements recollits",
-    "openRisksLabel": "Riscos oberts",
-    "openRisksCaption": "2 marcats aquesta setmana",
-    "frameworksLabel": "Marcs normatius",
-    "coverage": "cobertura",
-    "recentActivity": "Activitat recent",
-    "live": "En directe",
-    "activity": {
-      "evidenceVerified": { "label": "Evidència verificada", "detail": "Revisió d'accessos Q3 · automatitzada", "time": "fa 2 min" },
-      "controlUpdated": { "label": "Control actualitzat", "detail": "Xifratge en repòs · CC6.1", "time": "fa 18 min" },
-      "riskIdentified": { "label": "Risc identificat", "detail": "Abast d'accés de proveïdors · Mitjà", "time": "fa 41 min" },
-      "policyReviewed": { "label": "Política revisada", "detail": "Política de retenció de dades · v3.2", "time": "fa 1 h" }
-    },
-    "footnote": "Aquest mockup de producte es mostra amb dades il·lustratives només amb finalitats de demostració."
-  },
-  "industries": {
-    "headline": "Infraestructura de compliment per a sectors regulats.",
-    "subtext": "La mateixa infraestructura central està dissenyada per donar suport a diversos entorns normatius a mesura que la plataforma s'ampliï.",
-    "ctaTalkToUs": "Parla amb nosaltres",
-    "moduleLabels": {
-      "controls": "Controls",
-      "evidence": "Evidències",
-      "risk": "Risc",
-      "monitoring": "Monitoratge"
-    },
-    "list": {
-      "logistics": {
-        "name": "Logística",
-        "note": "Creat per donar suport a cadenes de subministrament, operacions de transport i gestió de flotes.",
-        "focus": ["Compliment de transportistes", "Documentació de flota", "Auditories de rutes"]
-      },
-      "construction": {
-        "name": "Construcció",
-        "note": "Dissenyat per a l'execució de projectes, contractistes, operacions d'obra i compliment normatiu.",
-        "focus": ["Registres de seguretat d'obra", "Verificació de contractistes", "Seguiment de permisos"]
-      },
-      "retail": {
-        "name": "Comerç",
-        "note": "Creat per donar suport a botigues, comerç electrònic, inventari i operacions amb clients.",
-        "focus": ["Protecció de dades", "Auditories de proveïdors", "Normativa de consum"]
-      },
-      "hospitality": {
-        "name": "Hostaleria",
-        "note": "Dissenyat per a hotels, restaurants, sales i operacions centrades en el client.",
-        "focus": ["Gestió de dades de clients", "Salut i seguretat", "Llicències"]
-      },
-      "tourism": {
-        "name": "Turisme",
-        "note": "Creat per donar suport a empreses de viatges, operadors turístics i experiències per a visitants.",
-        "focus": ["Normativa transfronterera", "Dades de reserves", "Llicències d'operador"]
-      },
-      "other": {
-        "name": "Altres Sectors",
-        "note": "Infraestructura flexible dissenyada per adaptar-se a nous sectors i models de negoci.",
-        "focus": ["Conjunts de controls personalitzats", "Nous marcs normatius", "Normativa emergent"]
-      }
-    }
-  },
-  "howItWorks": {
-    "headline": "De la normativa a la infraestructura operativa.",
-    "subtext": "El compliment normatiu no és una configuració puntual. Cada cicle entendre, construir, monitorar, escalar alimenta el següent, de manera que la infraestructura manté el ritme a mesura que canvien els requisits i les operacions.",
-    "cta": "Més informació",
-    "steps": {
-      "understand": { "title": "Entendre", "description": "Traduir els requisits normatius en controls estructurats." },
-      "build": { "title": "Construir", "description": "Convertir els controls en polítiques, fluxos de treball i processos operatius." },
-      "monitor": { "title": "Monitorar", "description": "Fer seguiment continu del compliment i recollir evidències." },
-      "scale": { "title": "Escalar", "description": "Ampliar la mateixa infraestructura a nous requisits, entitats i sectors." }
-    }
-  },
-    "proof": {
-  "headline": "Construït una vegada. Construït per durar.",
-  "subtext": "No vam afegir el compliment normatiu sobre programari antic. La infraestructura —controls, evidències, risc i monitoratge— es va construir primer, perquè cada mòdul sectorial hereti el mateix rigor.",
-  "stats": {
-    "modules": { "caption": "mòduls principals: controls, evidències, risc i monitoratge" },
-    "frameworks": { "caption": "marcs normatius de referència, des d'ISO 27001 fins a l'EU AI Act" },
-    "industries": { "caption": "sectors que la plataforma està dissenyada per suportar" }
-  }
-},
-  "about": {
-    "headline": "Construint la infraestructura darrere de la propera generació de negocis regulats.",
-    "subtext": "Estem construint un nou enfocament per al compliment normatiu: infraestructura de programari que pot adaptar-se a diferents entorns normatius, sectors i models de negoci. Amb seu a Andorra, al cor d'Europa.",
-    "markers": {
-      "andorra": "Creat a Andorra",
-      "europe": "Dissenyat per a Europa",
-      "global": "Creat per escalar globalment"
-    }
-  },
-  "contact": {
-    "headline": "Preparats per integrar el compliment al teu negoci?",
-    "subtext": "Parla amb nosaltres sobre la infraestructura de compliment que el teu negoci necessita.",
-    "form": {
-      "name": "Nom",
-      "namePlaceholder": "Jane Doe",
-      "email": "Correu de treball",
-      "emailPlaceholder": "jane@empresa.com",
-      "company": "Empresa",
-      "companyPlaceholder": "Nom de l'empresa",
-      "message": "Què vols resoldre?",
-      "messagePlaceholder": "Explica'ns una mica les teves necessitats de compliment",
-      "submit": "Envia el missatge",
-      "submitting": "Enviant…",
-      "success": "Gràcies — ens posarem en contacte aviat.",
-      "genericError": "S'ha produït un error. Torna-ho a provar."
-    }
-  },
-  "footer": {
-    "location": "Andorra · Europa",
-    "links": {
-      "industries": "Sectors",
-      "howItWorks": "Com Funciona",
-      "terms": "Termes d'Ús",
-      "privacy": "Política de Privacitat"
-    },
-    "rights": "Tots els drets reservats."
-  }
-}
-</file>
-
-<file path="messages/en.json">
-{
-  "nav": {
-    "platform": "Platform",
-    "industries": "Industries",
-    "howItWorks": "How It Works",
-    "company": "Company",
-    "contact": "Contact",
-    "bookDemo": "Book a Demo"
-  },
-  "hero": {
-    "eyebrow": "Compliance Infrastructure",
-    "headlinePart1": "Compliance,",
-    "headlineHighlight": "built into",
-    "headlinePart2": "the business.",
-    "subtext": "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
-    "ctaPrimary": "Get in Touch",
-    "ctaSecondary": "How It Works"
-  },
-  "heroDashboard": {
-    "complianceStatus": "Compliance status",
-    "onTrack": "On track",
-    "controls": "Controls",
-    "evidence": "Evidence",
-    "openRisks": "Open risks"
-  },
-  "problem": {
-    "headline": "Compliance shouldn't live in spreadsheets.",
-    "subtext": "Regulations are complex. Requirements change. Evidence is scattered across systems. Teams spend valuable time manually tracking controls, documents, risks and obligations.",
-    "points": {
-      "manual": {
-        "title": "Manual processes",
-        "description": "Controls, policies and reviews tracked by hand, one spreadsheet update at a time."
-      },
-      "fragmented": {
-        "title": "Fragmented evidence",
-        "description": "Proof of compliance scattered across tools, tickets, inboxes and shared drives."
-      },
-      "changing": {
-        "title": "Changing regulations",
-        "description": "Requirements shift while the process built to satisfy them stays static."
-      },
-      "disconnected": {
-        "title": "Disconnected systems",
-        "description": "Compliance sits apart from the systems where the actual work happens."
-      }
-    }
-  },
-  "architecture": {
-    "headline": "Built once. Adapted across industries.",
-    "subtext": "The same compliance infrastructure adapts to different regulatory environments, extending into industry-specific modules and, over time, industry-specific products.",
-    "layerInfrastructure": "Compliance Infrastructure",
-    "coreModules": {
-      "controls": "Controls",
-      "evidence": "Evidence",
-      "risk": "Risk"
-    },
-    "layerIndustryModules": "Industry Modules",
-    "industries": {
-      "hospitality": "Hospitality",
-      "logistics": "Logistics",
-      "retail": "Retail",
-      "construction": "Construction"
-    },
-    "layerSaasProducts": "SaaS Products",
-    "disclaimer": "Industry modules are designed to support these sectors as the platform expands — not a reflection of current customers."
-  },
-  "dashboard": {
-    "eyebrow": "Product",
-    "headline": "Your compliance command center.",
-    "subtext": "Controls, evidence, risk and monitoring, unified in a single operational view.",
-    "illustrativeLabel": "Illustrative mockup data",
-    "tabs": {
-      "overview": "Overview",
-      "controls": "Controls",
-      "evidence": "Evidence",
-      "risk": "Risk"
-    },
-    "complianceStatus": "Compliance status",
-    "onTrack": "On track",
-    "controlsLabel": "Controls",
-    "evidenceLabel": "Evidence",
-    "evidenceCaption": "items collected",
-    "openRisksLabel": "Open risks",
-    "openRisksCaption": "2 flagged this week",
-    "frameworksLabel": "Frameworks",
-    "coverage": "coverage",
-    "recentActivity": "Recent activity",
-    "live": "Live",
-    "activity": {
-      "evidenceVerified": { "label": "Evidence verified", "detail": "Access review Q3 · automated", "time": "2m ago" },
-      "controlUpdated": { "label": "Control updated", "detail": "Encryption at rest · CC6.1", "time": "18m ago" },
-      "riskIdentified": { "label": "Risk identified", "detail": "Vendor access scope · Medium", "time": "41m ago" },
-      "policyReviewed": { "label": "Policy reviewed", "detail": "Data retention policy · v3.2", "time": "1h ago" }
-    },
-    "footnote": "Product mockup shown with illustrative data for demonstration purposes only."
-  },
-  "industries": {
-    "headline": "Compliance infrastructure for regulated industries.",
-    "subtext": "The same core infrastructure is designed to support a range of regulatory environments as the platform expands.",
-      "ctaTalkToUs": "Talk to us",
-    "moduleLabels": {
-      "controls": "Controls",
-      "evidence": "Evidence",
-      "risk": "Risk",
-      "monitoring": "Monitoring"
-    },
-    "list": {
-      "logistics": {
-        "name": "Logistics",
-        "note": "Built to support supply chains, transport operations and fleet management.",
-        "focus": ["Carrier compliance", "Fleet documentation", "Route audits"]
-      },
-      "construction": {
-        "name": "Construction",
-        "note": "Designed for project delivery, contractors, site operations and compliance.",
-        "focus": ["Site safety records", "Contractor vetting", "Permit tracking"]
-      },
-      "retail": {
-        "name": "Retail",
-        "note": "Built to support stores, ecommerce, inventory and customer operations.",
-        "focus": ["Data protection", "Supplier audits", "Consumer regulations"]
-      },
-      "hospitality": {
-        "name": "Hospitality",
-        "note": "Designed for hotels, restaurants, venues and guest-focused operations.",
-        "focus": ["Guest data handling", "Health & safety", "Licensing"]
-      },
-      "tourism": {
-        "name": "Tourism",
-        "note": "Built to support travel businesses, tour operators and visitor experiences.",
-        "focus": ["Cross-border rules", "Booking data", "Operator licensing"]
-      },
-      "other": {
-        "name": "Other Industries",
-        "note": "Flexible infrastructure designed to adapt to new sectors and business models.",
-        "focus": ["Custom control sets", "New frameworks", "Emerging regulation"]
-      }
-    }
-  },
-  "howItWorks": {
-    "headline": "From regulation to operational infrastructure.",
-    "subtext": "Compliance isn't a one time setup. Each cycle understand, build, monitor, scale feeds the next, so the infrastructure keeps pace as requirements and operations change.",
-    "cta": "Learn more",
-    "steps": {
-      "understand": { "title": "Understand", "description": "Translate regulatory requirements into structured controls." },
-      "build": { "title": "Build", "description": "Turn controls into policies, workflows and operational processes." },
-      "monitor": { "title": "Monitor", "description": "Continuously track compliance and collect evidence." },
-      "scale": { "title": "Scale", "description": "Extend the same infrastructure across new requirements, entities and industries." }
-    }
-  },
-    "proof": {
-  "headline": "Built once. Built to hold up.",
-  "subtext": "We didn't bolt compliance onto old software. The infrastructure — controls, evidence, risk and monitoring — was built first, so every industry module inherits the same rigor.",
-  "stats": {
-    "modules": { "caption": "core modules — controls, evidence, risk and monitoring" },
-    "frameworks": { "caption": "regulatory frameworks referenced, from ISO 27001 to the EU AI Act" },
-    "industries": { "caption": "industries the platform is designed to support" }
-  }},
-  "about": {
-    "headline": "Building the infrastructure behind the next generation of regulated businesses.",
-    "subtext": "We're building a new approach to compliance: software infrastructure that can adapt to different regulatory environments, industries and business models. Based in Andorra, at the heart of Europe.",
-    "markers": {
-      "andorra": "Built in Andorra",
-      "europe": "Designed for Europe",
-      "global": "Built to scale globally"
-    }
-  },
-  "contact": {
-    "headline": "Ready to build compliance into your business?",
-    "subtext": "Talk to us about the compliance infrastructure your business needs.",
-    "form": {
-      "name": "Name",
-      "namePlaceholder": "Jane Doe",
-      "email": "Work email",
-      "emailPlaceholder": "jane@company.com",
-      "company": "Company",
-      "companyPlaceholder": "Company name",
-      "message": "What are you looking to solve?",
-      "messagePlaceholder": "Tell us a bit about your compliance needs",
-      "submit": "Send message",
-      "submitting": "Sending…",
-      "success": "Thanks — we'll be in touch shortly.",
-      "genericError": "Something went wrong. Please try again."
-    }
-  },
-  "footer": {
-    "location": "Andorra · Europe",
-    "links": {
-      "industries": "Industries",
-      "howItWorks": "How It Works",
-      "terms": "Terms of Use",
-      "privacy": "Privacy Policy"
-    },
-    "rights": "All rights reserved."
-  }
-  
-  
-}
-</file>
-
-<file path="messages/es.json">
-{
-  "nav": {
-    "platform": "Plataforma",
-    "industries": "Sectores",
-    "howItWorks": "Cómo Funciona",
-    "company": "Empresa",
-    "contact": "Contacto",
-    "bookDemo": "Reservar una Demo"
-  },
-  "hero": {
-    "eyebrow": "Infraestructura de Cumplimiento",
-    "headlinePart1": "Cumplimiento normativo,",
-    "headlineHighlight": "integrado",
-    "headlinePart2": "en el negocio.",
-    "subtext": "Convertimos requisitos normativos complejos en infraestructura de software escalable para sectores regulados.",
-    "ctaPrimary": "Contáctanos",
-    "ctaSecondary": "Cómo Funciona"
-  },
-  "heroDashboard": {
-    "complianceStatus": "Estado de cumplimiento",
-    "onTrack": "Al día",
-    "controls": "Controles",
-    "evidence": "Evidencias",
-    "openRisks": "Riesgos abiertos"
-  },
-  "problem": {
-    "headline": "El cumplimiento normativo no debería vivir en hojas de cálculo.",
-    "subtext": "Las normativas son complejas. Los requisitos cambian. Las evidencias están dispersas entre sistemas. Los equipos dedican tiempo valioso a hacer seguimiento manual de controles, documentos, riesgos y obligaciones.",
-    "points": {
-      "manual": {
-        "title": "Procesos manuales",
-        "description": "Controles, políticas y revisiones gestionados a mano, una actualización de hoja de cálculo tras otra."
-      },
-      "fragmented": {
-        "title": "Evidencias fragmentadas",
-        "description": "Pruebas de cumplimiento dispersas entre herramientas, tickets, bandejas de entrada y unidades compartidas."
-      },
-      "changing": {
-        "title": "Normativas cambiantes",
-        "description": "Los requisitos cambian mientras el proceso creado para cumplirlos permanece estático."
-      },
-      "disconnected": {
-        "title": "Sistemas desconectados",
-        "description": "El cumplimiento normativo queda al margen de los sistemas donde realmente se hace el trabajo."
-      }
-    }
-  },
-  "architecture": {
-    "headline": "Creado una vez. Adaptado a cada sector.",
-    "subtext": "La misma infraestructura de cumplimiento se adapta a diferentes entornos normativos, ampliándose en módulos específicos de cada sector y, con el tiempo, en productos específicos de cada sector.",
-    "layerInfrastructure": "Infraestructura de Cumplimiento",
-    "coreModules": {
-      "controls": "Controles",
-      "evidence": "Evidencias",
-      "risk": "Riesgo"
-    },
-    "layerIndustryModules": "Módulos Sectoriales",
-    "industries": {
-      "hospitality": "Hostelería",
-      "logistics": "Logística",
-      "retail": "Comercio",
-      "construction": "Construcción"
-    },
-    "layerSaasProducts": "Productos SaaS",
-    "disclaimer": "Los módulos sectoriales están diseñados para dar soporte a estos sectores a medida que la plataforma se amplíe — no reflejan a los clientes actuales."
-  },
-  "dashboard": {
-    "eyebrow": "Producto",
-    "headline": "Tu centro de mando del cumplimiento.",
-    "subtext": "Controles, evidencias, riesgo y monitoreo, unificados en una sola vista operativa.",
-    "illustrativeLabel": "Datos ilustrativos de muestra",
-    "tabs": {
-      "overview": "Resumen",
-      "controls": "Controles",
-      "evidence": "Evidencias",
-      "risk": "Riesgo"
-    },
-    "complianceStatus": "Estado de cumplimiento",
-    "onTrack": "Al día",
-    "controlsLabel": "Controles",
-    "evidenceLabel": "Evidencias",
-    "evidenceCaption": "elementos recopilados",
-    "openRisksLabel": "Riesgos abiertos",
-    "openRisksCaption": "2 marcados esta semana",
-    "frameworksLabel": "Marcos normativos",
-    "coverage": "cobertura",
-    "recentActivity": "Actividad reciente",
-    "live": "En directo",
-    "activity": {
-      "evidenceVerified": { "label": "Evidencia verificada", "detail": "Revisión de accesos Q3 · automatizada", "time": "hace 2 min" },
-      "controlUpdated": { "label": "Control actualizado", "detail": "Cifrado en reposo · CC6.1", "time": "hace 18 min" },
-      "riskIdentified": { "label": "Riesgo identificado", "detail": "Alcance de acceso de proveedores · Medio", "time": "hace 41 min" },
-      "policyReviewed": { "label": "Política revisada", "detail": "Política de retención de datos · v3.2", "time": "hace 1 h" }
-    },
-    "footnote": "Este mockup de producto se muestra con datos ilustrativos únicamente con fines de demostración."
-  },
-  "industries": {
-    "headline": "Infraestructura de cumplimiento para sectores regulados.",
-    "subtext": "La misma infraestructura central está diseñada para dar soporte a diversos entornos normativos a medida que la plataforma se amplíe.",
-    "ctaTalkToUs": "Habla con nosotros",
-    "moduleLabels": {
-      "controls": "Controles",
-      "evidence": "Evidencias",
-      "risk": "Riesgo",
-      "monitoring": "Monitoreo"
-    },
-    "list": {
-      "logistics": {
-        "name": "Logística",
-        "note": "Creado para dar soporte a cadenas de suministro, operaciones de transporte y gestión de flotas.",
-        "focus": ["Cumplimiento de transportistas", "Documentación de flota", "Auditorías de rutas"]
-      },
-      "construction": {
-        "name": "Construcción",
-        "note": "Diseñado para la ejecución de proyectos, contratistas, operaciones de obra y cumplimiento normativo.",
-        "focus": ["Registros de seguridad de obra", "Verificación de contratistas", "Seguimiento de permisos"]
-      },
-      "retail": {
-        "name": "Comercio",
-        "note": "Creado para dar soporte a tiendas, comercio electrónico, inventario y operaciones con clientes.",
-        "focus": ["Protección de datos", "Auditorías de proveedores", "Normativa de consumo"]
-      },
-      "hospitality": {
-        "name": "Hostelería",
-        "note": "Diseñado para hoteles, restaurantes, salas y operaciones centradas en el cliente.",
-        "focus": ["Gestión de datos de huéspedes", "Salud y seguridad", "Licencias"]
-      },
-      "tourism": {
-        "name": "Turismo",
-        "note": "Creado para dar soporte a empresas de viajes, operadores turísticos y experiencias para visitantes.",
-        "focus": ["Normativa transfronteriza", "Datos de reservas", "Licencias de operador"]
-      },
-      "other": {
-        "name": "Otros Sectores",
-        "note": "Infraestructura flexible diseñada para adaptarse a nuevos sectores y modelos de negocio.",
-        "focus": ["Conjuntos de controles personalizados", "Nuevos marcos normativos", "Normativa emergente"]
-      }
-    }
-  },
-  "howItWorks": {
-    "headline": "De la normativa a la infraestructura operativa.",
-    "subtext": "El cumplimiento normativo no es una configuración puntual. Cada ciclo entender, construir, monitorear, escalar alimenta el siguiente, de modo que la infraestructura mantiene el ritmo a medida que cambian los requisitos y las operaciones.",
-    "cta": "Más información",
-    "steps": {
-      "understand": { "title": "Entender", "description": "Traducir los requisitos normativos en controles estructurados." },
-      "build": { "title": "Construir", "description": "Convertir los controles en políticas, flujos de trabajo y procesos operativos." },
-      "monitor": { "title": "Monitorear", "description": "Hacer seguimiento continuo del cumplimiento y recopilar evidencias." },
-      "scale": { "title": "Escalar", "description": "Ampliar la misma infraestructura a nuevos requisitos, entidades y sectores." }
-    }
-  },
-    "proof": {
-  "headline": "Construido una vez. Construido para durar.",
-  "subtext": "No añadimos el cumplimiento normativo sobre software antiguo. La infraestructura —controles, evidencias, riesgo y monitoreo— se construyó primero, para que cada módulo sectorial herede el mismo rigor.",
-  "stats": {
-    "modules": { "caption": "módulos principales: controles, evidencias, riesgo y monitoreo" },
-    "frameworks": { "caption": "marcos normativos de referencia, desde ISO 27001 hasta la EU AI Act" },
-    "industries": { "caption": "sectores que la plataforma está diseñada para soportar" }
-  }
-},
-  "about": {
-    "headline": "Construyendo la infraestructura detrás de la próxima generación de negocios regulados.",
-    "subtext": "Estamos construyendo un nuevo enfoque para el cumplimiento normativo: infraestructura de software que puede adaptarse a diferentes entornos normativos, sectores y modelos de negocio. Con sede en Andorra, en el corazón de Europa.",
-    "markers": {
-      "andorra": "Creado en Andorra",
-      "europe": "Diseñado para Europa",
-      "global": "Creado para escalar globalmente"
-    }
-  },
-  "contact": {
-    "headline": "¿Listos para integrar el cumplimiento en tu negocio?",
-    "subtext": "Habla con nosotros sobre la infraestructura de cumplimiento que tu negocio necesita.",
-    "form": {
-      "name": "Nombre",
-      "namePlaceholder": "Jane Doe",
-      "email": "Correo de trabajo",
-      "emailPlaceholder": "jane@empresa.com",
-      "company": "Empresa",
-      "companyPlaceholder": "Nombre de la empresa",
-      "message": "¿Qué quieres resolver?",
-      "messagePlaceholder": "Cuéntanos un poco sobre tus necesidades de cumplimiento",
-      "submit": "Enviar mensaje",
-      "submitting": "Enviando…",
-      "success": "Gracias — nos pondremos en contacto en breve.",
-      "genericError": "Algo salió mal. Inténtalo de nuevo."
-    }
-  },
-  "footer": {
-    "location": "Andorra · Europa",
-    "links": {
-      "industries": "Sectores",
-      "howItWorks": "Cómo Funciona",
-      "terms": "Términos de Uso",
-      "privacy": "Política de Privacidad"
-    },
-    "rights": "Todos los derechos reservados."
-  }
-}
 </file>
 
 <file path="src/app/[locale]/layout.tsx">
@@ -2894,6 +2292,992 @@ export function Logo({ className = "" }: { className?: string }) {
 }
 </file>
 
+<file path="src/i18n/routing.ts">
+import { defineRouting } from "next-intl/routing";
+
+export const routing = defineRouting({
+  locales: ["en", "ca", "es"],
+  defaultLocale: "en",
+  localePrefix: "as-needed",
+});
+</file>
+
+<file path="eslint.config.mjs">
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
+
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
+]);
+
+export default eslintConfig;
+</file>
+
+<file path="next.config.ts">
+import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default withNextIntl(nextConfig);
+</file>
+
+<file path="package.json">
+{
+  "name": "compliance-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "framer-motion": "^13.0.0",
+    "geist": "^1.7.2",
+    "lucide-react": "^1.31.0",
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "next-intl": "^4.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.0",
+    "playwright": "^1.62.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
+</file>
+
+<file path="postcss.config.mjs">
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default config;
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}
+</file>
+
+<file path="messages/ca.json">
+{
+  "nav": {
+    "platform": "Plataforma",
+    "industries": "Sectors",
+    "howItWorks": "Com Funciona",
+    "company": "Empresa",
+    "contact": "Contacte",
+    "bookDemo": "Reserva una Demo"
+  },
+  "hero": {
+    "eyebrow": "Infraestructura de Compliment",
+    "headlinePart1": "Compliment normatiu,",
+    "headlineHighlight": "integrat",
+    "headlinePart2": "al negoci.",
+    "subtext": "Convertim requisits normatius complexos en infraestructura de programari escalable per a sectors regulats.",
+    "ctaPrimary": "Contacta amb Nosaltres",
+    "ctaSecondary": "Com Funciona"
+  },
+  "heroDashboard": {
+    "complianceStatus": "Estat de compliment",
+    "onTrack": "Al dia",
+    "controls": "Controls",
+    "evidence": "Evidències",
+    "openRisks": "Riscos oberts"
+  },
+  "problem": {
+    "headline": "El compliment normatiu no hauria de viure en fulls de càlcul.",
+    "subtext": "Les normatives són complexes. Els requisits canvien. Les evidències estan disperses entre sistemes. Els equips dediquen temps valuós a fer seguiment manual de controls, documents, riscos i obligacions.",
+    "points": {
+      "manual": {
+        "title": "Processos manuals",
+        "description": "Controls, polítiques i revisions gestionats a mà, una actualització de full de càlcul rere l'altra."
+      },
+      "fragmented": {
+        "title": "Evidències fragmentades",
+        "description": "Proves de compliment disperses entre eines, tiquets, safates d'entrada i unitats compartides."
+      },
+      "changing": {
+        "title": "Normatives canviants",
+        "description": "Els requisits canvien mentre el procés creat per satisfer-los es manté estàtic."
+      },
+      "disconnected": {
+        "title": "Sistemes desconnectats",
+        "description": "El compliment normatiu queda al marge dels sistemes on realment es fa la feina."
+      }
+    }
+  },
+  "solution": {
+    "headline": "Documentació de compliment, gestionada per la plataforma.",
+    "description": "Transformem polítiques, evidències i tràmits en un únic flux de treball automatitzat perquè el teu equip dediqui menys temps a cercar documents i més a fer créixer el negoci.",
+    "cta": "Parla amb nosaltres",
+    "live": "En directe",
+    "complianceScore": "Puntuació de compliment",
+    "paperworkByType": "Documentació per tipus",
+    "filingStatus": "Estat de tramitació",
+    "disclaimer": "Maqueta de producte mostrada amb dades il·lustratives només amb fins demostratius.",
+    "points": {
+      "intake": {
+        "title": "Recepció automatitzada",
+        "description": "Les polítiques, contractes i certificats es capturen i organitzen des del moment en què arriben."
+      },
+      "verification": {
+        "title": "Verificació contínua",
+        "description": "Cada document es verifica automàticament en relació amb els marcs normatius que ha de complir."
+      },
+      "filing": {
+        "title": "Arxivat a punt per a auditories",
+        "description": "La documentació aprovada s'arxiva i es gestiona per versions, a punt per lliurar a qualsevol auditor quan calgui."
+      }
+    },
+    "bars": {
+      "policies": "Polítiques",
+      "contracts": "Contractes",
+      "audits": "Auditories",
+      "certs": "Certificats"
+    },
+    "segments": {
+      "approved": "Aprovat",
+      "review": "En revisió",
+      "pending": "Pendent"
+    }
+  },
+  "architecture": {
+    "headline": "Creat una vegada. Adaptat a cada sector.",
+    "subtext": "La mateixa infraestructura de compliment s'adapta a diferents entorns normatius, ampliant-se en mòduls específics de cada sector i, amb el temps, en productes específics de cada sector.",
+    "layerInfrastructure": "Infraestructura de Compliment",
+    "coreModules": {
+      "controls": "Controls",
+      "evidence": "Evidències",
+      "risk": "Risc"
+    },
+    "layerIndustryModules": "Mòduls Sectorials",
+    "industries": {
+      "hospitality": "Hostaleria",
+      "logistics": "Logística",
+      "retail": "Comerç",
+      "construction": "Construcció"
+    },
+    "layerSaasProducts": "Productes SaaS",
+    "disclaimer": "Els mòduls sectorials estan dissenyats per donar suport a aquests sectors a mesura que la plataforma s'ampliï — no reflecteixen els clients actuals."
+  },
+  "dashboard": {
+    "eyebrow": "Producte",
+    "headline": "El teu centre de comandament del compliment.",
+    "subtext": "Controls, evidències, risc i monitoratge, unificats en una sola vista operativa.",
+    "illustrativeLabel": "Dades il·lustratives de mostra",
+    "tabs": {
+      "overview": "Resum",
+      "controls": "Controls",
+      "evidence": "Evidències",
+      "risk": "Risc"
+    },
+    "complianceStatus": "Estat de compliment",
+    "onTrack": "Al dia",
+    "controlsLabel": "Controls",
+    "evidenceLabel": "Evidències",
+    "evidenceCaption": "elements recollits",
+    "openRisksLabel": "Riscos oberts",
+    "openRisksCaption": "2 marcats aquesta setmana",
+    "frameworksLabel": "Marcs normatius",
+    "coverage": "cobertura",
+    "recentActivity": "Activitat recent",
+    "live": "En directe",
+    "activity": {
+      "evidenceVerified": { "label": "Evidència verificada", "detail": "Revisió d'accessos Q3 · automatitzada", "time": "fa 2 min" },
+      "controlUpdated": { "label": "Control actualitzat", "detail": "Xifratge en repòs · CC6.1", "time": "fa 18 min" },
+      "riskIdentified": { "label": "Risc identificat", "detail": "Abast d'accés de proveïdors · Mitjà", "time": "fa 41 min" },
+      "policyReviewed": { "label": "Política revisada", "detail": "Política de retenció de dades · v3.2", "time": "fa 1 h" }
+    },
+    "footnote": "Aquest mockup de producte es mostra amb dades il·lustratives només amb finalitats de demostració."
+  },
+  "integrations": {
+    "headline": "Connecta les eines que els teus equips ja utilitzen.",
+    "cardTitle": "Sincronitza controls, evidències i registres automàticament.",
+    "cardSubtext": "Sense substituir res. Statum es connecta als sistemes CRM, ERP i RRHH que ja utilitzes.",
+    "cta": "Explora les integracions"
+  },
+  "industries": {
+    "headline": "Infraestructura de compliment per a sectors regulats.",
+    "subtext": "La mateixa infraestructura central està dissenyada per donar suport a diversos entorns normatius a mesura que la plataforma s'ampliï.",
+    "ctaTalkToUs": "Parla amb nosaltres",
+    "moduleLabels": {
+      "controls": "Controls",
+      "evidence": "Evidències",
+      "risk": "Risc",
+      "monitoring": "Monitoratge"
+    },
+    "list": {
+      "logistics": {
+        "name": "Logística",
+        "note": "Creat per donar suport a cadenes de subministrament, operacions de transport i gestió de flotes.",
+        "focus": ["Compliment de transportistes", "Documentació de flota", "Auditories de rutes"]
+      },
+      "construction": {
+        "name": "Construcció",
+        "note": "Dissenyat per a l'execució de projectes, contractistes, operacions d'obra i compliment normatiu.",
+        "focus": ["Registres de seguretat d'obra", "Verificació de contractistes", "Seguiment de permisos"]
+      },
+      "retail": {
+        "name": "Comerç",
+        "note": "Creat per donar suport a botigues, comerç electrònic, inventari i operacions amb clients.",
+        "focus": ["Protecció de dades", "Auditories de proveïdors", "Normativa de consum"]
+      },
+      "hospitality": {
+        "name": "Hostaleria",
+        "note": "Dissenyat per a hotels, restaurants, sales i operacions centrades en el client.",
+        "focus": ["Gestió de dades de clients", "Salut i seguretat", "Llicències"]
+      },
+      "tourism": {
+        "name": "Turisme",
+        "note": "Creat per donar suport a empreses de viatges, operadors turístics i experiències per a visitants.",
+        "focus": ["Normativa transfronterera", "Dades de reserves", "Llicències d'operador"]
+      },
+      "other": {
+        "name": "Altres Sectors",
+        "note": "Infraestructura flexible dissenyada per adaptar-se a nous sectors i models de negoci.",
+        "focus": ["Conjunts de controls personalitzats", "Nous marcs normatius", "Normativa emergent"]
+      }
+    }
+  },
+  "howItWorks": {
+    "headline": "De la normativa a la infraestructura operativa.",
+    "subtext": "El compliment normatiu no és una configuració puntual. Cada cicle entendre, construir, monitorar, escalar alimenta el següent, de manera que la infraestructura manté el ritme a mesura que canvien els requisits i les operacions.",
+    "cta": "Més informació",
+    "steps": {
+      "understand": { "title": "Entendre", "description": "Traduir els requisits normatius en controls estructurats." },
+      "build": { "title": "Construir", "description": "Convertir els controls en polítiques, fluxos de treball i processos operatius." },
+      "monitor": { "title": "Monitorar", "description": "Fer seguiment continu del compliment i recollir evidències." },
+      "scale": { "title": "Escalar", "description": "Ampliar la mateixa infraestructura a nous requisits, entitats i sectors." }
+    }
+  },
+    "proof": {
+  "headline": "Construït una vegada. Construït per durar.",
+  "subtext": "No vam afegir el compliment normatiu sobre programari antic. La infraestructura —controls, evidències, risc i monitoratge— es va construir primer, perquè cada mòdul sectorial hereti el mateix rigor.",
+  "stats": {
+    "modules": { "caption": "mòduls principals: controls, evidències, risc i monitoratge" },
+    "frameworks": { "caption": "marcs normatius de referència, des d'ISO 27001 fins a l'EU AI Act" },
+    "industries": { "caption": "sectors que la plataforma està dissenyada per suportar" }
+  }
+},
+  "about": {
+    "headline": "Construint la infraestructura darrere de la propera generació de negocis regulats.",
+    "subtext": "Estem construint un nou enfocament per al compliment normatiu: infraestructura de programari que pot adaptar-se a diferents entorns normatius, sectors i models de negoci. Amb seu a Andorra, al cor d'Europa.",
+    "markers": {
+      "andorra": "Creat a Andorra",
+      "europe": "Dissenyat per a Europa",
+      "global": "Creat per escalar globalment"
+    }
+  },
+  "contact": {
+    "headline": "Preparats per integrar el compliment al teu negoci?",
+    "subtext": "Parla amb nosaltres sobre la infraestructura de compliment que el teu negoci necessita.",
+    "form": {
+      "name": "Nom",
+      "namePlaceholder": "Jane Doe",
+      "email": "Correu de treball",
+      "emailPlaceholder": "jane@empresa.com",
+      "company": "Empresa",
+      "companyPlaceholder": "Nom de l'empresa",
+      "message": "Què vols resoldre?",
+      "messagePlaceholder": "Explica'ns una mica les teves necessitats de compliment",
+      "submit": "Envia el missatge",
+      "submitting": "Enviant…",
+      "success": "Gràcies — ens posarem en contacte aviat.",
+      "genericError": "S'ha produït un error. Torna-ho a provar."
+    }
+  },
+  "footer": {
+    "location": "Andorra · Europa",
+    "links": {
+      "industries": "Sectors",
+      "howItWorks": "Com Funciona",
+      "terms": "Termes d'Ús",
+      "privacy": "Política de Privacitat"
+    },
+    "rights": "Tots els drets reservats."
+  }
+}
+</file>
+
+<file path="messages/en.json">
+{
+  "nav": {
+    "platform": "Platform",
+    "industries": "Industries",
+    "howItWorks": "How It Works",
+    "company": "Company",
+    "contact": "Contact",
+    "bookDemo": "Book a Demo"
+  },
+  "hero": {
+    "eyebrow": "Compliance Infrastructure",
+    "headlinePart1": "Compliance,",
+    "headlineHighlight": "built into",
+    "headlinePart2": "the business.",
+    "subtext": "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
+    "ctaPrimary": "Get in Touch",
+    "ctaSecondary": "How It Works"
+  },
+  "heroDashboard": {
+    "complianceStatus": "Compliance status",
+    "onTrack": "On track",
+    "controls": "Controls",
+    "evidence": "Evidence",
+    "openRisks": "Open risks"
+  },
+  "problem": {
+    "headline": "Compliance shouldn't live in spreadsheets.",
+    "subtext": "Regulations are complex. Requirements change. Evidence is scattered across systems. Teams spend valuable time manually tracking controls, documents, risks and obligations.",
+    "points": {
+      "manual": {
+        "title": "Manual processes",
+        "description": "Controls, policies and reviews tracked by hand, one spreadsheet update at a time."
+      },
+      "fragmented": {
+        "title": "Fragmented evidence",
+        "description": "Proof of compliance scattered across tools, tickets, inboxes and shared drives."
+      },
+      "changing": {
+        "title": "Changing regulations",
+        "description": "Requirements shift while the process built to satisfy them stays static."
+      },
+      "disconnected": {
+        "title": "Disconnected systems",
+        "description": "Compliance sits apart from the systems where the actual work happens."
+      }
+    }
+  },
+  "solution": {
+    "headline": "Compliance paperwork, handled by the platform.",
+    "description": "We turn policies, evidence and filings into a single automated workflow so your team spends less time chasing documents and more time running the business.",
+    "cta": "Talk to us",
+    "live": "Live",
+    "complianceScore": "Compliance score",
+    "paperworkByType": "Paperwork by type",
+    "filingStatus": "Filing status",
+    "disclaimer": "Product mockup shown with illustrative data for demonstration purposes only.",
+    "points": {
+      "intake": {
+        "title": "Automated intake",
+        "description": "Policies, contracts and certificates are captured and organized the moment they land."
+      },
+      "verification": {
+        "title": "Continuous verification",
+        "description": "Every document is checked against the frameworks it needs to satisfy, automatically."
+      },
+      "filing": {
+        "title": "Audit-ready filing",
+        "description": "Approved paperwork is filed and versioned, ready to hand to any auditor on demand."
+      }
+    },
+    "bars": {
+      "policies": "Policies",
+      "contracts": "Contracts",
+      "audits": "Audits",
+      "certs": "Certs"
+    },
+    "segments": {
+      "approved": "Approved",
+      "review": "In review",
+      "pending": "Pending"
+    }
+  },
+  "architecture": {
+    "headline": "Built once. Adapted across industries.",
+    "subtext": "The same compliance infrastructure adapts to different regulatory environments, extending into industry-specific modules and, over time, industry-specific products.",
+    "layerInfrastructure": "Compliance Infrastructure",
+    "coreModules": {
+      "controls": "Controls",
+      "evidence": "Evidence",
+      "risk": "Risk"
+    },
+    "layerIndustryModules": "Industry Modules",
+    "industries": {
+      "hospitality": "Hospitality",
+      "logistics": "Logistics",
+      "retail": "Retail",
+      "construction": "Construction"
+    },
+    "layerSaasProducts": "SaaS Products",
+    "disclaimer": "Industry modules are designed to support these sectors as the platform expands — not a reflection of current customers."
+  },
+  "dashboard": {
+    "eyebrow": "Product",
+    "headline": "Your compliance command center.",
+    "subtext": "Controls, evidence, risk and monitoring, unified in a single operational view.",
+    "illustrativeLabel": "Illustrative mockup data",
+    "tabs": {
+      "overview": "Overview",
+      "controls": "Controls",
+      "evidence": "Evidence",
+      "risk": "Risk"
+    },
+    "complianceStatus": "Compliance status",
+    "onTrack": "On track",
+    "controlsLabel": "Controls",
+    "evidenceLabel": "Evidence",
+    "evidenceCaption": "items collected",
+    "openRisksLabel": "Open risks",
+    "openRisksCaption": "2 flagged this week",
+    "frameworksLabel": "Frameworks",
+    "coverage": "coverage",
+    "recentActivity": "Recent activity",
+    "live": "Live",
+    "activity": {
+      "evidenceVerified": { "label": "Evidence verified", "detail": "Access review Q3 · automated", "time": "2m ago" },
+      "controlUpdated": { "label": "Control updated", "detail": "Encryption at rest · CC6.1", "time": "18m ago" },
+      "riskIdentified": { "label": "Risk identified", "detail": "Vendor access scope · Medium", "time": "41m ago" },
+      "policyReviewed": { "label": "Policy reviewed", "detail": "Data retention policy · v3.2", "time": "1h ago" }
+    },
+    "footnote": "Product mockup shown with illustrative data for demonstration purposes only."
+  },
+  "integrations": {
+    "headline": "Connect the tools your teams already run on.",
+    "cardTitle": "Sync controls, evidence and records automatically.",
+    "cardSubtext": "No rip-and-replace. Statum plugs into the CRM, ERP and HR systems you already use.",
+    "cta": "Explore integrations"
+  },
+  "industries": {
+    "headline": "Compliance infrastructure for regulated industries.",
+    "subtext": "The same core infrastructure is designed to support a range of regulatory environments as the platform expands.",
+      "ctaTalkToUs": "Talk to us",
+    "moduleLabels": {
+      "controls": "Controls",
+      "evidence": "Evidence",
+      "risk": "Risk",
+      "monitoring": "Monitoring"
+    },
+    "list": {
+      "logistics": {
+        "name": "Logistics",
+        "note": "Built to support supply chains, transport operations and fleet management.",
+        "focus": ["Carrier compliance", "Fleet documentation", "Route audits"]
+      },
+      "construction": {
+        "name": "Construction",
+        "note": "Designed for project delivery, contractors, site operations and compliance.",
+        "focus": ["Site safety records", "Contractor vetting", "Permit tracking"]
+      },
+      "retail": {
+        "name": "Retail",
+        "note": "Built to support stores, ecommerce, inventory and customer operations.",
+        "focus": ["Data protection", "Supplier audits", "Consumer regulations"]
+      },
+      "hospitality": {
+        "name": "Hospitality",
+        "note": "Designed for hotels, restaurants, venues and guest-focused operations.",
+        "focus": ["Guest data handling", "Health & safety", "Licensing"]
+      },
+      "tourism": {
+        "name": "Tourism",
+        "note": "Built to support travel businesses, tour operators and visitor experiences.",
+        "focus": ["Cross-border rules", "Booking data", "Operator licensing"]
+      },
+      "other": {
+        "name": "Other Industries",
+        "note": "Flexible infrastructure designed to adapt to new sectors and business models.",
+        "focus": ["Custom control sets", "New frameworks", "Emerging regulation"]
+      }
+    }
+  },
+  "howItWorks": {
+    "headline": "From regulation to operational infrastructure.",
+    "subtext": "Compliance isn't a one time setup. Each cycle understand, build, monitor, scale feeds the next, so the infrastructure keeps pace as requirements and operations change.",
+    "cta": "Learn more",
+    "steps": {
+      "understand": { "title": "Understand", "description": "Translate regulatory requirements into structured controls." },
+      "build": { "title": "Build", "description": "Turn controls into policies, workflows and operational processes." },
+      "monitor": { "title": "Monitor", "description": "Continuously track compliance and collect evidence." },
+      "scale": { "title": "Scale", "description": "Extend the same infrastructure across new requirements, entities and industries." }
+    }
+  },
+    "proof": {
+  "headline": "Built once. Built to hold up.",
+  "subtext": "We didn't bolt compliance onto old software. The infrastructure — controls, evidence, risk and monitoring — was built first, so every industry module inherits the same rigor.",
+  "stats": {
+    "modules": { "caption": "core modules — controls, evidence, risk and monitoring" },
+    "frameworks": { "caption": "regulatory frameworks referenced, from ISO 27001 to the EU AI Act" },
+    "industries": { "caption": "industries the platform is designed to support" }
+  }},
+  "about": {
+    "headline": "Building the infrastructure behind the next generation of regulated businesses.",
+    "subtext": "We're building a new approach to compliance: software infrastructure that can adapt to different regulatory environments, industries and business models. Based in Andorra, at the heart of Europe.",
+    "markers": {
+      "andorra": "Built in Andorra",
+      "europe": "Designed for Europe",
+      "global": "Built to scale globally"
+    }
+  },
+  "contact": {
+    "headline": "Ready to build compliance into your business?",
+    "subtext": "Talk to us about the compliance infrastructure your business needs.",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Jane Doe",
+      "email": "Work email",
+      "emailPlaceholder": "jane@company.com",
+      "company": "Company",
+      "companyPlaceholder": "Company name",
+      "message": "What are you looking to solve?",
+      "messagePlaceholder": "Tell us a bit about your compliance needs",
+      "submit": "Send message",
+      "submitting": "Sending…",
+      "success": "Thanks — we'll be in touch shortly.",
+      "genericError": "Something went wrong. Please try again."
+    }
+  },
+  "footer": {
+    "location": "Andorra · Europe",
+    "links": {
+      "industries": "Industries",
+      "howItWorks": "How It Works",
+      "terms": "Terms of Use",
+      "privacy": "Privacy Policy"
+    },
+    "rights": "All rights reserved."
+  }
+  
+  
+}
+</file>
+
+<file path="messages/es.json">
+{
+  "nav": {
+    "platform": "Plataforma",
+    "industries": "Sectores",
+    "howItWorks": "Cómo Funciona",
+    "company": "Empresa",
+    "contact": "Contacto",
+    "bookDemo": "Reservar una Demo"
+  },
+  "hero": {
+    "eyebrow": "Infraestructura de Cumplimiento",
+    "headlinePart1": "Cumplimiento normativo,",
+    "headlineHighlight": "integrado",
+    "headlinePart2": "en el negocio.",
+    "subtext": "Convertimos requisitos normativos complejos en infraestructura de software escalable para sectores regulados.",
+    "ctaPrimary": "Contáctanos",
+    "ctaSecondary": "Cómo Funciona"
+  },
+  "heroDashboard": {
+    "complianceStatus": "Estado de cumplimiento",
+    "onTrack": "Al día",
+    "controls": "Controles",
+    "evidence": "Evidencias",
+    "openRisks": "Riesgos abiertos"
+  },
+  "problem": {
+    "headline": "El cumplimiento normativo no debería vivir en hojas de cálculo.",
+    "subtext": "Las normativas son complejas. Los requisitos cambian. Las evidencias están dispersas entre sistemas. Los equipos dedican tiempo valioso a hacer seguimiento manual de controles, documentos, riesgos y obligaciones.",
+    "points": {
+      "manual": {
+        "title": "Procesos manuales",
+        "description": "Controles, políticas y revisiones gestionados a mano, una actualización de hoja de cálculo tras otra."
+      },
+      "fragmented": {
+        "title": "Evidencias fragmentadas",
+        "description": "Pruebas de cumplimiento dispersas entre herramientas, tickets, bandejas de entrada y unidades compartidas."
+      },
+      "changing": {
+        "title": "Normativas cambiantes",
+        "description": "Los requisitos cambian mientras el proceso creado para cumplirlos permanece estático."
+      },
+      "disconnected": {
+        "title": "Sistemas desconectados",
+        "description": "El cumplimiento normativo queda al margen de los sistemas donde realmente se hace el trabajo."
+      }
+    }
+  },
+  "solution": {
+    "headline": "Documentación de cumplimiento, gestionada por la plataforma.",
+    "description": "Transformamos políticas, evidencias y trámites en un único flujo de trabajo automatizado para que tu equipo dedique menos tiempo a buscar documentos y más a hacer crecer el negocio.",
+    "cta": "Habla con nosotros",
+    "live": "En vivo",
+    "complianceScore": "Puntuación de cumplimiento",
+    "paperworkByType": "Documentación por tipo",
+    "filingStatus": "Estado de tramitación",
+    "disclaimer": "Maqueta de producto mostrada con datos ilustrativos únicamente con fines demostrativos.",
+    "points": {
+      "intake": {
+        "title": "Recepción automatizada",
+        "description": "Las políticas, contratos y certificados se capturan y organizan desde el momento en que llegan."
+      },
+      "verification": {
+        "title": "Verificación continua",
+        "description": "Cada documento se verifica automáticamente contra los marcos normativos que debe cumplir."
+      },
+      "filing": {
+        "title": "Archivado listo para auditoría",
+        "description": "La documentación aprobada se archiva y gestiona por versiones, lista para presentar a cualquier auditor bajo demanda."
+      }
+    },
+    "bars": {
+      "policies": "Políticas",
+      "contracts": "Contratos",
+      "audits": "Auditorías",
+      "certs": "Certificados"
+    },
+    "segments": {
+      "approved": "Aprobado",
+      "review": "En revisión",
+      "pending": "Pendiente"
+    }
+  },
+  "architecture": {
+    "headline": "Creado una vez. Adaptado a cada sector.",
+    "subtext": "La misma infraestructura de cumplimiento se adapta a diferentes entornos normativos, ampliándose en módulos específicos de cada sector y, con el tiempo, en productos específicos de cada sector.",
+    "layerInfrastructure": "Infraestructura de Cumplimiento",
+    "coreModules": {
+      "controls": "Controles",
+      "evidence": "Evidencias",
+      "risk": "Riesgo"
+    },
+    "layerIndustryModules": "Módulos Sectoriales",
+    "industries": {
+      "hospitality": "Hostelería",
+      "logistics": "Logística",
+      "retail": "Comercio",
+      "construction": "Construcción"
+    },
+    "layerSaasProducts": "Productos SaaS",
+    "disclaimer": "Los módulos sectoriales están diseñados para dar soporte a estos sectores a medida que la plataforma se amplíe — no reflejan a los clientes actuales."
+  },
+  "dashboard": {
+    "eyebrow": "Producto",
+    "headline": "Tu centro de mando del cumplimiento.",
+    "subtext": "Controles, evidencias, riesgo y monitoreo, unificados en una sola vista operativa.",
+    "illustrativeLabel": "Datos ilustrativos de muestra",
+    "tabs": {
+      "overview": "Resumen",
+      "controls": "Controles",
+      "evidence": "Evidencias",
+      "risk": "Riesgo"
+    },
+    "complianceStatus": "Estado de cumplimiento",
+    "onTrack": "Al día",
+    "controlsLabel": "Controles",
+    "evidenceLabel": "Evidencias",
+    "evidenceCaption": "elementos recopilados",
+    "openRisksLabel": "Riesgos abiertos",
+    "openRisksCaption": "2 marcados esta semana",
+    "frameworksLabel": "Marcos normativos",
+    "coverage": "cobertura",
+    "recentActivity": "Actividad reciente",
+    "live": "En directo",
+    "activity": {
+      "evidenceVerified": { "label": "Evidencia verificada", "detail": "Revisión de accesos Q3 · automatizada", "time": "hace 2 min" },
+      "controlUpdated": { "label": "Control actualizado", "detail": "Cifrado en reposo · CC6.1", "time": "hace 18 min" },
+      "riskIdentified": { "label": "Riesgo identificado", "detail": "Alcance de acceso de proveedores · Medio", "time": "hace 41 min" },
+      "policyReviewed": { "label": "Política revisada", "detail": "Política de retención de datos · v3.2", "time": "hace 1 h" }
+    },
+    "footnote": "Este mockup de producto se muestra con datos ilustrativos únicamente con fines de demostración."
+  },
+  "integrations": {
+    "headline": "Conecta las herramientas que tus equipos ya utilizan.",
+    "cardTitle": "Sincroniza controles, evidencias y registros automáticamente.",
+    "cardSubtext": "Sin sustituir nada. Statum se conecta a los sistemas CRM, ERP y RRHH que ya utilizas.",
+    "cta": "Explora las integraciones"
+  },
+  "industries": {
+    "headline": "Infraestructura de cumplimiento para sectores regulados.",
+    "subtext": "La misma infraestructura central está diseñada para dar soporte a diversos entornos normativos a medida que la plataforma se amplíe.",
+    "ctaTalkToUs": "Habla con nosotros",
+    "moduleLabels": {
+      "controls": "Controles",
+      "evidence": "Evidencias",
+      "risk": "Riesgo",
+      "monitoring": "Monitoreo"
+    },
+    "list": {
+      "logistics": {
+        "name": "Logística",
+        "note": "Creado para dar soporte a cadenas de suministro, operaciones de transporte y gestión de flotas.",
+        "focus": ["Cumplimiento de transportistas", "Documentación de flota", "Auditorías de rutas"]
+      },
+      "construction": {
+        "name": "Construcción",
+        "note": "Diseñado para la ejecución de proyectos, contratistas, operaciones de obra y cumplimiento normativo.",
+        "focus": ["Registros de seguridad de obra", "Verificación de contratistas", "Seguimiento de permisos"]
+      },
+      "retail": {
+        "name": "Comercio",
+        "note": "Creado para dar soporte a tiendas, comercio electrónico, inventario y operaciones con clientes.",
+        "focus": ["Protección de datos", "Auditorías de proveedores", "Normativa de consumo"]
+      },
+      "hospitality": {
+        "name": "Hostelería",
+        "note": "Diseñado para hoteles, restaurantes, salas y operaciones centradas en el cliente.",
+        "focus": ["Gestión de datos de huéspedes", "Salud y seguridad", "Licencias"]
+      },
+      "tourism": {
+        "name": "Turismo",
+        "note": "Creado para dar soporte a empresas de viajes, operadores turísticos y experiencias para visitantes.",
+        "focus": ["Normativa transfronteriza", "Datos de reservas", "Licencias de operador"]
+      },
+      "other": {
+        "name": "Otros Sectores",
+        "note": "Infraestructura flexible diseñada para adaptarse a nuevos sectores y modelos de negocio.",
+        "focus": ["Conjuntos de controles personalizados", "Nuevos marcos normativos", "Normativa emergente"]
+      }
+    }
+  },
+  "howItWorks": {
+    "headline": "De la normativa a la infraestructura operativa.",
+    "subtext": "El cumplimiento normativo no es una configuración puntual. Cada ciclo entender, construir, monitorear, escalar alimenta el siguiente, de modo que la infraestructura mantiene el ritmo a medida que cambian los requisitos y las operaciones.",
+    "cta": "Más información",
+    "steps": {
+      "understand": { "title": "Entender", "description": "Traducir los requisitos normativos en controles estructurados." },
+      "build": { "title": "Construir", "description": "Convertir los controles en políticas, flujos de trabajo y procesos operativos." },
+      "monitor": { "title": "Monitorear", "description": "Hacer seguimiento continuo del cumplimiento y recopilar evidencias." },
+      "scale": { "title": "Escalar", "description": "Ampliar la misma infraestructura a nuevos requisitos, entidades y sectores." }
+    }
+  },
+    "proof": {
+  "headline": "Construido una vez. Construido para durar.",
+  "subtext": "No añadimos el cumplimiento normativo sobre software antiguo. La infraestructura —controles, evidencias, riesgo y monitoreo— se construyó primero, para que cada módulo sectorial herede el mismo rigor.",
+  "stats": {
+    "modules": { "caption": "módulos principales: controles, evidencias, riesgo y monitoreo" },
+    "frameworks": { "caption": "marcos normativos de referencia, desde ISO 27001 hasta la EU AI Act" },
+    "industries": { "caption": "sectores que la plataforma está diseñada para soportar" }
+  }
+},
+  "about": {
+    "headline": "Construyendo la infraestructura detrás de la próxima generación de negocios regulados.",
+    "subtext": "Estamos construyendo un nuevo enfoque para el cumplimiento normativo: infraestructura de software que puede adaptarse a diferentes entornos normativos, sectores y modelos de negocio. Con sede en Andorra, en el corazón de Europa.",
+    "markers": {
+      "andorra": "Creado en Andorra",
+      "europe": "Diseñado para Europa",
+      "global": "Creado para escalar globalmente"
+    }
+  },
+  "contact": {
+    "headline": "¿Listos para integrar el cumplimiento en tu negocio?",
+    "subtext": "Habla con nosotros sobre la infraestructura de cumplimiento que tu negocio necesita.",
+    "form": {
+      "name": "Nombre",
+      "namePlaceholder": "Jane Doe",
+      "email": "Correo de trabajo",
+      "emailPlaceholder": "jane@empresa.com",
+      "company": "Empresa",
+      "companyPlaceholder": "Nombre de la empresa",
+      "message": "¿Qué quieres resolver?",
+      "messagePlaceholder": "Cuéntanos un poco sobre tus necesidades de cumplimiento",
+      "submit": "Enviar mensaje",
+      "submitting": "Enviando…",
+      "success": "Gracias — nos pondremos en contacto en breve.",
+      "genericError": "Algo salió mal. Inténtalo de nuevo."
+    }
+  },
+  "footer": {
+    "location": "Andorra · Europa",
+    "links": {
+      "industries": "Sectores",
+      "howItWorks": "Cómo Funciona",
+      "terms": "Términos de Uso",
+      "privacy": "Política de Privacidad"
+    },
+    "rights": "Todos los derechos reservados."
+  }
+}
+</file>
+
+<file path="src/components/HowItWorksSection.tsx">
+"use client";
+
+import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { ArrowRight, ChevronRight } from "lucide-react";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+const stepKeys = ["understand", "build", "monitor", "scale"] as const;
+
+// Compass position for each stage label around the loop, clockwise from the top.
+const positions: Record<(typeof stepKeys)[number], string> = {
+  understand: "top-0 left-1/2 -translate-x-1/2 -translate-y-1/2",
+  build: "top-1/2 right-0 translate-x-1/2 -translate-y-1/2",
+  monitor: "bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2",
+  scale: "top-1/2 left-0 -translate-x-1/2 -translate-y-1/2",
+};
+
+// ChevronRight defaults to pointing East (0deg).
+// To point clockwise along the circle's tangents at these 45-degree corner points:
+const arrows = [
+  { top: "17.5%", left: "82.5%", rotate: "rotate-[45deg]" },   // NE -> pointing SE (down-right)
+  { top: "82.5%", left: "82.5%", rotate: "rotate-[135deg]" },  // SE -> pointing SW (down-left)
+  { top: "82.5%", left: "17.5%", rotate: "rotate-[225deg]" },  // SW -> pointing NW (up-left)
+  { top: "17.5%", left: "17.5%", rotate: "rotate-[315deg]" },  // NW -> pointing NE (up-right)
+];
+
+export function HowItWorksSection() {
+  const t = useTranslations("howItWorks");
+
+  return (
+    <section id="how-it-works" className="relative overflow-hidden py-24 lg:py-32 bg-white">
+      <div className="mx-auto max-w-[1200px] px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-12 items-center">
+          
+          {/* Left: Copy */}
+          <div className="max-w-[440px]">
+            
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.05, ease }}
+              className="text-balance text-[32px] sm:text-[40px] leading-[1.12] font-semibold tracking-[-0.015em] text-navy mb-5"
+            >
+              {t("headline")}
+            </motion.h2>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.1, ease }}
+              className="text-[15.5px] leading-[1.7] text-navy/60 mb-8"
+            >
+             {t("subtext")}
+            </motion.p>
+            
+            <motion.a
+              href="#contact"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.15, ease }}
+              className="inline-flex items-center gap-2 rounded-md bg-navy px-6 py-3 text-[14.5px] font-medium text-white transition-colors hover:bg-navy/90"
+            >
+              {t("cta")}
+              <ArrowRight className="h-4 w-4" />
+            </motion.a>
+          </div>
+
+          {/* Right: Circular Process Diagram */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease }}
+            className="relative mx-auto my-12 w-full max-w-[340px] aspect-square"
+          >
+            {/* Dashed Track */}
+            <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible">
+              <circle 
+                cx="50" 
+                cy="50" 
+                r="46" 
+                fill="none" 
+                stroke="rgba(7,27,58,0.12)" 
+                strokeWidth="1" 
+                strokeDasharray="2 4" 
+              />
+            </svg>
+
+            {/* Directional Arrows */}
+            {arrows.map((a, i) => (
+              <div
+                key={`arrow-${i}`}
+                className={`absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-white rounded-full ${a.rotate}`}
+                style={{ top: a.top, left: a.left }}
+              >
+                <ChevronRight className="h-4 w-4 text-navy/40" />
+              </div>
+            ))}
+
+            {/* Center Mark / Logo Hub (Restored Scale & Overflow logic) */}
+            <div className="absolute top-1/2 left-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-navy/10 bg-pale overflow-hidden shadow-[0_0_40px_-10px_rgba(0,0,0,0.08)] z-10">
+              <img
+                src="/logo.png"
+                alt="Logo"
+                className="h-10 w-auto object-contain scale-[2.5]" 
+              />
+            </div>
+
+            {/* Stage Labels (Restored original typography, removed dots) */}
+            {stepKeys.map((key, i) => (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.4, delay: 0.3 + i * 0.1, ease }}
+                className={`absolute z-20 flex items-center justify-center whitespace-nowrap rounded-full border border-slate-100 bg-white px-5 py-2 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] ${positions[key]}`}
+              >
+                <span className="text-[12.5px] font-semibold tracking-tight text-navy">
+                  {t(`steps.${key}.title`)}
+                </span>
+              </motion.div>
+            ))}
+          </motion.div>
+          
+        </div>
+      </div>
+    </section>
+  );
+}
+</file>
+
 <file path="src/components/ProblemSection.tsx">
 "use client";
 
@@ -3151,131 +3535,6 @@ export function ProblemSection() {
       </div>
     </section>
   );
-}
-</file>
-
-<file path="src/i18n/routing.ts">
-import { defineRouting } from "next-intl/routing";
-
-export const routing = defineRouting({
-  locales: ["en", "ca", "es"],
-  defaultLocale: "en",
-  localePrefix: "as-needed",
-});
-</file>
-
-<file path="eslint.config.mjs">
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
-
-const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
-]);
-
-export default eslintConfig;
-</file>
-
-<file path="next.config.ts">
-import type { NextConfig } from "next";
-import createNextIntlPlugin from "next-intl/plugin";
-
-const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
-
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-export default withNextIntl(nextConfig);
-</file>
-
-<file path="package.json">
-{
-  "name": "compliance-site",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "framer-motion": "^13.0.0",
-    "geist": "^1.7.2",
-    "lucide-react": "^1.31.0",
-    "next": "16.3.0",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "next-intl": "^4.0.0"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.0",
-    "playwright": "^1.62.1",
-    "tailwindcss": "^4",
-    "typescript": "^5"
-  }
-}
-</file>
-
-<file path="postcss.config.mjs">
-const config = {
-  plugins: {
-    "@tailwindcss/postcss": {},
-  },
-};
-
-export default config;
-</file>
-
-<file path="tsconfig.json">
-{
-  "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
-  ],
-  "exclude": ["node_modules"]
 }
 </file>
 
@@ -3555,143 +3814,6 @@ export function Hero() {
 }
 </file>
 
-<file path="src/components/HowItWorksSection.tsx">
-"use client";
-
-import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import { ArrowRight, ChevronRight } from "lucide-react";
-
-const ease = [0.16, 1, 0.3, 1] as const;
-
-const stepKeys = ["understand", "build", "monitor", "scale"] as const;
-
-// Compass position for each stage label around the loop, clockwise from the top.
-const positions: Record<(typeof stepKeys)[number], string> = {
-  understand: "top-0 left-1/2 -translate-x-1/2 -translate-y-1/2",
-  build: "top-1/2 right-0 translate-x-1/2 -translate-y-1/2",
-  monitor: "bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2",
-  scale: "top-1/2 left-0 -translate-x-1/2 -translate-y-1/2",
-};
-
-// ChevronRight defaults to pointing East (0deg).
-// To point clockwise along the circle's tangents at these 45-degree corner points:
-const arrows = [
-  { top: "17.5%", left: "82.5%", rotate: "rotate-[45deg]" },   // NE -> pointing SE (down-right)
-  { top: "82.5%", left: "82.5%", rotate: "rotate-[135deg]" },  // SE -> pointing SW (down-left)
-  { top: "82.5%", left: "17.5%", rotate: "rotate-[225deg]" },  // SW -> pointing NW (up-left)
-  { top: "17.5%", left: "17.5%", rotate: "rotate-[315deg]" },  // NW -> pointing NE (up-right)
-];
-
-export function HowItWorksSection() {
-  const t = useTranslations("howItWorks");
-
-  return (
-    <section id="how-it-works" className="relative overflow-hidden py-24 lg:py-32 bg-white">
-      <div className="mx-auto max-w-[1200px] px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-12 items-center">
-          
-          {/* Left: Copy */}
-          <div className="max-w-[440px]">
-            
-            <motion.h2
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, delay: 0.05, ease }}
-              className="text-balance text-[32px] sm:text-[40px] leading-[1.12] font-semibold tracking-[-0.015em] text-navy mb-5"
-            >
-              {t("headline")}
-            </motion.h2>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, delay: 0.1, ease }}
-              className="text-[15.5px] leading-[1.7] text-navy/60 mb-8"
-            >
-             {t("subtext")}
-            </motion.p>
-            
-            <motion.a
-              href="#contact"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, delay: 0.15, ease }}
-              className="inline-flex items-center gap-2 rounded-md bg-navy px-6 py-3 text-[14.5px] font-medium text-white transition-colors hover:bg-navy/90"
-            >
-              {t("cta")}
-              <ArrowRight className="h-4 w-4" />
-            </motion.a>
-          </div>
-
-          {/* Right: Circular Process Diagram */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, ease }}
-            className="relative mx-auto my-12 w-full max-w-[340px] aspect-square"
-          >
-            {/* Dashed Track */}
-            <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible">
-              <circle 
-                cx="50" 
-                cy="50" 
-                r="46" 
-                fill="none" 
-                stroke="rgba(7,27,58,0.12)" 
-                strokeWidth="1" 
-                strokeDasharray="2 4" 
-              />
-            </svg>
-
-            {/* Directional Arrows */}
-            {arrows.map((a, i) => (
-              <div
-                key={`arrow-${i}`}
-                className={`absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-white rounded-full ${a.rotate}`}
-                style={{ top: a.top, left: a.left }}
-              >
-                <ChevronRight className="h-4 w-4 text-navy/40" />
-              </div>
-            ))}
-
-            {/* Center Mark / Logo Hub (Restored Scale & Overflow logic) */}
-            <div className="absolute top-1/2 left-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-navy/10 bg-pale overflow-hidden shadow-[0_0_40px_-10px_rgba(0,0,0,0.08)] z-10">
-              <img
-                src="/logo.png"
-                alt="Logo"
-                className="h-10 w-auto object-contain scale-[2.5]" 
-              />
-            </div>
-
-            {/* Stage Labels (Restored original typography, removed dots) */}
-            {stepKeys.map((key, i) => (
-              <motion.div
-                key={key}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.4, delay: 0.3 + i * 0.1, ease }}
-                className={`absolute z-20 flex items-center justify-center whitespace-nowrap rounded-full border border-slate-100 bg-white px-5 py-2 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] ${positions[key]}`}
-              >
-                <span className="text-[12.5px] font-semibold tracking-tight text-navy">
-                  {t(`steps.${key}.title`)}
-                </span>
-              </motion.div>
-            ))}
-          </motion.div>
-          
-        </div>
-      </div>
-    </section>
-  );
-}
-</file>
-
 <file path="src/components/Navigation.tsx">
 "use client";
 
@@ -3885,36 +4007,13 @@ return (
 
 import { motion } from "framer-motion";
 import { FileCheck2, ShieldCheck, ScanSearch } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { AnimatedNumber } from "./AnimatedNumber";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const points = [
-  {
-    key: "intake",
-    icon: FileCheck2,
-    title: "Automated intake",
-    description: "Policies, contracts and certificates are captured and organized the moment they land.",
-  },
-  {
-    key: "verification",
-    icon: ScanSearch,
-    title: "Continuous verification",
-    description: "Every document is checked against the frameworks it needs to satisfy, automatically.",
-  },
-  {
-    key: "filing",
-    icon: ShieldCheck,
-    title: "Audit-ready filing",
-    description: "Approved paperwork is filed and versioned, ready to hand to any auditor on demand.",
-  },
-];
-
 /* Wavy trend line, drawn on scroll-into-view */
 function TrendChart() {
-  const path =
-    "M2,44 C22,44 26,14 46,14 C66,14 70,38 90,38 C110,38 114,10 134,10 C154,10 158,30 178,26 C198,22 202,6 218,6";
-
   return (
     <div className="relative h-[92px] w-full">
       <svg viewBox="0 0 220 60" className="h-full w-full overflow-visible" preserveAspectRatio="none">
@@ -3930,7 +4029,7 @@ function TrendChart() {
         </defs>
 
         <motion.path
-          d={`${path} L218,60 L2,60 Z`}
+          d="M2,44 C22,44 26,14 46,14 C66,14 70,38 90,38 C110,38 114,10 134,10 C154,10 158,30 178,26 C198,22 202,6 218,6 L218,60 L2,60 Z"
           fill="url(#solution-area-grad)"
           stroke="none"
           initial={{ opacity: 0 }}
@@ -3940,7 +4039,7 @@ function TrendChart() {
         />
 
         <motion.path
-          d={path}
+          d="M2,44 C22,44 26,14 46,14 C66,14 70,38 90,38 C110,38 114,10 134,10 C154,10 158,30 178,26 C198,22 202,6 218,6"
           fill="none"
           stroke="url(#solution-line-grad)"
           strokeWidth="2"
@@ -3983,11 +4082,12 @@ function TrendChart() {
 
 /* Small animated bar chart */
 function PaperworkBars() {
+  const t = useTranslations("solution.bars");
   const bars = [
-    { key: "policies", label: "Policies", height: 55 },
-    { key: "contracts", label: "Contracts", height: 88 },
-    { key: "audits", label: "Audits", height: 40 },
-    { key: "certificates", label: "Certs", height: 68 },
+    { key: "policies", label: t("policies"), height: 55 },
+    { key: "contracts", label: t("contracts"), height: 88 },
+    { key: "audits", label: t("audits"), height: 40 },
+    { key: "certificates", label: t("certs"), height: 68 },
   ];
 
   return (
@@ -4014,12 +4114,13 @@ function PaperworkBars() {
 
 /* Filing-status donut, segments drawn as stacked dasharray strokes */
 function FilingDonut() {
+  const t = useTranslations("solution.segments");
   const radius = 26;
   const circumference = 2 * Math.PI * radius;
   const segments = [
-    { key: "approved", label: "Approved", value: 62, color: "#18C6D1" },
-    { key: "review", label: "In review", value: 26, color: "#2451B8" },
-    { key: "pending", label: "Pending", value: 12, color: "rgba(7,27,58,0.18)" },
+    { key: "approved", label: t("approved"), value: 62, color: "#18C6D1" },
+    { key: "review", label: t("review"), value: 26, color: "#2451B8" },
+    { key: "pending", label: t("pending"), value: 12, color: "rgba(7,27,58,0.18)" },
   ];
 
   let offsetAcc = 0;
@@ -4078,6 +4179,29 @@ function FilingDonut() {
 }
 
 export function SolutionSection() {
+  const t = useTranslations("solution");
+
+  const points = [
+    {
+      key: "intake",
+      icon: FileCheck2,
+      title: t("points.intake.title"),
+      description: t("points.intake.description"),
+    },
+    {
+      key: "verification",
+      icon: ScanSearch,
+      title: t("points.verification.title"),
+      description: t("points.verification.description"),
+    },
+    {
+      key: "filing",
+      icon: ShieldCheck,
+      title: t("points.filing.title"),
+      description: t("points.filing.description"),
+    },
+  ];
+
   return (
     <section className="relative py-24 lg:py-32 bg-white overflow-hidden">
       {/* Ambient background shapes */}
@@ -4106,8 +4230,6 @@ export function SolutionSection() {
         <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
           {/* Copy */}
           <div>
-
-
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -4115,7 +4237,7 @@ export function SolutionSection() {
               transition={{ duration: 0.6, delay: 0.05, ease }}
               className="text-balance text-[32px] sm:text-[42px] leading-[1.14] font-semibold tracking-[-0.015em] text-navy mb-6"
             >
-              Compliance paperwork, handled by the platform.
+              {t("headline")}
             </motion.h2>
 
             <motion.p
@@ -4125,7 +4247,7 @@ export function SolutionSection() {
               transition={{ duration: 0.6, delay: 0.1, ease }}
               className="text-[16.5px] leading-[1.75] text-navy/60 max-w-[480px] mb-10"
             >
-              We turn policies, evidence and filings into a single automated workflow so your team spends less time chasing documents and more time running the business.
+              {t("description")}
             </motion.p>
 
             <div className="space-y-5 mb-10">
@@ -4167,7 +4289,7 @@ export function SolutionSection() {
                 href="#contact"
                 className="inline-flex items-center justify-center rounded-lg bg-navy px-5 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-navy/90"
               >
-                Talk to us
+                {t("cta")}
               </a>
             </motion.div>
           </div>
@@ -4204,7 +4326,7 @@ export function SolutionSection() {
                 <div className="rounded-xl border border-navy/10 p-4 sm:p-5">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[12px] font-medium text-navy/50">
-                      Compliance score
+                      {t("complianceScore")}
                     </span>
                     <span className="flex items-center gap-1.5">
                       <motion.span
@@ -4212,7 +4334,7 @@ export function SolutionSection() {
                         animate={{ opacity: [0.4, 1, 0.4] }}
                         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       />
-                      <span className="text-[10.5px] text-navy/40">Live</span>
+                      <span className="text-[10.5px] text-navy/40">{t("live")}</span>
                     </span>
                   </div>
                   <TrendChart />
@@ -4222,13 +4344,13 @@ export function SolutionSection() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="rounded-xl border border-navy/10 p-4 sm:p-5">
                     <span className="text-[12px] font-medium text-navy/50 block mb-4">
-                      Paperwork by type
+                      {t("paperworkByType")}
                     </span>
                     <PaperworkBars />
                   </div>
                   <div className="rounded-xl border border-navy/10 p-4 sm:p-5 flex flex-col justify-between">
                     <span className="text-[12px] font-medium text-navy/50 block mb-4">
-                      Filing status
+                      {t("filingStatus")}
                     </span>
                     <FilingDonut />
                   </div>
@@ -4237,7 +4359,7 @@ export function SolutionSection() {
             </div>
 
             <p className="mt-6 text-center text-[12px] text-navy/35">
-              Product mockup shown with illustrative data for demonstration purposes only.
+              {t("disclaimer")}
             </p>
           </motion.div>
         </div>
