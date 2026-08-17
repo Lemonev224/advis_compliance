@@ -13,7 +13,8 @@
     "headlineHighlight": "integrat",
     "headlinePart2": "al negoci.",
     "subtext": "Convertim requisits normatius complexos en infraestructura de programari escalable per a sectors regulats.",
-    "ctaPrimary": "Contacta amb Nosaltres"
+    "ctaPrimary": "Contacta amb Nosaltres",
+    "ctaSecondary": "Com Funciona"
   },
   "heroDashboard": {
     "complianceStatus": "Estat de compliment",
@@ -42,6 +43,41 @@
         "title": "Sistemes desconnectats",
         "description": "El compliment normatiu queda al marge dels sistemes on realment es fa la feina."
       }
+    }
+  },
+  "solution": {
+    "headline": "Documentació de compliment, gestionada per la plataforma.",
+    "description": "Transformem polítiques, evidències i tràmits en un únic flux de treball automatitzat perquè el teu equip dediqui menys temps a cercar documents i més a fer créixer el negoci.",
+    "cta": "Parla amb nosaltres",
+    "live": "En directe",
+    "complianceScore": "Puntuació de compliment",
+    "paperworkByType": "Documentació per tipus",
+    "filingStatus": "Estat de tramitació",
+    "disclaimer": "Maqueta de producte mostrada amb dades il·lustratives només amb fins demostratius.",
+    "points": {
+      "intake": {
+        "title": "Recepció automatitzada",
+        "description": "Les polítiques, contractes i certificats es capturen i organitzen des del moment en què arriben."
+      },
+      "verification": {
+        "title": "Verificació contínua",
+        "description": "Cada document es verifica automàticament en relació amb els marcs normatius que ha de complir."
+      },
+      "filing": {
+        "title": "Arxivat a punt per a auditories",
+        "description": "La documentació aprovada s'arxiva i es gestiona per versions, a punt per lliurar a qualsevol auditor quan calgui."
+      }
+    },
+    "bars": {
+      "policies": "Polítiques",
+      "contracts": "Contractes",
+      "audits": "Auditories",
+      "certs": "Certificats"
+    },
+    "segments": {
+      "approved": "Aprovat",
+      "review": "En revisió",
+      "pending": "Pendent"
     }
   },
   "architecture": {
@@ -93,6 +129,12 @@
     },
     "footnote": "Aquest mockup de producte es mostra amb dades il·lustratives només amb finalitats de demostració."
   },
+  "integrations": {
+    "headline": "Connecta les eines que els teus equips ja utilitzen.",
+    "cardTitle": "Sincronitza controls, evidències i registres automàticament.",
+    "cardSubtext": "Sense substituir res. Statum es connecta als sistemes CRM, ERP i RRHH que ja utilitzes.",
+    "cta": "Explora les integracions"
+  },
   "industries": {
     "headline": "Infraestructura de compliment per a sectors regulats.",
     "subtext": "La mateixa infraestructura central està dissenyada per donar suport a diversos entorns normatius a mesura que la plataforma s'ampliï.",
@@ -138,7 +180,7 @@
   },
   "howItWorks": {
     "headline": "De la normativa a la infraestructura operativa.",
-    "subtext": "El compliment normatiu no és una configuració puntual. Cada cicle —entendre, construir, monitorar, escalar— alimenta el següent, de manera que la infraestructura manté el ritme a mesura que canvien els requisits i les operacions.",
+    "subtext": "El compliment normatiu no és una configuració puntual. Cada cicle entendre, construir, monitorar, escalar alimenta el següent, de manera que la infraestructura manté el ritme a mesura que canvien els requisits i les operacions.",
     "cta": "Més informació",
     "steps": {
       "understand": { "title": "Entendre", "description": "Traduir els requisits normatius en controls estructurats." },

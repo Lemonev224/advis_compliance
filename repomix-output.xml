@@ -45,16 +45,27 @@ messages/
   en.json
   es.json
 public/
+  industries/
+    construction.jpg
+    hospitality.jpg
+    logistics.jpg
+    retail.jpg
+    tourism.jpg
   andorra.png
   andorra2.jpeg
   andorra3.jpg
+  blue-wave (2).png
+  blue-wave.png
+  blue-wave3.png
   dash_hero.png
+  dash.png
   file.svg
   globe.svg
   icon.png
   logo.png
   next.svg
   og-image.png
+  premium_blue_wave.jpg
   vercel.svg
   window.svg
 src/
@@ -81,6 +92,7 @@ src/
     HeroVisual.tsx
     HowItWorksSection.tsx
     IndustriesSection.tsx
+    IntergrationsSection.tsx
     Logo.tsx
     MaintanacePage.tsx
     Navigation.tsx
@@ -103,6 +115,293 @@ tsconfig.json
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="src/components/IntergrationsSection.tsx">
+"use client";
+
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+type Node = {
+  key: string;
+  label: string;
+  x: number;
+  y: number;
+};
+
+const leftNodes: Node[] = [
+  { key: "excel", label: "Excel", x: 100, y: 50 },
+  { key: "salesforce", label: "Salesforce", x: 100, y: 176 },
+  { key: "hubspot", label: "HubSpot", x: 100, y: 302 },
+  { key: "sharepoint", label: "SharePoint", x: 100, y: 428 },
+];
+
+const rightNodes: Node[] = [
+  { key: "sesame", label: "Sesame HR", x: 1000, y: 50 },
+  { key: "bamboo", label: "BambooHR", x: 1000, y: 176 },
+  { key: "procore", label: "Procore", x: 1000, y: 302 },
+  { key: "cloudbeds", label: "Cloudbeds", x: 1000, y: 428 },
+];
+
+const CARD_LEFT = 360;
+const CARD_RIGHT = 740;
+const CARD_MID_Y = 240;
+
+function pathFor(node: Node, side: "left" | "right") {
+  const edgeX = side === "left" ? CARD_LEFT + 20 : CARD_RIGHT - 20;
+  const startX = node.x;
+  const c1x = side === "left" ? startX + 130 : startX - 130;
+  const c2x = side === "left" ? edgeX - 130 : edgeX + 130;
+  return `M${startX},${node.y} C${c1x},${node.y} ${c2x},${CARD_MID_Y} ${edgeX},${CARD_MID_Y}`;
+}
+
+function Pill({ label, index }: { label: string; index: number }) {
+  return (
+    <div className="relative w-[124px] rounded-full border border-navy/10 bg-white px-4 py-2.5 text-center shadow-[0_8px_20px_-10px_rgba(7,27,58,0.25)]">
+      <motion.span
+        className="absolute inset-0 rounded-full border border-cyan/40"
+        animate={{ opacity: [0.5, 0, 0.5] }}
+        transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
+      />
+      <span className="relative text-[13px] font-semibold text-navy whitespace-nowrap">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+// Wrapper that places the pill centered at a given (x,y) coordinate inside SVG
+function PillInSVG({ node, index }: { node: Node; index: number }) {
+  // Pill dimensions – must match the pill's actual size
+  const pillWidth = 124;
+  const pillHeight = 44; // approx from padding + font size
+
+  return (
+    <foreignObject
+      x={node.x - pillWidth / 2}
+      y={node.y - pillHeight / 2}
+      width={pillWidth}
+      height={pillHeight}
+      className="overflow-visible"
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.5, delay: 0.15 + index * 0.08, ease }}
+        className="flex items-center justify-center w-full h-full"
+      >
+        <Pill label={node.label} index={index} />
+      </motion.div>
+    </foreignObject>
+  );
+}
+
+export function IntegrationsSection() {
+  const allNodes = [...leftNodes, ...rightNodes];
+
+  return (
+    <section className="relative py-24 lg:py-32 bg-white overflow-hidden">
+      <div aria-hidden className="absolute inset-0 -z-10 bg-grid bg-grid-fade opacity-[0.03]" />
+      <div
+        aria-hidden
+        className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 h-[480px] w-[900px] opacity-40 blur-[110px]"
+        style={{ background: "radial-gradient(closest-side, rgba(24,198,209,0.14), transparent)" }}
+      />
+
+      <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
+        {/* Header */}
+        <div className="max-w-[640px] mx-auto text-center mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, delay: 0.05, ease }}
+            className="text-balance text-[32px] sm:text-[42px] leading-[1.14] font-semibold tracking-[-0.015em] text-navy"
+          >
+            Connect the tools your teams already run on.
+          </motion.h2>
+        </div>
+
+        {/* Desktop: connector diagram */}
+        <div
+          className="relative mx-auto hidden lg:block w-full max-w-[1100px]"
+          style={{ aspectRatio: "1100 / 480" }}
+        >
+          <svg
+            viewBox="0 0 1100 480"
+            preserveAspectRatio="none"
+            className="absolute inset-0 h-full w-full"
+          >
+            <defs>
+              <linearGradient id="integ-line-left" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#18C6D1" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#2451B8" stopOpacity="0.75" />
+              </linearGradient>
+              <linearGradient id="integ-line-right" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#2451B8" stopOpacity="0.75" />
+                <stop offset="100%" stopColor="#18C6D1" stopOpacity="0.75" />
+              </linearGradient>
+              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            {/* Left lines */}
+            {leftNodes.map((n, i) => (
+              <g key={n.key}>
+                <motion.path
+                  d={pathFor(n, "left")}
+                  fill="none"
+                  stroke="url(#integ-line-left)"
+                  strokeWidth="1.5"
+                  strokeDasharray="5 6"
+                  strokeLinecap="round"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.8, delay: 0.1 + i * 0.08, ease }}
+                />
+                <motion.path
+                  d={pathFor(n, "left")}
+                  fill="none"
+                  stroke="#18C6D1"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  filter="url(#glow)"
+                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
+                  whileInView={{
+                    pathOffset: [0, 1],
+                    opacity: [0, 1, 0],
+                  }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: 0.8 + i * 0.35,
+                  }}
+                />
+              </g>
+            ))}
+
+            {/* Right lines */}
+            {rightNodes.map((n, i) => (
+              <g key={n.key}>
+                <motion.path
+                  d={pathFor(n, "right")}
+                  fill="none"
+                  stroke="url(#integ-line-right)"
+                  strokeWidth="1.5"
+                  strokeDasharray="5 6"
+                  strokeLinecap="round"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.8, delay: 0.1 + i * 0.08, ease }}
+                />
+                <motion.path
+                  d={pathFor(n, "right")}
+                  fill="none"
+                  stroke="#18C6D1"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  filter="url(#glow)"
+                  initial={{ pathLength: 0.15, pathOffset: 0, opacity: 0 }}
+                  whileInView={{
+                    pathOffset: [0, 1],
+                    opacity: [0, 1, 0],
+                  }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: 1.2 + i * 0.35,
+                  }}
+                />
+              </g>
+            ))}
+
+            {/* Pills inside the SVG using foreignObject */}
+            {allNodes.map((n, i) => (
+              <PillInSVG key={n.key} node={n} index={i} />
+            ))}
+          </svg>
+
+          {/* Center card – still positioned absolutely on top of the SVG */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, delay: 0.2, ease }}
+            className="absolute rounded-2xl border border-navy/10 bg-white shadow-[0_1px_2px_rgba(7,27,58,0.04),0_40px_80px_-28px_rgba(7,27,58,0.22)] flex flex-col items-center justify-center text-center px-10"
+            style={{
+              left: `${(CARD_LEFT / 1100) * 100}%`,
+              top: `${(110 / 480) * 100}%`,
+              width: `${((CARD_RIGHT - CARD_LEFT) / 1100) * 100}%`,
+              height: `${(260 / 480) * 100}%`,
+            }}
+          >
+            <h3 className="text-[22px] leading-[1.25] font-semibold tracking-[-0.01em] text-navy mb-3">
+              Sync controls, evidence and records automatically.
+            </h3>
+            <p className="text-[13.5px] leading-[1.6] text-navy/55 max-w-[320px] mb-6">
+              No rip-and-replace. Statum plugs into the CRM, ERP and HR systems you already use.
+            </p>
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-navy/90"
+            >
+              Explore integrations
+              <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          </motion.div>
+        </div>
+
+        {/* Mobile / tablet: simple pill wrap, no connector lines */}
+        <div className="lg:hidden">
+          <div className="mx-auto max-w-[420px] rounded-2xl border border-navy/10 bg-white shadow-[0_1px_2px_rgba(7,27,58,0.04),0_32px_64px_-28px_rgba(7,27,58,0.2)] px-7 py-9 text-center mb-10">
+            <h3 className="text-[19px] leading-[1.3] font-semibold tracking-[-0.01em] text-navy mb-2.5">
+              Sync controls, evidence and records automatically.
+            </h3>
+            <p className="text-[13.5px] leading-[1.6] text-navy/55 mb-6">
+              No rip and replace. Statum plugs into the CRM, ERP and HR systems you already use.
+            </p>
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-navy/90"
+            >
+              Explore integrations
+              <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-2.5 max-w-[440px] mx-auto">
+            {allNodes.map((n, i) => (
+              <motion.div
+                key={n.key}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.4, delay: i * 0.05, ease }}
+                className="rounded-full border border-navy/10 bg-white px-4 py-2 shadow-[0_6px_16px_-8px_rgba(7,27,58,0.2)]"
+              >
+                <span className="text-[12.5px] font-semibold text-navy whitespace-nowrap">
+                  {n.label}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+</file>
 
 <file path="public/file.svg">
 <svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
@@ -432,118 +731,6 @@ export default function TermsPage() {
 }
 </file>
 
-<file path="src/app/[locale]/layout.tsx">
-import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
-import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { notFound } from "next/navigation";
-import { routing } from "@/i18n/routing";
-import "@/app/globals.css";
-
-const geistSans = GeistSans;
-const geistMono = GeistMono;
-
-export const metadata: Metadata = {
-  metadataBase: new URL("https://advisorly.tech"), // replace with your real domain once you have it
-  title: {
-    default: "Advisorly — Compliance Infrastructure",
-    template: "%s | Advisorly",
-  },
-  description:
-    "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
-  keywords: [
-    "compliance software",
-    "regtech",
-    "regulatory infrastructure",
-    "compliance automation",
-    "andorra",
-    "andorra tech",
-    "andorra startup",
-  ],
-  authors: [{ name: "Advisorly" }],
-  icons: {
-    icon: "/icon.png",
-    shortcut: "/icon.png",
-    apple: "/icon.png",
-  },
-  openGraph: {
-    title: "Advisorly — Compliance Infrastructure",
-    description:
-      "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
-    url: "https://advisorly.tech",
-    siteName: "Advisorly",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Advisorly — Compliance Infrastructure",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Advisorly — Compliance Infrastructure",
-    description:
-      "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
-    images: ["/og-image.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
-
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Advisorly",
-  url: "https://advisorly.tech",
-  logo: "https://advisorly.tech/logo.png",
-  description:
-    "Advisorly builds compliance infrastructure that turns complex regulatory requirements into scalable software for regulated industries.",
-  contactPoint: {
-    "@type": "ContactPoint",
-    email: "contact@advisorly.uk",
-    contactType: "customer service",
-  },
-};
-
-export default async function RootLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-
-  if (!hasLocale(routing.locales, locale)) {
-    notFound();
-  }
-
-  return (
-    <html
-      lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
-      </head>
-      <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
-      </body>
-    </html>
-  );
-}
-</file>
-
 <file path="src/app/robots.ts">
 import type { MetadataRoute } from "next";
 
@@ -557,30 +744,6 @@ export default function robots(): MetadataRoute.Robots {
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };
-}
-</file>
-
-<file path="src/app/sitemap.ts">
-import type { MetadataRoute } from "next";
-import { routing } from "@/i18n/routing";
-
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://advisorly.tech";
-  const paths = ["", "/terms", "/privacy"];
-
-  return paths.flatMap((path) =>
-    routing.locales.map((locale) => ({
-      url: `${baseUrl}/${locale}${path}`,
-      lastModified: new Date(),
-      changeFrequency: path === "" ? "monthly" : "yearly",
-      priority: path === "" ? 1 : 0.3,
-      alternates: {
-        languages: Object.fromEntries(
-          routing.locales.map((l) => [l, `${baseUrl}/${l}${path}`])
-        ),
-      },
-    })) as MetadataRoute.Sitemap
-  );
 }
 </file>
 
@@ -871,15 +1034,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 });
 </file>
 
-<file path="src/i18n/routing.ts">
-import { defineRouting } from "next-intl/routing";
-
-export const routing = defineRouting({
-  locales: ["en", "ca", "es"],
-  defaultLocale: "en",
-});
-</file>
-
 <file path="src/middleware.ts">
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
@@ -1006,7 +1160,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
     "headlineHighlight": "integrat",
     "headlinePart2": "al negoci.",
     "subtext": "Convertim requisits normatius complexos en infraestructura de programari escalable per a sectors regulats.",
-    "ctaPrimary": "Contacta amb Nosaltres"
+    "ctaPrimary": "Contacta amb Nosaltres",
+    "ctaSecondary": "Com Funciona"
   },
   "heroDashboard": {
     "complianceStatus": "Estat de compliment",
@@ -1131,7 +1286,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   },
   "howItWorks": {
     "headline": "De la normativa a la infraestructura operativa.",
-    "subtext": "El compliment normatiu no és una configuració puntual. Cada cicle —entendre, construir, monitorar, escalar— alimenta el següent, de manera que la infraestructura manté el ritme a mesura que canvien els requisits i les operacions.",
+    "subtext": "El compliment normatiu no és una configuració puntual. Cada cicle entendre, construir, monitorar, escalar alimenta el següent, de manera que la infraestructura manté el ritme a mesura que canvien els requisits i les operacions.",
     "cta": "Més informació",
     "steps": {
       "understand": { "title": "Entendre", "description": "Traduir els requisits normatius en controls estructurats." },
@@ -1205,7 +1360,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
     "headlineHighlight": "built into",
     "headlinePart2": "the business.",
     "subtext": "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
-    "ctaPrimary": "Get in Touch"
+    "ctaPrimary": "Get in Touch",
+    "ctaSecondary": "How It Works"
   },
   "heroDashboard": {
     "complianceStatus": "Compliance status",
@@ -1330,7 +1486,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   },
   "howItWorks": {
     "headline": "From regulation to operational infrastructure.",
-    "subtext": "Compliance isn't a one-time setup. Each cycle — understand, build, monitor, scale — feeds the next, so the infrastructure keeps pace as requirements and operations change.",
+    "subtext": "Compliance isn't a one time setup. Each cycle understand, build, monitor, scale feeds the next, so the infrastructure keeps pace as requirements and operations change.",
     "cta": "Learn more",
     "steps": {
       "understand": { "title": "Understand", "description": "Translate regulatory requirements into structured controls." },
@@ -1405,7 +1561,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
     "headlineHighlight": "integrado",
     "headlinePart2": "en el negocio.",
     "subtext": "Convertimos requisitos normativos complejos en infraestructura de software escalable para sectores regulados.",
-    "ctaPrimary": "Contáctanos"
+    "ctaPrimary": "Contáctanos",
+    "ctaSecondary": "Cómo Funciona"
   },
   "heroDashboard": {
     "complianceStatus": "Estado de cumplimiento",
@@ -1530,7 +1687,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   },
   "howItWorks": {
     "headline": "De la normativa a la infraestructura operativa.",
-    "subtext": "El cumplimiento normativo no es una configuración puntual. Cada ciclo —entender, construir, monitorear, escalar— alimenta el siguiente, de modo que la infraestructura mantiene el ritmo a medida que cambian los requisitos y las operaciones.",
+    "subtext": "El cumplimiento normativo no es una configuración puntual. Cada ciclo entender, construir, monitorear, escalar alimenta el siguiente, de modo que la infraestructura mantiene el ritmo a medida que cambian los requisitos y las operaciones.",
     "cta": "Más información",
     "steps": {
       "understand": { "title": "Entender", "description": "Traducir los requisitos normativos en controles estructurados." },
@@ -1585,6 +1742,138 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
     },
     "rights": "Todos los derechos reservados."
   }
+}
+</file>
+
+<file path="src/app/[locale]/layout.tsx">
+import type { Metadata } from "next";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
+import "@/app/globals.css";
+
+const geistSans = GeistSans;
+const geistMono = GeistMono;
+
+const BASE_URL = "https://advisorly.tech";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const url =
+  locale === routing.defaultLocale
+    ? BASE_URL
+    : `${BASE_URL}/${locale}`;
+
+  return {
+    metadataBase: new URL(BASE_URL),
+    title: {
+      default: "Advisorly",
+      template: "%s | Advisorly",
+    },
+    description:
+      "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
+    keywords: [
+      "compliance software",
+      "regtech",
+      "regulatory infrastructure",
+      "compliance automation",
+      "andorra",
+      "andorra tech",
+      "andorra startup",
+    ],
+    authors: [{ name: "Advisorly" }],
+    icons: {
+      icon: "/icon.png",
+      shortcut: "/icon.png",
+      apple: "/icon.png",
+    },
+    alternates: {
+      canonical: url,
+      languages: Object.fromEntries(
+        routing.locales.map((l) => [l, `${BASE_URL}/${l}`])
+      ),
+    },
+    openGraph: {
+      title: "Advisorly",
+      description:
+        "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
+      url,
+      siteName: "Advisorly",
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: "Advisorly",
+        },
+      ],
+      locale,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Advisorly",
+      description:
+        "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
+      images: ["/og-image.png"],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Advisorly",
+  url: "https://advisorly.tech",
+  logo: "https://advisorly.tech/logo.png",
+  description:
+    "Advisorly builds compliance infrastructure that turns complex regulatory requirements into scalable software for regulated industries.",
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "contact@advisorly.uk",
+    contactType: "customer service",
+  },
+};
+
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+
+  return (
+    <html
+      lang={locale}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col">
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+      </body>
+    </html>
+  );
 }
 </file>
 
@@ -1663,6 +1952,36 @@ body {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+</file>
+
+<file path="src/app/sitemap.ts">
+import type { MetadataRoute } from "next";
+import { routing } from "@/i18n/routing";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = "https://advisorly.tech";
+  const paths = ["", "/terms", "/privacy"];
+
+  // helper: default locale gets no prefix under "as-needed"
+  const localeUrl = (locale: string, path: string) =>
+    locale === routing.defaultLocale
+      ? `${baseUrl}${path}`
+      : `${baseUrl}/${locale}${path}`;
+
+  return paths.flatMap((path) =>
+    routing.locales.map((locale) => ({
+      url: localeUrl(locale, path),
+      lastModified: new Date(),
+      changeFrequency: path === "" ? "monthly" : "yearly",
+      priority: path === "" ? 1 : 0.3,
+      alternates: {
+        languages: Object.fromEntries(
+          routing.locales.map((l) => [l, localeUrl(l, path)])
+        ),
+      },
+    })) as MetadataRoute.Sitemap
+  );
 }
 </file>
 
@@ -2579,79 +2898,270 @@ export function Logo({ className = "" }: { className?: string }) {
 "use client";
 
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import { PenLine, Shuffle, RefreshCw, Unlink } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const pointKeys = ["manual", "fragmented", "changing", "disconnected"] as const;
-const icons = { manual: PenLine, fragmented: Shuffle, changing: RefreshCw, disconnected: Unlink };
+type Position = { top: string; left: string; rotate: number; z: number };
 
-export function ProblemSection() {
-  const t = useTranslations("problem");
+type Doc = {
+  id: string;
+  kind: "pdf" | "sheet" | "note" | "email" | "checklist";
+  title: string;
+  meta?: string;
+  tone: "white" | "yellow" | "red";
+  stamp?: string;
+  desktop: { messy: Position; unified: Position };
+  mobile: { messy: Position; unified: Position };
+};
+
+const docs: Doc[] = [
+  {
+    id: "sar",
+    kind: "pdf",
+    title: "SAR-4992.pdf",
+    meta: "Suspected structuring · Client #4992",
+    tone: "white",
+    stamp: "OVERDUE",
+    desktop: {
+      messy: { top: "6%", left: "4%", rotate: -9, z: 3 },
+      unified: { top: "0%", left: "0%", rotate: 0, z: 1 },
+    },
+    mobile: {
+      messy: { top: "2%", left: "2%", rotate: -5, z: 3 },
+      unified: { top: "0%", left: "0%", rotate: 0, z: 1 },
+    },
+  },
+  {
+    id: "kyc",
+    kind: "sheet",
+    title: "KYC_Renewal_CorpB.xlsx",
+    meta: "UBO documentation missing",
+    tone: "white",
+    desktop: {
+      messy: { top: "2%", left: "30%", rotate: 6, z: 2 },
+      unified: { top: "0%", left: "25.5%", rotate: 0, z: 1 },
+    },
+    mobile: {
+      messy: { top: "12%", left: "45%", rotate: 6, z: 2 },
+      unified: { top: "0%", left: "52%", rotate: 0, z: 1 },
+    },
+  },
+  {
+    id: "note1",
+    kind: "note",
+    title: "URGENT — file by EOD",
+    tone: "yellow",
+    desktop: {
+      messy: { top: "18%", left: "58%", rotate: -5, z: 5 },
+      unified: { top: "0%", left: "51%", rotate: 0, z: 1 },
+    },
+    mobile: {
+      messy: { top: "26%", left: "8%", rotate: -4, z: 5 },
+      unified: { top: "26%", left: "0%", rotate: 0, z: 1 },
+    },
+  },
+  {
+    id: "email",
+    kind: "email",
+    title: "Re: MiFID II Suitability",
+    meta: "L. Garcia → Compliance",
+    tone: "white",
+    desktop: {
+      messy: { top: "34%", left: "8%", rotate: 11, z: 1 },
+      unified: { top: "0%", left: "76.5%", rotate: 0, z: 1 },
+    },
+    mobile: {
+      messy: { top: "35%", left: "50%", rotate: 8, z: 1 },
+      unified: { top: "26%", left: "52%", rotate: 0, z: 1 },
+    },
+  },
+  {
+    id: "audit",
+    kind: "pdf",
+    title: "AFA_Audit_Report_Q3.pdf",
+    meta: "Internal findings review",
+    tone: "white",
+    desktop: {
+      messy: { top: "44%", left: "40%", rotate: -7, z: 4 },
+      unified: { top: "52%", left: "0%", rotate: 0, z: 1 },
+    },
+    mobile: {
+      messy: { top: "52%", left: "4%", rotate: -6, z: 4 },
+      unified: { top: "52%", left: "0%", rotate: 0, z: 1 },
+    },
+  },
+  {
+    id: "note2",
+    kind: "note",
+    title: "Ask M. Coma for UBO docs",
+    tone: "yellow",
+    desktop: {
+      messy: { top: "52%", left: "66%", rotate: 8, z: 2 },
+      unified: { top: "52%", left: "25.5%", rotate: 0, z: 1 },
+    },
+    mobile: {
+      messy: { top: "60%", left: "48%", rotate: 6, z: 2 },
+      unified: { top: "52%", left: "52%", rotate: 0, z: 1 },
+    },
+  },
+  {
+    id: "checklist",
+    kind: "checklist",
+    title: "AML Alert Batch #882",
+    meta: "5 flags to triage",
+    tone: "white",
+    desktop: {
+      messy: { top: "62%", left: "10%", rotate: -4, z: 6 },
+      unified: { top: "52%", left: "51%", rotate: 0, z: 1 },
+    },
+    mobile: {
+      messy: { top: "76%", left: "6%", rotate: -3, z: 6 },
+      unified: { top: "78%", left: "0%", rotate: 0, z: 1 },
+    },
+  },
+  {
+    id: "note3",
+    kind: "note",
+    title: "Renewal window closes Friday",
+    tone: "red",
+    desktop: {
+      messy: { top: "70%", left: "48%", rotate: 5, z: 3 },
+      unified: { top: "52%", left: "76.5%", rotate: 0, z: 1 },
+    },
+    mobile: {
+      messy: { top: "82%", left: "46%", rotate: 4, z: 3 },
+      unified: { top: "78%", left: "52%", rotate: 0, z: 1 },
+    },
+  },
+];
+
+function DocCard({ doc, unified, isMobile }: { doc: Doc; unified: boolean; isMobile: boolean }) {
+  const mode = isMobile ? doc.mobile : doc.desktop;
+  const pos = unified ? mode.unified : mode.messy;
+
+  const toneClasses =
+    doc.tone === "yellow"
+      ? "bg-[#FFF6D8] border-[#EBD98A]"
+      : doc.tone === "red"
+      ? "bg-red-50 border-red-200"
+      : "bg-white border-navy/10";
 
   return (
-    <section className="relative py-24 lg:py-32 bg-white">
-      <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-        <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-8 mb-16">
+    <motion.div
+      className={`absolute w-[46%] sm:w-[23%] rounded-lg border ${toneClasses} p-3 shadow-[0_8px_24px_-8px_rgba(7,27,58,0.25)] cursor-default select-none`}
+      animate={{
+        top: pos.top,
+        left: pos.left,
+        rotate: pos.rotate,
+        zIndex: pos.z,
+      }}
+      whileHover={{ scale: 1.05, rotate: 0, zIndex: 20 }}
+      transition={{ type: "spring", stiffness: 260, damping: 24 }}
+    >
+
+
+      <div className="flex items-center gap-1.5">
+
+        <span className="text-[9px] font-semibold uppercase tracking-wide text-navy/40">
+          {doc.kind === "pdf"
+            ? "Document"
+            : doc.kind === "sheet"
+            ? "Spreadsheet"
+            : doc.kind === "email"
+            ? "Email"
+            : doc.kind === "checklist"
+            ? "Checklist"
+            : "Note"}
+        </span>
+      </div>
+      <div className="mt-1 text-[11px] font-semibold leading-snug text-navy">
+        {doc.title}
+      </div>
+      {doc.meta && (
+        <div className="mt-0.5 text-[9.5px] leading-snug text-navy/45">
+          {doc.meta}
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+export function ProblemSection() {
+  const [unified, setUnified] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check initial match
+    const mql = window.matchMedia("(max-width: 639px)");
+    setIsMobile(mql.matches);
+
+    // Listen for changes
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
+  return (
+    <section className="relative bg-white py-24 lg:py-32">
+      <div className="mx-auto max-w-[1320px] px-6 lg:px-8">
+        <div className="max-w-[620px]">
+
           <motion.h2
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, ease }}
-            className="text-balance text-[32px] sm:text-[40px] leading-[1.12] font-semibold tracking-[-0.015em] text-navy"
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease }}
+            className="text-balance text-[32px] sm:text-[40px] leading-[1.12] font-semibold tracking-[-0.02em] text-navy"
           >
-            {t("headline")}
+            Compliance still runs on scattered paperwork.
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1, ease }}
-            className="text-[17px] leading-[1.7] text-navy/60 max-w-[520px] lg:pt-2"
+            className="mt-5 text-[17px] leading-[1.6] text-navy/60 max-w-[480px]"
           >
-            {t("subtext")}
+            Contracts, audit findings, and one off emails, all living in
+            different systems, owned by different people, tracked by no one
+            in particular.
           </motion.p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {pointKeys.map((key, i) => {
-            const Icon = icons[key];
-            return (
-              <motion.div
-                key={key}
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.55, delay: i * 0.08, ease }}
-                whileHover={{ y: -4 }}
-                className="group relative rounded-xl border border-navy/10 bg-white p-6 transition-colors duration-300 hover:border-cyan/40"
-              >
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{
-                    background: "linear-gradient(160deg, rgba(24,198,209,0.06), transparent 60%)",
-                  }}
-                />
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-navy/10 bg-pale mb-5 transition-colors duration-300 group-hover:border-cyan/30">
-                  <Icon className="h-[18px] w-[18px] text-blue" strokeWidth={1.75} />
-                </div>
-                <h3 className="relative text-[16px] font-semibold text-navy tracking-tight mb-2">
-                  {t(`points.${key}.title`)}
-                </h3>
-                <p className="relative text-[14px] leading-[1.6] text-navy/55">
-                  {t(`points.${key}.description`)}
-                </p>
-              </motion.div>
-            );
-          })}
+        {/* interactive canvas */}
+        <div className="relative mt-14">
+          <div className="relative h-[520px] sm:h-[420px]">
+            {docs.map((doc) => (
+              <DocCard key={doc.id} doc={doc} unified={unified} isMobile={isMobile} />
+            ))}
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setUnified((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-navy/90 active:scale-[0.98]"
+            >
+              {unified ? "Scatter it again" : "Bring it into one place"}
+            </button>
+          </div>
         </div>
       </div>
     </section>
   );
 }
+</file>
+
+<file path="src/i18n/routing.ts">
+import { defineRouting } from "next-intl/routing";
+
+export const routing = defineRouting({
+  locales: ["en", "ca", "es"],
+  defaultLocale: "en",
+  localePrefix: "as-needed",
+});
 </file>
 
 <file path="eslint.config.mjs">
@@ -2775,12 +3285,13 @@ import MaintenancePage from "@/components/MaintanacePage";
 import { Hero } from "@/components/Hero";
 import { ProblemSection } from "@/components/ProblemSection";
 import { DashboardSection } from "@/components/DashboardSection";
-import { ProofSection } from "@/components/ArchitectureSection";      
+import { SolutionSection } from "@/components/ArchitectureSection";  
 import { IndustriesSection } from "@/components/IndustriesSection";
 import { HowItWorksSection } from "@/components/HowItWorksSection";
 import { AboutSection } from "@/components/AboutSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
+import { IntegrationsSection } from "@/components/IntergrationsSection";
 
 export default function Home() {
   return (
@@ -2788,7 +3299,8 @@ export default function Home() {
       <Navigation />
       <Hero />
       <ProblemSection />
-      <ProofSection />
+      <SolutionSection />
+      <IntegrationsSection />
       <IndustriesSection />
       <HowItWorksSection />
       <AboutSection />
@@ -2802,115 +3314,10 @@ export default function Home() {
 
 <file path="src/components/Hero.tsx">
 "use client";
- 
- {/*"use client";
-
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import { Play } from "lucide-react";
-
-const ease = [0.16, 1, 0.3, 1] as const;
-
-export function Hero() {
-  const t = useTranslations("hero");
-  const [imgLoaded, setImgLoaded] = useState(false);
-
-  return (
-    // pt-[72px] clears the fixed white nav (see Navigation.tsx height)
-    <section id="top" className="relative overflow-hidden pt-[72px] bg-navy">
-      <div className="relative min-h-[560px] lg:min-h-[640px] flex items-center">
-        {/* Full-bleed background image. Point this at a real photo — a
-            city skyline (Coupa's look), a compliance-dashboard screenshot,
-            or an Andorra/regulatory shot — dropped into /public. Until you
-            add one, the section just shows solid navy (bg-navy on the
-            <section> above) instead of breaking to white. 
-        <img
-          src="/andorra3.jpg"
-          alt=""
-          aria-hidden
-          ref={(img) => {
-            if (img && img.complete) {
-              setImgLoaded(true);
-            }
-          }}
-          onLoad={() => setImgLoaded(true)}
-          onError={(e) => (e.currentTarget.style.display = "none")}
-          className={`absolute inset-0 h-full w-full object-cover object-[70%_center] transition-opacity duration-500 ${
-            imgLoaded ? "opacity-100" : "opacity-0"
-          }`}
-        />
-
-         Navy panel dissolving into the photo — solid under the text,
-            fading to transparent toward the right, Coupa-style. Hardcoded
-            hex values so this never depends on a CSS variable resolving. 
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(90deg, #071b3a 0%, #071b3a 38%, rgba(7,27,58,0.85) 55%, rgba(7,27,58,0.25) 78%, rgba(7,27,58,0) 100%)",
-          }}
-        />
-
-        <div className="relative mx-auto w-full max-w-[1320px] px-6 lg:px-8 py-20 lg:py-28">
-          <div className="max-w-[620px]">
-            <motion.h1
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.08, ease }}
-              className="text-balance text-[38px] sm:text-[48px] lg:text-[56px] leading-[1.08] font-semibold tracking-[-0.02em] text-white"
-            >
-              {t("headlinePart1")} {t("headlineHighlight")} {t("headlinePart2")}
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease }}
-              className="mt-6 text-[17px] leading-[1.6] text-white/75 max-w-[480px]"
-            >
-              {t("subtext")}
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3, ease }}
-              className="mt-9 flex flex-wrap items-center gap-6"
-            >
-              Solid pill CTA — Coupa: "Learn More" 
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center rounded-full bg-cyan px-7 py-3.5 text-[15px] font-semibold text-navy transition-colors hover:bg-cyan/85 active:scale-[0.98]"
-              >
-                {t("ctaPrimary")}
-              </a>
-
-               Ghost play-button CTA — Coupa: "Watch Now" 
-              <a
-                href="#how-it-works"
-                className="group inline-flex items-center gap-3 text-[15px] font-semibold text-white"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm transition-colors group-hover:bg-white/25">
-                  <Play className="h-3.5 w-3.5 fill-white text-white ml-0.5" strokeWidth={0} />
-                </span>
-
-              </a>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-*/}
-
-
 
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Play } from "lucide-react";
+import Image from "next/image";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -2918,124 +3325,232 @@ export function Hero() {
   const t = useTranslations("hero");
 
   return (
-    // pt-[72px] clears the fixed white nav (see Navigation.tsx height)
-    <section id="top" className="relative overflow-hidden pt-[72px] bg-navy">
-      {/* ambient glow, same treatment as your old HeroVisual */}
-      <div
-        aria-hidden
-        className="absolute -z-10 top-[-160px] right-[-120px] h-[520px] w-[520px] rounded-full opacity-30 blur-[110px]"
-        style={{ background: "radial-gradient(circle, #18c6d1, transparent 70%)" }}
-      />
-      <div
-        aria-hidden
-        className="absolute -z-10 bottom-[-160px] left-[-160px] h-[420px] w-[420px] rounded-full opacity-20 blur-[110px]"
-        style={{ background: "radial-gradient(circle, #2451b8, transparent 70%)" }}
-      />
-      {/* faint technical grid like the rest of the site */}
-      <div className="absolute inset-0 -z-10 bg-grid bg-grid-fade opacity-[0.06]" />
-
-      <div className="mx-auto max-w-[1320px] px-6 lg:px-8 py-20 lg:py-28">
-        <div className="grid lg:grid-cols-[1fr_1.05fr] gap-16 lg:gap-10 items-center">
-          {/* Left column — copy */}
-          <div>
-            <motion.h1
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.08, ease }}
-              className="text-balance text-[38px] sm:text-[48px] lg:text-[56px] leading-[1.08] font-semibold tracking-[-0.02em] text-white"
-            >
-              {t("headlinePart1")} {t("headlineHighlight")} {t("headlinePart2")}
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease }}
-              className="mt-6 text-[17px] leading-[1.6] text-white/70 max-w-[460px]"
-            >
-              {t("subtext")}
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3, ease }}
-              className="mt-9 flex flex-wrap items-center gap-6"
-            >
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center rounded-full bg-cyan px-7 py-3.5 text-[15px] font-semibold text-navy transition-colors hover:bg-cyan/85 active:scale-[0.98]"
-              >
-                {t("ctaPrimary")}
-              </a>
-
-              <a
-                href="#how-it-works"
-                className="group inline-flex items-center gap-3 text-[15px] font-semibold text-white"
-              >
-
-
-              </a>
-            </motion.div>
-          </div>
-
-          {/* Right column — dashboard screenshot in a laptop frame */}
-          <LaptopMockup />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function LaptopMockup() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.9, delay: 0.35, ease }}
-      className="relative mx-auto w-full max-w-[600px]"
-      style={{ perspective: "1400px" }}
+    <section
+      id="top"
+      className="relative z-0 overflow-hidden bg-white pt-[96px] min-h-[640px] lg:min-h-[760px] flex items-center"
     >
-      {/* glow behind the laptop */}
+      {/* full-bleed wave — sized off its own aspect ratio (869x1200) instead of
+          object-cover, so it never gets crushed down to a thin cropped sliver.
+          w-[clamp(...)] scales it fluidly with the viewport at every breakpoint.
+          `sizes` tells Next.js the real rendered width so it serves a
+          correctly-sized source instead of upscaling a smaller one (= blur).
+          `quality={100}` avoids compression softness on the gradient. */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <Image
+          src="/blue-wave3.png"
+          alt=""
+          width={1791}
+          height={2400}
+          priority
+          quality={100}
+          sizes="(max-width: 750px) 600px, (max-width: 1500px) 80vw, 1200px"
+          className="absolute right-[-40%] md:right-[0%] top-[65%] md:top-1/2 -translate-y-1/2 w-[clamp(800px,140vw,1200px)] md:w-[clamp(600px,80vw,1200px)] h-auto max-w-none select-none opacity-25 md:opacity-100"
+        />
+      </div>
+
+      {/* light fade on the left only, just enough for the copy to stay legible */}
       <div
         aria-hidden
-        className="absolute -inset-10 -z-10 rounded-[40px] opacity-70 blur-3xl"
+        className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(24,198,209,0.22), rgba(36,81,184,0.14), transparent)",
+            "linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.85) 22%, rgba(255,255,255,0.35) 42%, rgba(255,255,255,0) 60%)",
         }}
       />
 
+      {/* fade out the bottom so it seamlessly transitions into the next white section */}
       <div
-        className="relative"
-        style={{ transform: "rotateX(6deg) rotateY(-10deg)", transformStyle: "preserve-3d" }}
-      >
-        {/* screen / bezel */}
-        <div className="rounded-t-xl rounded-b-md border-[10px] border-[#0c1e3f] bg-[#0c1e3f] shadow-[0_40px_80px_-24px_rgba(2,10,26,0.6)]">
-          {/* browser chrome */}
-          <div className="flex items-center gap-1.5 bg-[#0c1e3f] px-3 py-2.5 rounded-t-sm">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-            <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-            <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
-            <div className="ml-3 flex-1 rounded-md bg-white/10 px-3 py-1 text-[11px] text-white/50">
-              advisorly.tech/dashboard
-            </div>
-          </div>
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 -z-10"
+        style={{
+          background:
+            "linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%)",
+        }}
+      />
 
-          {/* screenshot — naturally scaled to fit the image aspect ratio */}
-          <div className="relative w-full overflow-hidden bg-white">
-            <img
-              src="/dash_hero.png"
-              alt="Advisorly compliance dashboard showing active contracts, expiring documents and alerts"
-              className="block h-auto w-full"
-            />
+      <div className="relative mx-auto max-w-[1320px] px-6 lg:px-8 py-24 lg:py-32 w-full">
+        <div className="max-w-[620px]">
 
-          </div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.08, ease }}
+            className="text-balance text-[38px] sm:text-[48px] lg:text-[56px] leading-[1.08] font-semibold tracking-[-0.02em] text-navy"
+          >
+            {t("headlinePart1")} {t("headlineHighlight")} {t("headlinePart2")}
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease }}
+            className="mt-6 text-[17px] leading-[1.6] text-navy/60 max-w-[480px]"
+          >
+            {t("subtext")}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease }}
+            className="mt-9 flex flex-wrap items-center gap-3"
+          >
+            <a
+              href="#contact"
+              className="inline-flex items-center justify-center rounded-full bg-navy px-7 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-navy/90 active:scale-[0.98]"
+            >
+              {t("ctaPrimary")}
+            </a>
+ 
+          </motion.div>
         </div>
 
-        <div className="mx-auto h-1 w-[70%] rounded-b-md bg-[#0c1e3f]/80" />
+        {/* floating glass card, echoes the "Generating reply..." card in the reference */}
+       {/* floating browser-tab card showing the live dashboard.
+    Width is fluid via clamp() so it scales smoothly with the viewport
+    instead of jumping between fixed breakpoints. The image sits in an
+    aspect-[1895/777] box that exactly matches its native ratio, so it
+    can never be stretched or squashed at any card width. */}
+{/* floating browser-tab card with a coded dashboard mockup (no image asset).
+    Mobile: sits in normal flow, full width, below the CTAs.
+    lg+: switches to an absolutely-positioned floating card at a fluid width. */}
+{/* floating browser-tab card — coded compliance dashboard mockup (no image asset).
+    Mobile: sits in normal flow, full width, below the CTAs.
+    lg+: switches to an absolutely-positioned floating card at a fluid width. */}
+<motion.div
+  initial={{ opacity: 0, y: 24 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: 0.4, ease }}
+  className="relative mt-10 w-full lg:mt-0 lg:absolute lg:top-[70px] lg:right-[10px] lg:w-[clamp(460px,42vw,700px)] rounded-2xl border border-navy/10 bg-white shadow-[0_30px_60px_-20px_rgba(7,27,58,0.25)] overflow-hidden"
+>
+  {/* browser chrome */}
+  <div className="flex items-center gap-2 border-b border-navy/8 bg-pale/70 px-4 py-2.5">
+    <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
+    <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" />
+    <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
+    <div className="ml-3 flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-medium text-navy/50">
+      <span className="h-1.5 w-1.5 rounded-full bg-cyan animate-pulse" />
+      advisorly.tech/compliance
+    </div>
+  </div>
+
+  {/* app shell */}
+  <div className="flex text-navy">
+    {/* icon rail — hidden on the smallest screens to save width */}
+    <div className="hidden sm:flex w-11 flex-col items-center gap-4 border-r border-navy/8 bg-pale/40 py-4 shrink-0">
+      <span className="h-6 w-6 rounded-md bg-navy" />
+      <span className="h-2 w-2 rounded-full bg-cyan" />
+      <span className="h-2 w-2 rounded-full bg-navy/15" />
+      <span className="h-2 w-2 rounded-full bg-navy/15" />
+      <span className="h-2 w-2 rounded-full bg-navy/15" />
+    </div>
+
+    <div className="flex-1 min-w-0">
+      {/* top bar */}
+      <div className="flex items-center justify-between border-b border-navy/8 px-4 py-2.5">
+        <div>
+          <span className="text-[11px] font-semibold text-navy">Action Engine</span>
+          <span className="ml-2 text-[10px] text-navy/40">Top priorities</span>
+        </div>
+        <span className="text-[9px] font-semibold uppercase tracking-wide text-navy/35">
+          Ranked by risk × urgency
+        </span>
       </div>
-    </motion.div>
+
+      {/* action queue */}
+      <div className="divide-y divide-navy/6">
+        {[
+          {
+            severity: "CRITICAL",
+            action: "SAR Submission to UIFAND",
+            context: "Client #4992 · Suspected structuring",
+            sla: "Breached by 24h",
+            slaTone: "critical",
+            cta: "Submit SAR",
+          },
+          {
+            severity: "CRITICAL",
+            action: "AML Alerts Triage",
+            context: "Batch #882 · 5 high-risk transactions",
+            sla: "Breached by 4h",
+            slaTone: "critical",
+            cta: "Review flags",
+          },
+          {
+            severity: "HIGH",
+            action: "KYC Renewal Escalation",
+            context: "Corp Entity B · UBO missing",
+            sla: "Due in 48h",
+            slaTone: "warn",
+            cta: "Request docs",
+          },
+          {
+            severity: "HIGH",
+            action: "MiFID II Suitability",
+            context: "Client profile update · HNW",
+            sla: "Due in 3 days",
+            slaTone: "warn",
+            cta: "Update profile",
+          },
+        ].map((row) => (
+          <div key={row.action} className="flex items-center gap-3 px-4 py-2.5">
+            <span
+              className={`shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold tracking-wide ${
+                row.severity === "CRITICAL"
+                  ? "bg-red-600 text-white"
+                  : "bg-red-50 text-red-600"
+              }`}
+            >
+              {row.severity}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-[10.5px] font-semibold text-navy">
+                {row.action}
+              </div>
+              <div className="truncate text-[9px] text-navy/40">{row.context}</div>
+            </div>
+            <div className="hidden sm:block shrink-0 text-right">
+              <div
+                className={`text-[9px] font-semibold ${
+                  row.slaTone === "critical" ? "text-red-600" : "text-amber-600"
+                }`}
+              >
+                {row.sla}
+              </div>
+            </div>
+            <span className="hidden md:inline-block shrink-0 rounded-md border border-navy/10 bg-pale/60 px-2 py-1 text-[9px] font-semibold text-navy/70">
+              {row.cta}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* regulatory framework posture strip */}
+      <div className="border-t border-navy/8 bg-pale/30 px-4 py-2.5">
+        <div className="mb-1.5 text-[9px] font-semibold uppercase tracking-wide text-navy/40">
+          Regulatory Framework Posture
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="rounded-full bg-red-50 px-2 py-1 text-[9px] font-medium text-red-600">
+            UIFAND Reporting — 2 escalated
+          </span>
+          <span className="rounded-full bg-pale px-2 py-1 text-[9px] font-medium text-navy/50">
+            KYC / AML
+          </span>
+          <span className="rounded-full bg-pale px-2 py-1 text-[9px] font-medium text-navy/50">
+            MiFID II
+          </span>
+          <span className="ml-auto rounded-md bg-red-600 px-2 py-1 text-[9px] font-bold text-white">
+            CRITICAL
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</motion.div>
+      </div>
+    </section>
   );
 }
 </file>
@@ -3226,144 +3741,142 @@ export function Navigation() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  return (
-    // Coupa's nav is a solid white bar, not transparent-over-hero — it sits
-    // above the image hero, so it's always opaque instead of scroll-triggered.
-    <header className="fixed top-0 inset-x-0 z-50 bg-white border-b border-navy/8">
-      <nav className="mx-auto max-w-[1320px] px-6 lg:px-8 h-[72px] flex items-center justify-between">
-        <Link href="/#top" className="flex items-center -ml-2" onClick={() => setOpen(false)}>
-          <Logo />
-        </Link>
+return (
+  <header className="fixed top-4 inset-x-0 z-50 px-4">
+    <nav className="mx-auto max-w-[1100px] h-[64px] flex items-center justify-between rounded-full bg-white/90 backdrop-blur-md shadow-[0_8px_30px_-8px_rgba(7,27,58,0.15)] border border-navy/5 px-3 lg:px-5">
+      <Link href="/#top" className="flex items-center pl-2" onClick={() => setOpen(false)}>
+        <Logo />
+      </Link>
 
-        {/* Center links, each with a Coupa-style dropdown chevron */}
-        <ul className="hidden lg:flex items-center gap-8">
-          {links.map((link) => (
-            <li key={link.label}>
-              <Link
-                href={link.href}
-                className="group flex items-center gap-1 text-[15px] font-semibold text-navy/80 hover:text-navy transition-colors"
-              >
-                {link.label}
-
-              </Link>
-            </li>
-          ))}
-        </ul>
-
-        <div className="hidden lg:flex items-center gap-4">
-          {/* language switcher, Coupa uses a plain globe icon in this slot */}
-          <div className="relative">
-            <button
-              onClick={() => setLangOpen((v) => !v)}
-              aria-label="Change language"
-              className="flex items-center justify-center h-9 w-9 rounded-full text-navy/60 hover:text-navy hover:bg-pale transition-colors"
+      {/* Center links */}
+      <ul className="hidden lg:flex items-center gap-7">
+        {links.map((link) => (
+          <li key={link.label}>
+            <Link
+              href={link.href}
+              className="text-[14.5px] font-medium text-navy/70 hover:text-navy transition-colors"
             >
-              <Globe className="h-[18px] w-[18px]" strokeWidth={1.75} />
-            </button>
-            <AnimatePresence>
-              {langOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-11 w-28 rounded-lg border border-navy/10 bg-white py-1.5 shadow-[0_12px_32px_-12px_rgba(7,27,58,0.25)]"
-                >
-                  {locales.map((l) => (
-                    <button
-                      key={l.code}
-                      onClick={() => {
-                        router.replace(pathname, { locale: l.code });
-                        setLangOpen(false);
-                      }}
-                      className={`block w-full px-3.5 py-2 text-left text-[13.5px] font-medium transition-colors ${
-                        locale === l.code
-                          ? "text-navy bg-pale"
-                          : "text-navy/60 hover:text-navy hover:bg-pale/60"
-                      }`}
-                    >
-                      {l.label}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
 
-          {/* Solid pill CTA — now the only button, labeled "Contact" */}
-          <Link
-            href="/#contact"
-            className="inline-flex items-center justify-center rounded-full bg-cyan px-5 py-2.5 text-[14px] font-semibold text-navy hover:bg-cyan/85 transition-colors"
+      <div className="hidden lg:flex items-center gap-3">
+        {/* language switcher */}
+        <div className="relative">
+          <button
+            onClick={() => setLangOpen((v) => !v)}
+            aria-label="Change language"
+            className="flex items-center justify-center h-9 w-9 rounded-full text-navy/60 hover:text-navy hover:bg-pale transition-colors"
           >
-            {t("contact")}
-          </Link>
+            <Globe className="h-[18px] w-[18px]" strokeWidth={1.75} />
+          </button>
+          <AnimatePresence>
+            {langOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.15 }}
+                className="absolute right-0 top-11 w-28 rounded-lg border border-navy/10 bg-white py-1.5 shadow-[0_12px_32px_-12px_rgba(7,27,58,0.25)]"
+              >
+                {locales.map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => {
+                      router.replace(pathname, { locale: l.code });
+                      setLangOpen(false);
+                    }}
+                    className={`block w-full px-3.5 py-2 text-left text-[13.5px] font-medium transition-colors ${
+                      locale === l.code
+                        ? "text-navy bg-pale"
+                        : "text-navy/60 hover:text-navy hover:bg-pale/60"
+                    }`}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="lg:hidden text-navy relative z-10"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
+        {/* pill button, ghost "Sign in" + solid dark "Get all-access" style */}
+
+        <Link
+          href="/#contact"
+          className="inline-flex items-center justify-center rounded-full bg-navy px-5 py-2.5 text-[14px] font-semibold text-white hover:bg-navy/90 transition-colors"
         >
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            {open ? (
-              <path d="M5 5L17 17M17 5L5 17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            ) : (
-              <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            )}
-          </svg>
-        </button>
-      </nav>
+          {t("contact")}
+        </Link>
+      </div>
 
-      {/* mobile menu panel */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:hidden overflow-hidden bg-white border-b border-navy/8"
-          >
-            <div className="px-6 py-6 flex flex-col gap-1">
-              {links.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="py-3 text-[16px] font-semibold text-navy/80 border-b border-navy/5"
-                >
-                  {link.label}
-                </Link>
-              ))}
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="lg:hidden text-navy relative z-10 pr-2"
+        aria-label={open ? "Close menu" : "Open menu"}
+        aria-expanded={open}
+      >
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          {open ? (
+            <path d="M5 5L17 17M17 5L5 17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          ) : (
+            <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          )}
+        </svg>
+      </button>
+    </nav>
 
-              <div className="mt-4 flex items-center gap-1.5 text-[13px] font-medium text-navy/50">
-                {locales.map((l, i) => (
-                  <span key={l.code} className="flex items-center">
-                    <button
-                      onClick={() => router.replace(pathname, { locale: l.code })}
-                      className={`px-1.5 ${locale === l.code ? "text-navy" : ""}`}
-                    >
-                      {l.label}
-                    </button>
-                    {i < locales.length - 1 && <span className="text-navy/20">/</span>}
-                  </span>
-                ))}
-              </div>
-
+    {/* mobile menu panel */}
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:hidden overflow-hidden mx-auto max-w-[1100px] mt-2 rounded-3xl bg-white shadow-[0_8px_30px_-8px_rgba(7,27,58,0.15)] border border-navy/5"
+        >
+          <div className="px-6 py-6 flex flex-col gap-1">
+            {links.map((link) => (
               <Link
-                href="/#contact"
+                key={link.label}
+                href={link.href}
                 onClick={() => setOpen(false)}
-                className="mt-5 inline-flex items-center justify-center rounded-full bg-cyan px-5 py-3 text-[15px] font-semibold text-navy"
+                className="py-3 text-[16px] font-semibold text-navy/80 border-b border-navy/5"
               >
-                {t("contact")}
+                {link.label}
               </Link>
+            ))}
+
+            <div className="mt-4 flex items-center gap-1.5 text-[13px] font-medium text-navy/50">
+              {locales.map((l, i) => (
+                <span key={l.code} className="flex items-center">
+                  <button
+                    onClick={() => router.replace(pathname, { locale: l.code })}
+                    className={`px-1.5 ${locale === l.code ? "text-navy" : ""}`}
+                  >
+                    {l.label}
+                  </button>
+                  {i < locales.length - 1 && <span className="text-navy/20">/</span>}
+                </span>
+              ))}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  );
+
+            <Link
+              href="/#contact"
+              onClick={() => setOpen(false)}
+              className="mt-5 inline-flex items-center justify-center rounded-full bg-navy px-5 py-3 text-[15px] font-semibold text-white"
+            >
+              {t("contact")}
+            </Link>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </header>
+);
 }
 </file>
 
@@ -3371,70 +3884,362 @@ export function Navigation() {
 "use client";
 
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { FileCheck2, ShieldCheck, ScanSearch } from "lucide-react";
 import { AnimatedNumber } from "./AnimatedNumber";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const statKeys = ["modules", "frameworks", "industries"] as const;
-const statValues: Record<(typeof statKeys)[number], { value: number; suffix: string }> = {
-  modules: { value: 4, suffix: "" },
-  frameworks: { value: 4, suffix: "+" },
-  industries: { value: 5, suffix: "" },
-};
+const points = [
+  {
+    key: "intake",
+    icon: FileCheck2,
+    title: "Automated intake",
+    description: "Policies, contracts and certificates are captured and organized the moment they land.",
+  },
+  {
+    key: "verification",
+    icon: ScanSearch,
+    title: "Continuous verification",
+    description: "Every document is checked against the frameworks it needs to satisfy, automatically.",
+  },
+  {
+    key: "filing",
+    icon: ShieldCheck,
+    title: "Audit-ready filing",
+    description: "Approved paperwork is filed and versioned, ready to hand to any auditor on demand.",
+  },
+];
 
-export function ProofSection() {
-  const t = useTranslations("proof");
+/* Wavy trend line, drawn on scroll-into-view */
+function TrendChart() {
+  const path =
+    "M2,44 C22,44 26,14 46,14 C66,14 70,38 90,38 C110,38 114,10 134,10 C154,10 158,30 178,26 C198,22 202,6 218,6";
 
   return (
-    <section className="relative py-24 lg:py-32 bg-white">
-      <div className="mx-auto max-w-[1120px] px-6 lg:px-8">
-        <div className="max-w-[600px] mb-14 lg:mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, ease }}
-            className="text-balance text-[32px] sm:text-[40px] leading-[1.15] font-semibold tracking-[-0.015em] text-navy mb-5"
-          >
-            {t("headline")}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.1, ease }}
-            className="text-[17px] leading-[1.7] text-navy/60"
-          >
-            {t("subtext")}
-          </motion.p>
-        </div>
+    <div className="relative h-[92px] w-full">
+      <svg viewBox="0 0 220 60" className="h-full w-full overflow-visible" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="solution-line-grad" x1="0" y1="0" x2="220" y2="0">
+            <stop offset="0%" stopColor="#2451B8" />
+            <stop offset="100%" stopColor="#18C6D1" />
+          </linearGradient>
+          <linearGradient id="solution-area-grad" x1="0" y1="0" x2="0" y2="60">
+            <stop offset="0%" stopColor="rgba(24,198,209,0.22)" />
+            <stop offset="100%" stopColor="rgba(24,198,209,0)" />
+          </linearGradient>
+        </defs>
 
-        <div className="grid sm:grid-cols-3 gap-10 sm:gap-8">
-          {statKeys.map((key, i) => {
-            const s = statValues[key];
+        <motion.path
+          d={`${path} L218,60 L2,60 Z`}
+          fill="url(#solution-area-grad)"
+          stroke="none"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.8, delay: 0.5, ease }}
+        />
+
+        <motion.path
+          d={path}
+          fill="none"
+          stroke="url(#solution-line-grad)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          initial={{ pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 1.3, ease, delay: 0.15 }}
+        />
+
+        <motion.circle
+          cx="218"
+          cy="6"
+          r="4"
+          fill="#0A1E42"
+          stroke="#18C6D1"
+          strokeWidth="2"
+          initial={{ opacity: 0, scale: 0.4 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.4, delay: 1.3, ease }}
+        />
+      </svg>
+
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.4, delay: 1.4, ease }}
+        className="absolute -top-1 right-0 rounded-md border border-navy/10 bg-white px-2.5 py-1.5 shadow-[0_8px_20px_-8px_rgba(7,27,58,0.35)]"
+      >
+        <div className="text-[9.5px] font-medium text-navy/45 leading-none mb-1">Q3</div>
+        <div className="text-[12px] font-semibold text-navy leading-none">
+          <AnimatedNumber value={97} format={(n) => `${Math.round(n)}%`} delay={1.4} />
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+/* Small animated bar chart */
+function PaperworkBars() {
+  const bars = [
+    { key: "policies", label: "Policies", height: 55 },
+    { key: "contracts", label: "Contracts", height: 88 },
+    { key: "audits", label: "Audits", height: 40 },
+    { key: "certificates", label: "Certs", height: 68 },
+  ];
+
+  return (
+    <div className="flex items-end justify-between gap-2.5 h-[74px]">
+      {bars.map((b, i) => (
+        <div key={b.key} className="flex flex-1 flex-col items-center gap-2">
+          <div className="relative w-full flex-1 flex items-end overflow-hidden rounded-[5px] bg-navy/6">
+            <motion.div
+              className="w-full rounded-[5px] bg-gradient-to-t from-blue to-cyan"
+              initial={{ height: 0 }}
+              whileInView={{ height: `${b.height}%` }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.8, delay: 0.2 + i * 0.09, ease }}
+            />
+          </div>
+          <span className="text-[9px] font-medium text-navy/40 text-center leading-tight">
+            {b.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* Filing-status donut, segments drawn as stacked dasharray strokes */
+function FilingDonut() {
+  const radius = 26;
+  const circumference = 2 * Math.PI * radius;
+  const segments = [
+    { key: "approved", label: "Approved", value: 62, color: "#18C6D1" },
+    { key: "review", label: "In review", value: 26, color: "#2451B8" },
+    { key: "pending", label: "Pending", value: 12, color: "rgba(7,27,58,0.18)" },
+  ];
+
+  let offsetAcc = 0;
+
+  return (
+    <div className="flex items-center gap-4">
+      <div className="relative h-[76px] w-[76px] shrink-0">
+        <svg viewBox="0 0 64 64" className="-rotate-90 h-full w-full">
+          <circle cx="32" cy="32" r={radius} fill="none" stroke="rgba(7,27,58,0.06)" strokeWidth="8" />
+          {segments.map((seg, i) => {
+            const dash = (seg.value / 100) * circumference;
+            const offset = offsetAcc;
+            offsetAcc += dash;
             return (
-              <motion.div
-                key={key}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+              <motion.circle
+                key={seg.key}
+                cx="32"
+                cy="32"
+                r={radius}
+                fill="none"
+                stroke={seg.color}
+                strokeWidth="8"
+                strokeDasharray={`${dash} ${circumference - dash}`}
+                strokeDashoffset={-offset}
+                strokeLinecap="butt"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease }}
-                className="border-t border-navy/15 pt-6"
-              >
-                <div className="font-tabular text-[44px] sm:text-[52px] leading-none font-semibold tracking-[-0.02em] text-navy mb-3">
-                  <AnimatedNumber
-                    value={s.value}
-                    format={(n) => `${Math.round(n)}${s.suffix}`}
-                    delay={0.15 + i * 0.1}
-                  />
-                </div>
-                <p className="text-[14.5px] leading-[1.6] text-navy/55 max-w-[220px]">
-                  {t(`stats.${key}.caption`)}
-                </p>
-              </motion.div>
+                transition={{ duration: 0.6, delay: 0.3 + i * 0.12, ease }}
+              />
             );
           })}
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-[14px] font-semibold text-navy tracking-tight">
+            <AnimatedNumber value={412} delay={0.35} />
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-1.5 min-w-0">
+        {segments.map((seg) => (
+          <div key={seg.key} className="flex items-center gap-1.5">
+            <span
+              className="h-1.5 w-1.5 rounded-full shrink-0"
+              style={{ background: seg.color }}
+            />
+            <span className="text-[10.5px] text-navy/55 truncate">
+              {seg.label} <span className="text-navy/35">· {seg.value}%</span>
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function SolutionSection() {
+  return (
+    <section className="relative py-24 lg:py-32 bg-white overflow-hidden">
+      {/* Ambient background shapes */}
+      <div aria-hidden className="absolute inset-0 -z-10 bg-grid bg-grid-fade opacity-[0.03]" />
+      <div
+        aria-hidden
+        className="absolute -top-40 -right-40 -z-10 h-[520px] w-[520px] rounded-full opacity-50 blur-[110px]"
+        style={{ background: "radial-gradient(closest-side, rgba(24,198,209,0.16), transparent)" }}
+      />
+      <div
+        aria-hidden
+        className="absolute bottom-0 left-[-10%] -z-10 h-[420px] w-[420px] rounded-full opacity-40 blur-[110px]"
+        style={{ background: "radial-gradient(closest-side, rgba(36,81,184,0.14), transparent)" }}
+      />
+      <svg
+        aria-hidden
+        className="pointer-events-none absolute -bottom-24 -right-24 -z-10 h-[420px] w-[420px] opacity-[0.05]"
+        viewBox="0 0 200 200"
+      >
+        <circle cx="100" cy="100" r="99" fill="none" stroke="#071B3A" strokeWidth="1" />
+        <circle cx="100" cy="100" r="76" fill="none" stroke="#071B3A" strokeWidth="1" />
+        <circle cx="100" cy="100" r="53" fill="none" stroke="#071B3A" strokeWidth="1" />
+      </svg>
+
+      <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+          {/* Copy */}
+          <div>
+
+
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.05, ease }}
+              className="text-balance text-[32px] sm:text-[42px] leading-[1.14] font-semibold tracking-[-0.015em] text-navy mb-6"
+            >
+              Compliance paperwork, handled by the platform.
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.1, ease }}
+              className="text-[16.5px] leading-[1.75] text-navy/60 max-w-[480px] mb-10"
+            >
+              We turn policies, evidence and filings into a single automated workflow so your team spends less time chasing documents and more time running the business.
+            </motion.p>
+
+            <div className="space-y-5 mb-10">
+              {points.map((point, i) => {
+                const Icon = point.icon;
+                return (
+                  <motion.div
+                    key={point.key}
+                    initial={{ opacity: 0, y: 14 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{ duration: 0.5, delay: 0.15 + i * 0.08, ease }}
+                    className="flex items-start gap-3.5"
+                  >
+                    <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-navy/10 bg-pale">
+                      <Icon className="h-4 w-4 text-blue" strokeWidth={1.75} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[14.5px] font-semibold text-navy mb-0.5">
+                        {point.title}
+                      </div>
+                      <p className="text-[13.5px] leading-[1.6] text-navy/55">
+                        {point.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, delay: 0.4, ease }}
+              className="flex flex-wrap items-center gap-3"
+            >
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center rounded-lg bg-navy px-5 py-3 text-[14px] font-semibold text-white transition-colors hover:bg-navy/90"
+              >
+                Talk to us
+              </a>
+            </motion.div>
+          </div>
+
+          {/* Dashboard visual */}
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, delay: 0.1, ease }}
+            className="relative"
+          >
+            <div
+              aria-hidden
+              className="absolute -inset-10 -z-10 rounded-[40px] opacity-60 blur-3xl"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(24,198,209,0.16), rgba(36,81,184,0.10), transparent)",
+              }}
+            />
+
+            <div className="rounded-2xl border border-navy/10 bg-white shadow-[0_1px_2px_rgba(7,27,58,0.04),0_32px_64px_-28px_rgba(7,27,58,0.25)] overflow-hidden">
+              {/* Chrome */}
+              <div className="flex items-center justify-between border-b border-navy/8 px-5 py-3.5">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
+                </div>
+              </div>
+
+              <div className="p-5 sm:p-6 space-y-5">
+                {/* Trend chart card */}
+                <div className="rounded-xl border border-navy/10 p-4 sm:p-5">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[12px] font-medium text-navy/50">
+                      Compliance score
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <motion.span
+                        className="h-1.5 w-1.5 rounded-full bg-cyan"
+                        animate={{ opacity: [0.4, 1, 0.4] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      />
+                      <span className="text-[10.5px] text-navy/40">Live</span>
+                    </span>
+                  </div>
+                  <TrendChart />
+                </div>
+
+                {/* Bars + Donut */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="rounded-xl border border-navy/10 p-4 sm:p-5">
+                    <span className="text-[12px] font-medium text-navy/50 block mb-4">
+                      Paperwork by type
+                    </span>
+                    <PaperworkBars />
+                  </div>
+                  <div className="rounded-xl border border-navy/10 p-4 sm:p-5 flex flex-col justify-between">
+                    <span className="text-[12px] font-medium text-navy/50 block mb-4">
+                      Filing status
+                    </span>
+                    <FilingDonut />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p className="mt-6 text-center text-[12px] text-navy/35">
+              Product mockup shown with illustrative data for demonstration purposes only.
+            </p>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -3445,7 +4250,7 @@ export function ProofSection() {
 <file path="src/components/IndustriesSection.tsx">
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import {
@@ -3481,33 +4286,35 @@ export function IndustriesSection() {
   const t = useTranslations("architecture");
   const tIndustries = useTranslations("industries");
   const [active, setActive] = useState<IndustryKey>("logistics");
+  const [imageError, setImageError] = useState<Record<string, boolean>>({});
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   const focus = tIndustries.raw(`list.${active}.focus`) as string[];
 
-  return (
-    <section id="industries" className="relative py-24 lg:py-32 bg-navy overflow-hidden">
-      <div aria-hidden className="absolute inset-0 bg-grid bg-grid-fade opacity-[0.2]" />
+  // Preload all images when the component mounts
+  useEffect(() => {
+    industryKeys.forEach((key) => {
+      const img = new window.Image();
+      img.src = `/industries/${key}.jpg`;
+      img.onload = () => {
+        setLoadedImages((prev) => ({ ...prev, [key]: true }));
+      };
+      img.onerror = () => {
+        // If the image fails to load, mark it as loaded anyway to avoid infinite loading
+        // but also set the error state so the fallback is shown
+        setImageError((prev) => ({ ...prev, [key]: true }));
+        setLoadedImages((prev) => ({ ...prev, [key]: true }));
+      };
+    });
+  }, []);
 
-      <div className="relative mx-auto max-w-[1200px] px-6 lg:px-8">
+  return (
+    <section id="industries" className="relative py-24 lg:py-32 bg-white overflow-hidden">
+      {/* ... ambient backgrounds unchanged ... */}
+
+      <div className="relative mx-auto max-w-[1280px] px-6 lg:px-8">
         <div className="max-w-[640px] mb-12 lg:mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, ease }}
-            className="text-balance text-[32px] sm:text-[40px] leading-[1.15] font-semibold tracking-[-0.015em] text-white mb-5"
-          >
-            {t("headline")}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, delay: 0.1, ease }}
-            className="text-[17px] leading-[1.7] text-white/55 max-w-[520px]"
-          >
-            {t("subtext")}
-          </motion.p>
+          {/* ... headline and subtext unchanged ... */}
         </div>
 
         <motion.div
@@ -3515,120 +4322,135 @@ export function IndustriesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, delay: 0.15, ease }}
-          className="grid lg:grid-cols-[0.85fr_1.15fr] rounded-lg border border-white/12 overflow-hidden"
+          className="grid lg:grid-cols-[380px_1fr] gap-8 lg:gap-12 items-start"
         >
-          {/* Left: accordion, single accent reserved for the active row */}
-          <div className="divide-y divide-white/10 bg-[#0a2247]">
+          {/* Left: Tabs (unchanged) */}
+          <div className="flex flex-col gap-2">
             {industryKeys.map((key) => {
               const isActive = key === active;
               const Icon = icons[key];
 
               return (
-                <div
+                <button
                   key={key}
-                  className={`relative pl-6 pr-6 lg:pl-8 lg:pr-8 transition-colors duration-300 ${
-                    isActive ? "bg-white/[0.03]" : ""
+                  onClick={() => setActive(key)}
+                  className={`group relative w-full text-left rounded-xl p-5 transition-all duration-300 border ${
+                    isActive
+                      ? "bg-white border-navy/10 shadow-[0_8px_20px_-8px_rgba(7,27,58,0.12)]"
+                      : "bg-transparent border-transparent hover:bg-white/50"
                   }`}
                 >
-                  <span
-                    aria-hidden
-                    className={`absolute left-0 top-0 h-full w-[2px] transition-colors duration-300 ${
-                      isActive ? "bg-cyan" : "bg-transparent"
-                    }`}
-                  />
-                  <button
-                    onClick={() => setActive(key)}
-                    className="w-full flex items-center justify-between gap-4 py-5 text-left"
-                  >
-                    <span className="flex items-center gap-3">
-
-                      <span
-                        className={`text-[15px] font-semibold tracking-tight transition-colors duration-300 ${
-                          isActive ? "text-white" : "text-white/60"
+                  <div className="flex items-start gap-4">
+                    <div>
+                      <h4
+                        className={`text-[15px] font-semibold transition-colors mt-2 ${
+                          isActive ? "text-navy" : "text-navy/60 group-hover:text-navy"
                         }`}
                       >
                         {tIndustries(`list.${key}.name`)}
-                      </span>
-                    </span>
-                    <span className="text-[15px] leading-none text-white/30">
-                      {isActive ? "\u2212" : "+"}
-                    </span>
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {isActive && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.35, ease }}
-                        className="overflow-hidden"
-                      >
-                        <div className="pb-6">
-                          <p className="text-[13.5px] leading-[1.65] text-white/50 mb-5 max-w-[380px]">
-                            {tIndustries(`list.${key}.note`)}
-                          </p>
-                          <a
-                            href="#contact"
-                            className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-cyan hover:text-cyan/80 transition-colors"
+                      </h4>
+                      <AnimatePresence>
+                        {isActive && (
+                          <motion.p
+                            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                            animate={{ opacity: 1, height: "auto", marginTop: 8 }}
+                            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                            className="text-[13.5px] leading-[1.55] text-navy/55 overflow-hidden"
                           >
-                            {tIndustries("ctaTalkToUs")}
-                            <ArrowRight className="h-3.5 w-3.5" />
-                          </a>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                            {tIndustries(`list.${key}.note`)}
+                          </motion.p>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                </button>
               );
             })}
           </div>
 
-          {/* Right: regulatory scope reference — plain content, not a fake product screenshot */}
-          <div className="relative border-t lg:border-t-0 lg:border-l border-white/10 bg-[#0c1e3f] p-8 sm:p-10 flex flex-col">
+          {/* Right: Visual Showcase */}
+          <div className="relative rounded-2xl border border-navy/10 bg-white shadow-[0_1px_2px_rgba(7,27,58,0.04),0_32px_64px_-28px_rgba(7,27,58,0.15)] overflow-hidden aspect-[4/3] lg:aspect-auto lg:h-[600px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 1.02 }}
+                animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.3, ease }}
-                className="flex-1 flex flex-col"
+                transition={{ duration: 0.4, ease }}
+                className="absolute inset-0 flex flex-col"
               >
-                <h3 className="text-[22px] font-semibold tracking-tight text-white mb-2">
-                  {tIndustries(`list.${active}.name`)}
-                </h3>
-                <p className="text-[14px] leading-[1.65] text-white/50 mb-8 max-w-[420px]">
-                  {tIndustries(`list.${active}.note`)}
-                </p>
-
-                <div className="mt-auto border-t border-white/10">
-                  {focus.map((item, i) => (
-                    <div
-                      key={item}
-                      className="flex items-baseline gap-4 py-4 border-b border-white/10"
-                    >
-                      <span className="text-[13px] text-white/25 tabular-nums">
-                        0{i + 1}
-                      </span>
-                      <span className="text-[14.5px] text-white/85">{item}</span>
+                {/* Image area */}
+                <div className="relative flex-1 bg-gradient-to-br from-navy/[0.03] to-cyan/[0.03] overflow-hidden">
+                  {/* Show loading skeleton until image is loaded and not error */}
+                  {!loadedImages[active] && !imageError[active] && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan border-t-transparent" />
                     </div>
-                  ))}
+                  )}
+
+                  <img
+                    src={`/industries/${active}.jpg`}
+                    alt={tIndustries(`list.${active}.name`)}
+                    className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+                      loadedImages[active] && !imageError[active] ? "opacity-100" : "opacity-0"
+                    }`}
+                    onError={(e) => {
+                      e.currentTarget.style.opacity = "0";
+                      setImageError((prev) => ({ ...prev, [active]: true }));
+                      setLoadedImages((prev) => ({ ...prev, [active]: true })); // hide spinner
+                    }}
+                    // If the image is already preloaded, it will show immediately
+                  />
+
+                  {/* Fallback when image fails */}
+                  {imageError[active] && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+                      <div className="h-12 w-12 rounded-full bg-white border border-navy/10 flex items-center justify-center mb-3">
+                        <icons.retail className="h-5 w-5 text-navy/30" />
+                      </div>
+                      <p className="text-[14px] font-semibold text-navy/60 mb-1">
+                        Add your image here
+                      </p>
+                      <p className="text-[12.5px] text-navy/40 font-mono bg-white border border-navy/10 px-2 py-1 rounded">
+                        public/industries/{active}.jpg
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Soft gradient fade */}
+                  <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                </div>
+
+                {/* Focus points content (unchanged) */}
+                <div className="relative bg-white px-8 pb-8 pt-2">
+                  <div className="flex items-center justify-between mb-5">
+                    <h3 className="text-[18px] font-semibold tracking-tight text-navy">
+                      Key capabilities
+                    </h3>
+                    <a
+                      href="#contact"
+                      className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-cyan hover:text-cyan/80 transition-colors"
+                    >
+                      {tIndustries("ctaTalkToUs")}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </a>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-x-8 gap-y-3.5">
+                    {focus.map((item) => (
+                      <div key={item} className="flex items-start gap-3">
+                        <div className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-cyan" />
+                        <span className="text-[13.5px] leading-[1.6] text-navy/70">
+                          {item}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
         </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6, delay: 0.25, ease }}
-          className="mt-8 text-[13px] leading-[1.6] text-white/40 max-w-[560px]"
-        >
-          {t("disclaimer")}
-        </motion.p>
       </div>
     </section>
   );

@@ -13,7 +13,8 @@
     "headlineHighlight": "integrado",
     "headlinePart2": "en el negocio.",
     "subtext": "Convertimos requisitos normativos complejos en infraestructura de software escalable para sectores regulados.",
-    "ctaPrimary": "Contáctanos"
+    "ctaPrimary": "Contáctanos",
+    "ctaSecondary": "Cómo Funciona"
   },
   "heroDashboard": {
     "complianceStatus": "Estado de cumplimiento",
@@ -42,6 +43,41 @@
         "title": "Sistemas desconectados",
         "description": "El cumplimiento normativo queda al margen de los sistemas donde realmente se hace el trabajo."
       }
+    }
+  },
+  "solution": {
+    "headline": "Documentación de cumplimiento, gestionada por la plataforma.",
+    "description": "Transformamos políticas, evidencias y trámites en un único flujo de trabajo automatizado para que tu equipo dedique menos tiempo a buscar documentos y más a hacer crecer el negocio.",
+    "cta": "Habla con nosotros",
+    "live": "En vivo",
+    "complianceScore": "Puntuación de cumplimiento",
+    "paperworkByType": "Documentación por tipo",
+    "filingStatus": "Estado de tramitación",
+    "disclaimer": "Maqueta de producto mostrada con datos ilustrativos únicamente con fines demostrativos.",
+    "points": {
+      "intake": {
+        "title": "Recepción automatizada",
+        "description": "Las políticas, contratos y certificados se capturan y organizan desde el momento en que llegan."
+      },
+      "verification": {
+        "title": "Verificación continua",
+        "description": "Cada documento se verifica automáticamente contra los marcos normativos que debe cumplir."
+      },
+      "filing": {
+        "title": "Archivado listo para auditoría",
+        "description": "La documentación aprobada se archiva y gestiona por versiones, lista para presentar a cualquier auditor bajo demanda."
+      }
+    },
+    "bars": {
+      "policies": "Políticas",
+      "contracts": "Contratos",
+      "audits": "Auditorías",
+      "certs": "Certificados"
+    },
+    "segments": {
+      "approved": "Aprobado",
+      "review": "En revisión",
+      "pending": "Pendiente"
     }
   },
   "architecture": {
@@ -93,6 +129,12 @@
     },
     "footnote": "Este mockup de producto se muestra con datos ilustrativos únicamente con fines de demostración."
   },
+  "integrations": {
+    "headline": "Conecta las herramientas que tus equipos ya utilizan.",
+    "cardTitle": "Sincroniza controles, evidencias y registros automáticamente.",
+    "cardSubtext": "Sin sustituir nada. Statum se conecta a los sistemas CRM, ERP y RRHH que ya utilizas.",
+    "cta": "Explora las integraciones"
+  },
   "industries": {
     "headline": "Infraestructura de cumplimiento para sectores regulados.",
     "subtext": "La misma infraestructura central está diseñada para dar soporte a diversos entornos normativos a medida que la plataforma se amplíe.",
@@ -138,7 +180,7 @@
   },
   "howItWorks": {
     "headline": "De la normativa a la infraestructura operativa.",
-    "subtext": "El cumplimiento normativo no es una configuración puntual. Cada ciclo —entender, construir, monitorear, escalar— alimenta el siguiente, de modo que la infraestructura mantiene el ritmo a medida que cambian los requisitos y las operaciones.",
+    "subtext": "El cumplimiento normativo no es una configuración puntual. Cada ciclo entender, construir, monitorear, escalar alimenta el siguiente, de modo que la infraestructura mantiene el ritmo a medida que cambian los requisitos y las operaciones.",
     "cta": "Más información",
     "steps": {
       "understand": { "title": "Entender", "description": "Traducir los requisitos normativos en controles estructurados." },

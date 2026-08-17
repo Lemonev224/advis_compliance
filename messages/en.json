@@ -13,7 +13,8 @@
     "headlineHighlight": "built into",
     "headlinePart2": "the business.",
     "subtext": "We turn complex regulatory requirements into scalable software infrastructure for regulated industries.",
-    "ctaPrimary": "Get in Touch"
+    "ctaPrimary": "Get in Touch",
+    "ctaSecondary": "How It Works"
   },
   "heroDashboard": {
     "complianceStatus": "Compliance status",
@@ -42,6 +43,41 @@
         "title": "Disconnected systems",
         "description": "Compliance sits apart from the systems where the actual work happens."
       }
+    }
+  },
+  "solution": {
+    "headline": "Compliance paperwork, handled by the platform.",
+    "description": "We turn policies, evidence and filings into a single automated workflow so your team spends less time chasing documents and more time running the business.",
+    "cta": "Talk to us",
+    "live": "Live",
+    "complianceScore": "Compliance score",
+    "paperworkByType": "Paperwork by type",
+    "filingStatus": "Filing status",
+    "disclaimer": "Product mockup shown with illustrative data for demonstration purposes only.",
+    "points": {
+      "intake": {
+        "title": "Automated intake",
+        "description": "Policies, contracts and certificates are captured and organized the moment they land."
+      },
+      "verification": {
+        "title": "Continuous verification",
+        "description": "Every document is checked against the frameworks it needs to satisfy, automatically."
+      },
+      "filing": {
+        "title": "Audit-ready filing",
+        "description": "Approved paperwork is filed and versioned, ready to hand to any auditor on demand."
+      }
+    },
+    "bars": {
+      "policies": "Policies",
+      "contracts": "Contracts",
+      "audits": "Audits",
+      "certs": "Certs"
+    },
+    "segments": {
+      "approved": "Approved",
+      "review": "In review",
+      "pending": "Pending"
     }
   },
   "architecture": {
@@ -93,6 +129,12 @@
     },
     "footnote": "Product mockup shown with illustrative data for demonstration purposes only."
   },
+  "integrations": {
+    "headline": "Connect the tools your teams already run on.",
+    "cardTitle": "Sync controls, evidence and records automatically.",
+    "cardSubtext": "No rip-and-replace. Statum plugs into the CRM, ERP and HR systems you already use.",
+    "cta": "Explore integrations"
+  },
   "industries": {
     "headline": "Compliance infrastructure for regulated industries.",
     "subtext": "The same core infrastructure is designed to support a range of regulatory environments as the platform expands.",
@@ -138,7 +180,7 @@
   },
   "howItWorks": {
     "headline": "From regulation to operational infrastructure.",
-    "subtext": "Compliance isn't a one-time setup. Each cycle — understand, build, monitor, scale — feeds the next, so the infrastructure keeps pace as requirements and operations change.",
+    "subtext": "Compliance isn't a one time setup. Each cycle understand, build, monitor, scale feeds the next, so the infrastructure keeps pace as requirements and operations change.",
     "cta": "Learn more",
     "steps": {
       "understand": { "title": "Understand", "description": "Translate regulatory requirements into structured controls." },
