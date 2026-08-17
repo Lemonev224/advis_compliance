@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://advisorly.tech";
+  const baseUrl = "https://www.advisorly.tech";
   const paths = ["", "/terms", "/privacy"];
 
   // helper: default locale gets no prefix under "as-needed"

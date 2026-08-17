@@ -129,7 +129,7 @@ export default function TermsPage() {
             <p>
               Questions about these Terms can be sent to{" "}
               <a href="mailto:contact@advisorly.uk" className="underline hover:text-navy">
-                contact@advisorly.tech
+                contact@advisorly.uk
               </a>.
             </p>
           </div>

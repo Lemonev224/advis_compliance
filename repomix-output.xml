@@ -448,7 +448,7 @@ export default function TermsPage() {
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://advisorly.tech";
+  const baseUrl = "https://www.advisorly.tech";
 
   return {
     rules: {
@@ -1155,7 +1155,7 @@ import "@/app/globals.css";
 const geistSans = GeistSans;
 const geistMono = GeistMono;
 
-const BASE_URL = "https://advisorly.tech";
+const BASE_URL = "https://www.advisorly.tech";
 
 export async function generateMetadata({
   params,
@@ -1358,7 +1358,7 @@ import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://advisorly.tech";
+  const baseUrl = "https://www.advisorly.tech";
   const paths = ["", "/terms", "/privacy"];
 
   // helper: default locale gets no prefix under "as-needed"
@@ -2028,103 +2028,6 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  );
-}
-</file>
-
-<file path="src/components/HeroDashboard.tsx">
-"use client";
-
-import { motion } from "framer-motion";
-import { ShieldCheck, Database, AlertTriangle, CheckCircle2 } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { AnimatedNumber } from "./AnimatedNumber";
-
-export function HeroDashboard() {
-  const t = useTranslations("heroDashboard");
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="relative w-full max-w-[520px] mx-auto"
-    >
-      <div
-        aria-hidden
-        className="absolute -inset-10 -z-10 rounded-[40px] opacity-60 blur-3xl"
-        style={{
-          background:
-            "radial-gradient(closest-side, rgba(24,198,209,0.16), rgba(36,81,184,0.10), transparent)",
-        }}
-      />
-
-      <div className="rounded-2xl border border-navy/10 bg-white shadow-[0_1px_2px_rgba(7,27,58,0.04),0_24px_48px_-24px_rgba(7,27,58,0.18)] overflow-hidden">
-        <div className="flex items-center justify-between border-b border-navy/8 px-5 py-3.5">
-          <div className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
-            <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
-            <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
-          </div>
-        </div>
-
-        <div className="p-5">
-          <div className="flex items-center gap-4 rounded-xl border border-navy/10 bg-pale/60 p-4 mb-3">
-            <div className="relative h-16 w-16 shrink-0">
-              <svg width="64" height="64" viewBox="0 0 64 64" className="-rotate-90">
-                <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(7,27,58,0.08)" strokeWidth="6" />
-                <motion.circle
-                  cx="32" cy="32" r="26" fill="none" stroke="url(#hero-ring)" strokeWidth="6" strokeLinecap="round"
-                  strokeDasharray={2 * Math.PI * 26}
-                  initial={{ strokeDashoffset: 2 * Math.PI * 26 }}
-                  animate={{ strokeDashoffset: 2 * Math.PI * 26 * 0.06 }}
-                  transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                />
-                <defs>
-                  <linearGradient id="hero-ring" x1="0" y1="0" x2="64" y2="64">
-                    <stop stopColor="#2451B8" />
-                    <stop offset="1" stopColor="#18C6D1" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center text-[13px] font-semibold text-navy">
-                <AnimatedNumber value={94} format={(n) => `${Math.round(n)}%`} delay={0.6} />
-              </div>
-            </div>
-            <div>
-              <div className="text-[12px] font-medium text-navy/50 mb-0.5">{t("complianceStatus")}</div>
-              <div className="text-[13px] text-navy/70 flex items-center gap-1.5">
-                <CheckCircle2 className="h-3.5 w-3.5 text-cyan" /> {t("onTrack")}
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-lg border border-navy/10 p-3.5">
-              <ShieldCheck className="h-4 w-4 text-blue mb-2" strokeWidth={1.75} />
-              <div className="text-[17px] font-semibold text-navy tracking-tight">
-                <AnimatedNumber value={184} delay={0.7} />
-              </div>
-              <div className="text-[10.5px] text-navy/45">{t("controls")}</div>
-            </div>
-            <div className="rounded-lg border border-navy/10 p-3.5">
-              <Database className="h-4 w-4 text-blue mb-2" strokeWidth={1.75} />
-              <div className="text-[17px] font-semibold text-navy tracking-tight">
-                <AnimatedNumber value={1248} delay={0.75} format={(n) => Math.round(n).toLocaleString("en-US")} />
-              </div>
-              <div className="text-[10.5px] text-navy/45">{t("evidence")}</div>
-            </div>
-            <div className="rounded-lg border border-navy/10 p-3.5">
-              <AlertTriangle className="h-4 w-4 text-[#B8722F] mb-2" strokeWidth={1.75} />
-              <div className="text-[17px] font-semibold text-navy tracking-tight">
-                <AnimatedNumber value={8} delay={0.8} />
-              </div>
-              <div className="text-[10.5px] text-navy/45">{t("openRisks")}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
   );
 }
 </file>
@@ -3141,6 +3044,132 @@ export default config;
 }
 </file>
 
+<file path="src/components/HeroDashboard.tsx">
+"use client";
+
+import { motion } from "framer-motion";
+import { ShieldCheck, Database, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { AnimatedNumber } from "./AnimatedNumber";
+
+export function HeroDashboard() {
+  const t = useTranslations("heroDashboard");
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      className="relative w-full max-w-[520px] mx-auto"
+    >
+      {/* Muted enterprise backdrop glow */}
+      <div
+        aria-hidden
+        className="absolute -inset-8 -z-10 rounded-[32px] opacity-40 blur-3xl"
+        style={{
+          background:
+            "radial-gradient(closest-side, rgba(7, 27, 58, 0.25), rgba(30, 58, 138, 0.12), transparent)",
+        }}
+      />
+
+      {/* Enterprise Card Container */}
+      <div className="rounded-xl border border-slate-200/80 bg-white shadow-[0_1px_3px_rgba(7,27,58,0.06),0_20px_40px_-20px_rgba(7,27,58,0.15)] overflow-hidden">
+        {/* Sleek Dark Navy Window Header */}
+        <div className="flex items-center justify-between border-b border-navy/10 bg-[#071B3A] px-4 py-3">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-white/20" />
+              <span className="h-2 w-2 rounded-full bg-white/20" />
+              <span className="h-2 w-2 rounded-full bg-white/20" />
+            </div>
+            <span className="ml-2 text-[11px] font-medium tracking-wider text-slate-300 uppercase">
+              Compliance Monitor
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 border border-emerald-500/20">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-[10.5px] font-medium text-emerald-300 tracking-wide uppercase">
+              Active
+            </span>
+          </div>
+        </div>
+
+        {/* Dashboard Content */}
+        <div className="p-5 bg-slate-50/40">
+          {/* Main Status Row */}
+          <div className="flex items-center gap-4 rounded-lg border border-slate-200/90 bg-white p-4 mb-3 shadow-xs">
+            <div className="relative h-15 w-15 shrink-0">
+              <svg width="60" height="60" viewBox="0 0 60 60" className="-rotate-90">
+                <circle cx="30" cy="30" r="24" fill="none" stroke="#E2E8F0" strokeWidth="5" />
+                <motion.circle
+                  cx="30"
+                  cy="30"
+                  r="24"
+                  fill="none"
+                  stroke="url(#hero-ring)"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  strokeDasharray={2 * Math.PI * 24}
+                  initial={{ strokeDashoffset: 2 * Math.PI * 24 }}
+                  animate={{ strokeDashoffset: 2 * Math.PI * 24 * 0.06 }}
+                  transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                />
+                <defs>
+                  <linearGradient id="hero-ring" x1="0" y1="0" x2="60" y2="60">
+                    <stop stopColor="#071B3A" />
+                    <stop offset="100%" stopColor="#2563EB" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center text-[13px] font-semibold text-navy">
+                <AnimatedNumber value={94} format={(n) => `${Math.round(n)}%`} delay={0.6} />
+              </div>
+            </div>
+
+            <div>
+              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-0.5">
+                {t("complianceStatus")}
+              </div>
+              <div className="text-[13px] font-medium text-slate-800 flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> {t("onTrack")}
+              </div>
+            </div>
+          </div>
+
+          {/* Key Metrics Grid */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="rounded-lg border border-slate-200/90 bg-white p-3.5 shadow-xs">
+              <ShieldCheck className="h-4 w-4 text-slate-600 mb-2" strokeWidth={1.75} />
+              <div className="text-[16px] font-semibold text-slate-900 tracking-tight">
+                <AnimatedNumber value={184} delay={0.7} />
+              </div>
+              <div className="text-[10.5px] font-medium text-slate-500">{t("controls")}</div>
+            </div>
+
+            <div className="rounded-lg border border-slate-200/90 bg-white p-3.5 shadow-xs">
+              <Database className="h-4 w-4 text-slate-600 mb-2" strokeWidth={1.75} />
+              <div className="text-[16px] font-semibold text-slate-900 tracking-tight">
+                <AnimatedNumber value={1248} delay={0.75} format={(n) => Math.round(n).toLocaleString("en-US")} />
+              </div>
+              <div className="text-[10.5px] font-medium text-slate-500">{t("evidence")}</div>
+            </div>
+
+            <div className="rounded-lg border border-slate-200/90 bg-white p-3.5 shadow-xs">
+              <AlertTriangle className="h-4 w-4 text-amber-600 mb-2" strokeWidth={1.75} />
+              <div className="text-[16px] font-semibold text-slate-900 tracking-tight">
+                <AnimatedNumber value={8} delay={0.8} />
+              </div>
+              <div className="text-[10.5px] font-medium text-slate-500">{t("openRisks")}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+</file>
+
 <file path="src/components/HowItWorksSection.tsx">
 "use client";
 
@@ -3567,249 +3596,6 @@ export default function Home() {
       <Footer />
     </main>
     
-  );
-}
-</file>
-
-<file path="src/components/Hero.tsx">
-"use client";
-
-import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
-
-const ease = [0.16, 1, 0.3, 1] as const;
-
-export function Hero() {
-  const t = useTranslations("hero");
-
-  return (
-    <section
-      id="top"
-      className="relative z-0 overflow-hidden bg-white pt-[96px] min-h-[640px] lg:min-h-[760px] flex items-center"
-    >
-      {/* full-bleed wave — sized off its own aspect ratio (869x1200) instead of
-          object-cover, so it never gets crushed down to a thin cropped sliver.
-          w-[clamp(...)] scales it fluidly with the viewport at every breakpoint.
-          `sizes` tells Next.js the real rendered width so it serves a
-          correctly-sized source instead of upscaling a smaller one (= blur).
-          `quality={100}` avoids compression softness on the gradient. */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <Image
-          src="/blue-wave3.png"
-          alt=""
-          width={1791}
-          height={2400}
-          priority
-          quality={100}
-          sizes="(max-width: 750px) 600px, (max-width: 1500px) 80vw, 1200px"
-          className="absolute right-[-40%] md:right-[0%] top-[65%] md:top-1/2 -translate-y-1/2 w-[clamp(800px,140vw,1200px)] md:w-[clamp(600px,80vw,1200px)] h-auto max-w-none select-none opacity-25 md:opacity-100"
-        />
-      </div>
-
-      {/* light fade on the left only, just enough for the copy to stay legible */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
-        style={{
-          background:
-            "linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.85) 22%, rgba(255,255,255,0.35) 42%, rgba(255,255,255,0) 60%)",
-        }}
-      />
-
-      {/* fade out the bottom so it seamlessly transitions into the next white section */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 -z-10"
-        style={{
-          background:
-            "linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%)",
-        }}
-      />
-
-      <div className="relative mx-auto max-w-[1320px] px-6 lg:px-8 py-24 lg:py-32 w-full">
-        <div className="max-w-[620px]">
-
-
-          <motion.h1
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.08, ease }}
-            className="text-balance text-[38px] sm:text-[48px] lg:text-[56px] leading-[1.08] font-semibold tracking-[-0.02em] text-navy"
-          >
-            {t("headlinePart1")} {t("headlineHighlight")} {t("headlinePart2")}
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease }}
-            className="mt-6 text-[17px] leading-[1.6] text-navy/60 max-w-[480px]"
-          >
-            {t("subtext")}
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3, ease }}
-            className="mt-9 flex flex-wrap items-center gap-3"
-          >
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center rounded-full bg-navy px-7 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-navy/90 active:scale-[0.98]"
-            >
-              {t("ctaPrimary")}
-            </a>
- 
-          </motion.div>
-        </div>
-
-        {/* floating glass card, echoes the "Generating reply..." card in the reference */}
-       {/* floating browser-tab card showing the live dashboard.
-    Width is fluid via clamp() so it scales smoothly with the viewport
-    instead of jumping between fixed breakpoints. The image sits in an
-    aspect-[1895/777] box that exactly matches its native ratio, so it
-    can never be stretched or squashed at any card width. */}
-{/* floating browser-tab card with a coded dashboard mockup (no image asset).
-    Mobile: sits in normal flow, full width, below the CTAs.
-    lg+: switches to an absolutely-positioned floating card at a fluid width. */}
-{/* floating browser-tab card — coded compliance dashboard mockup (no image asset).
-    Mobile: sits in normal flow, full width, below the CTAs.
-    lg+: switches to an absolutely-positioned floating card at a fluid width. */}
-<motion.div
-  initial={{ opacity: 0, y: 24 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.8, delay: 0.4, ease }}
-  className="relative mt-10 w-full lg:mt-0 lg:absolute lg:top-[70px] lg:right-[10px] lg:w-[clamp(460px,42vw,700px)] rounded-2xl border border-navy/10 bg-white shadow-[0_30px_60px_-20px_rgba(7,27,58,0.25)] overflow-hidden"
->
-  {/* browser chrome */}
-  <div className="flex items-center gap-2 border-b border-navy/8 bg-pale/70 px-4 py-2.5">
-    <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
-    <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" />
-    <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
-    <div className="ml-3 flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-medium text-navy/50">
-      <span className="h-1.5 w-1.5 rounded-full bg-cyan animate-pulse" />
-      advisorly.tech/compliance
-    </div>
-  </div>
-
-  {/* app shell */}
-  <div className="flex text-navy">
-    {/* icon rail — hidden on the smallest screens to save width */}
-    <div className="hidden sm:flex w-11 flex-col items-center gap-4 border-r border-navy/8 bg-pale/40 py-4 shrink-0">
-      <span className="h-6 w-6 rounded-md bg-navy" />
-      <span className="h-2 w-2 rounded-full bg-cyan" />
-      <span className="h-2 w-2 rounded-full bg-navy/15" />
-      <span className="h-2 w-2 rounded-full bg-navy/15" />
-      <span className="h-2 w-2 rounded-full bg-navy/15" />
-    </div>
-
-    <div className="flex-1 min-w-0">
-      {/* top bar */}
-      <div className="flex items-center justify-between border-b border-navy/8 px-4 py-2.5">
-        <div>
-          <span className="text-[11px] font-semibold text-navy">Action Engine</span>
-          <span className="ml-2 text-[10px] text-navy/40">Top priorities</span>
-        </div>
-        <span className="text-[9px] font-semibold uppercase tracking-wide text-navy/35">
-          Ranked by risk × urgency
-        </span>
-      </div>
-
-      {/* action queue */}
-      <div className="divide-y divide-navy/6">
-        {[
-          {
-            severity: "CRITICAL",
-            action: "SAR Submission to UIFAND",
-            context: "Client #4992 · Suspected structuring",
-            sla: "Breached by 24h",
-            slaTone: "critical",
-            cta: "Submit SAR",
-          },
-          {
-            severity: "CRITICAL",
-            action: "AML Alerts Triage",
-            context: "Batch #882 · 5 high-risk transactions",
-            sla: "Breached by 4h",
-            slaTone: "critical",
-            cta: "Review flags",
-          },
-          {
-            severity: "HIGH",
-            action: "KYC Renewal Escalation",
-            context: "Corp Entity B · UBO missing",
-            sla: "Due in 48h",
-            slaTone: "warn",
-            cta: "Request docs",
-          },
-          {
-            severity: "HIGH",
-            action: "MiFID II Suitability",
-            context: "Client profile update · HNW",
-            sla: "Due in 3 days",
-            slaTone: "warn",
-            cta: "Update profile",
-          },
-        ].map((row) => (
-          <div key={row.action} className="flex items-center gap-3 px-4 py-2.5">
-            <span
-              className={`shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold tracking-wide ${
-                row.severity === "CRITICAL"
-                  ? "bg-red-600 text-white"
-                  : "bg-red-50 text-red-600"
-              }`}
-            >
-              {row.severity}
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-[10.5px] font-semibold text-navy">
-                {row.action}
-              </div>
-              <div className="truncate text-[9px] text-navy/40">{row.context}</div>
-            </div>
-            <div className="hidden sm:block shrink-0 text-right">
-              <div
-                className={`text-[9px] font-semibold ${
-                  row.slaTone === "critical" ? "text-red-600" : "text-amber-600"
-                }`}
-              >
-                {row.sla}
-              </div>
-            </div>
-            <span className="hidden md:inline-block shrink-0 rounded-md border border-navy/10 bg-pale/60 px-2 py-1 text-[9px] font-semibold text-navy/70">
-              {row.cta}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* regulatory framework posture strip */}
-      <div className="border-t border-navy/8 bg-pale/30 px-4 py-2.5">
-        <div className="mb-1.5 text-[9px] font-semibold uppercase tracking-wide text-navy/40">
-          Regulatory Framework Posture
-        </div>
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="rounded-full bg-red-50 px-2 py-1 text-[9px] font-medium text-red-600">
-            UIFAND Reporting — 2 escalated
-          </span>
-          <span className="rounded-full bg-pale px-2 py-1 text-[9px] font-medium text-navy/50">
-            KYC / AML
-          </span>
-          <span className="rounded-full bg-pale px-2 py-1 text-[9px] font-medium text-navy/50">
-            MiFID II
-          </span>
-          <span className="ml-auto rounded-md bg-red-600 px-2 py-1 text-[9px] font-bold text-white">
-            CRITICAL
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</motion.div>
-      </div>
-    </section>
   );
 }
 </file>
@@ -4369,12 +4155,255 @@ export function SolutionSection() {
 }
 </file>
 
+<file path="src/components/Hero.tsx">
+"use client";
+
+import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+export function Hero() {
+  const t = useTranslations("hero");
+
+  return (
+    <section
+      id="top"
+      className="relative z-0 overflow-hidden bg-white pt-[96px] min-h-[640px] lg:min-h-[760px] flex items-center"
+    >
+      {/* full-bleed wave — sized off its own aspect ratio (869x1200) instead of
+          object-cover, so it never gets crushed down to a thin cropped sliver.
+          w-[clamp(...)] scales it fluidly with the viewport at every breakpoint.
+          `sizes` tells Next.js the real rendered width so it serves a
+          correctly-sized source instead of upscaling a smaller one (= blur).
+          `quality={100}` avoids compression softness on the gradient. */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <Image
+          src="/blue-wave3.png"
+          alt=""
+          width={1791}
+          height={2400}
+          priority
+          quality={100}
+          sizes="(max-width: 750px) 600px, (max-width: 1500px) 80vw, 1200px"
+          className="absolute right-[-40%] md:right-[0%] top-[65%] md:top-1/2 -translate-y-1/2 w-[clamp(800px,140vw,1200px)] md:w-[clamp(600px,80vw,1200px)] h-auto max-w-none select-none opacity-25 md:opacity-100"
+        />
+      </div>
+
+      {/* light fade on the left only, just enough for the copy to stay legible */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          background:
+            "linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.85) 22%, rgba(255,255,255,0.35) 42%, rgba(255,255,255,0) 60%)",
+        }}
+      />
+
+      {/* fade out the bottom so it seamlessly transitions into the next white section */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 -z-10"
+        style={{
+          background:
+            "linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%)",
+        }}
+      />
+
+      <div className="relative mx-auto max-w-[1320px] px-6 lg:px-8 py-24 lg:py-32 w-full">
+        <div className="max-w-[620px]">
+
+
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.08, ease }}
+            className="text-balance text-[38px] sm:text-[48px] lg:text-[56px] leading-[1.08] font-semibold tracking-[-0.02em] text-navy"
+          >
+            {t("headlinePart1")} {t("headlineHighlight")} {t("headlinePart2")}
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease }}
+            className="mt-6 text-[17px] leading-[1.6] text-navy/60 max-w-[480px]"
+          >
+            {t("subtext")}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease }}
+            className="mt-9 flex flex-wrap items-center gap-3"
+          >
+            <a
+              href="#contact"
+              className="inline-flex items-center justify-center rounded-full bg-navy px-7 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-navy/90 active:scale-[0.98]"
+            >
+              {t("ctaPrimary")}
+            </a>
+ 
+          </motion.div>
+        </div>
+
+        {/* floating glass card, echoes the "Generating reply..." card in the reference */}
+       {/* floating browser-tab card showing the live dashboard.
+    Width is fluid via clamp() so it scales smoothly with the viewport
+    instead of jumping between fixed breakpoints. The image sits in an
+    aspect-[1895/777] box that exactly matches its native ratio, so it
+    can never be stretched or squashed at any card width. */}
+{/* floating browser-tab card with a coded dashboard mockup (no image asset).
+    Mobile: sits in normal flow, full width, below the CTAs.
+    lg+: switches to an absolutely-positioned floating card at a fluid width. */}
+{/* floating browser-tab card — coded compliance dashboard mockup (no image asset).
+    Restyled for a sober, institutional / core-banking-software feel:
+    desaturated palette, color used only as a thin accent (border-left /
+    small dot / text tint) rather than solid saturated fills, no pulsing
+    animation on status indicators, tighter tracking on labels. */}
+<motion.div
+  initial={{ opacity: 0, y: 24 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: 0.4, ease }}
+  className="relative mt-10 w-full lg:mt-0 lg:absolute lg:top-[70px] lg:right-[10px] lg:w-[clamp(460px,42vw,700px)] rounded-2xl border border-navy/10 bg-white shadow-[0_30px_60px_-20px_rgba(7,27,58,0.25)] overflow-hidden"
+>
+  {/* browser chrome — muted, uniform tone instead of red/amber/green traffic lights */}
+  <div className="flex items-center gap-2 border-b border-navy/8 bg-slate-50 px-4 py-2.5">
+    <span className="h-2.5 w-2.5 rounded-full bg-navy/15" />
+    <span className="h-2.5 w-2.5 rounded-full bg-navy/15" />
+    <span className="h-2.5 w-2.5 rounded-full bg-navy/15" />
+    <div className="ml-3 flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-medium text-navy/50">
+      <span className="h-1.5 w-1.5 rounded-full bg-navy/30" />
+      advisorly.tech/compliance
+    </div>
+  </div>
+
+  {/* app shell */}
+  <div className="flex text-navy">
+    {/* icon rail — hidden on the smallest screens to save width */}
+    <div className="hidden sm:flex w-11 flex-col items-center gap-4 border-r border-navy/8 bg-slate-50/60 py-4 shrink-0">
+
+    </div>
+
+    <div className="flex-1 min-w-0">
+      {/* top bar */}
+      <div className="flex items-center justify-between border-b border-navy/8 px-4 py-2.5">
+        <div>
+          <span className="text-[11px] font-semibold text-navy">Dashboard</span>
+          <span className="ml-2 text-[10px] text-navy/40">Alerts</span>
+        </div>
+
+      </div>
+
+      {/* action queue */}
+      <div className="divide-y divide-navy/6">
+        {[
+          {
+            severity: "CRITICAL",
+            action: "SAR Submission to UIFAND",
+            context: "Client #4992 · Suspected structuring",
+            sla: "Breached by 24h",
+            slaTone: "critical",
+            cta: "Submit SAR",
+          },
+          {
+            severity: "CRITICAL",
+            action: "AML Alerts Triage",
+            context: "Batch #882 · 5 high-risk transactions",
+            sla: "Breached by 4h",
+            slaTone: "critical",
+            cta: "Review flags",
+          },
+          {
+            severity: "HIGH",
+            action: "KYC Renewal Escalation",
+            context: "Corp Entity B · UBO missing",
+            sla: "Due in 48h",
+            slaTone: "warn",
+            cta: "Request docs",
+          },
+          {
+            severity: "HIGH",
+            action: "MiFID II Suitability",
+            context: "Client profile update · HNW",
+            sla: "Due in 3 days",
+            slaTone: "warn",
+            cta: "Update profile",
+          },
+        ].map((row) => (
+          <div
+            key={row.action}
+            className={`flex items-center gap-3 px-4 py-2.5 border-l-2 ${
+              row.slaTone === "critical" ? "border-l-[#7A2E2E]" : "border-l-[#8A6A2E]"
+            }`}
+          >
+            <span
+              className={`shrink-0 rounded-[3px] border px-1.5 py-0.5 text-[8px] font-bold tracking-wide ${
+                row.severity === "CRITICAL"
+                  ? "border-[#7A2E2E]/30 text-[#7A2E2E] bg-[#7A2E2E]/[0.04]"
+                  : "border-navy/15 text-navy/55 bg-navy/[0.02]"
+              }`}
+            >
+              {row.severity}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-[10.5px] font-semibold text-navy">
+                {row.action}
+              </div>
+              <div className="truncate text-[9px] text-navy/40">{row.context}</div>
+            </div>
+            <div className="hidden sm:block shrink-0 text-right">
+              <div
+                className={`text-[9px] font-semibold tabular-nums ${
+                  row.slaTone === "critical" ? "text-[#7A2E2E]" : "text-[#8A6A2E]"
+                }`}
+              >
+                {row.sla}
+              </div>
+            </div>
+            <span className="hidden md:inline-block shrink-0 rounded-md border border-navy/10 bg-slate-50 px-2 py-1 text-[9px] font-semibold text-navy/70">
+              {row.cta}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* regulatory framework posture strip */}
+      <div className="border-t border-navy/8 bg-slate-50/60 px-4 py-2.5">
+
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="rounded-[3px] border border-[#7A2E2E]/25 bg-transparent px-2 py-1 text-[9px] font-medium text-[#7A2E2E]">
+            UIFAND Reporting — 2 escalated
+          </span>
+          <span className="rounded-[3px] border border-navy/10 px-2 py-1 text-[9px] font-medium text-navy/50">
+            KYC / AML
+          </span>
+          <span className="rounded-[3px] border border-navy/10 px-2 py-1 text-[9px] font-medium text-navy/50">
+            MiFID II
+          </span>
+          <span className="ml-auto rounded-[3px] border border-[#7A2E2E]/30 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-[#7A2E2E]">
+            Critical
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</motion.div>
+      </div>
+    </section>
+  );
+}
+</file>
+
 <file path="src/components/IndustriesSection.tsx">
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import {
   Truck,
   HardHat,
@@ -4409,26 +4438,13 @@ export function IndustriesSection() {
   const tIndustries = useTranslations("industries");
   const [active, setActive] = useState<IndustryKey>("logistics");
   const [imageError, setImageError] = useState<Record<string, boolean>>({});
-  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   const focus = tIndustries.raw(`list.${active}.focus`) as string[];
 
-  // Preload all images when the component mounts
-  useEffect(() => {
-    industryKeys.forEach((key) => {
-      const img = new window.Image();
-      img.src = `/industries/${key}.jpg`;
-      img.onload = () => {
-        setLoadedImages((prev) => ({ ...prev, [key]: true }));
-      };
-      img.onerror = () => {
-        // If the image fails to load, mark it as loaded anyway to avoid infinite loading
-        // but also set the error state so the fallback is shown
-        setImageError((prev) => ({ ...prev, [key]: true }));
-        setLoadedImages((prev) => ({ ...prev, [key]: true }));
-      };
-    });
-  }, []);
+  // No manual preloading needed anymore — next/image handles lazy loading,
+  // resizing, format negotiation (webp/avif) and caching for us. We just
+  // mark the very first tab as `priority` so it's fetched eagerly on
+  // initial paint (it's above the fold), and let the rest load on demand.
 
   return (
     <section id="industries" className="relative py-24 lg:py-32 bg-white overflow-hidden">
@@ -4503,26 +4519,27 @@ export function IndustriesSection() {
               >
                 {/* Image area */}
                 <div className="relative flex-1 bg-gradient-to-br from-navy/[0.03] to-cyan/[0.03] overflow-hidden">
-                  {/* Show loading skeleton until image is loaded and not error */}
-                  {!loadedImages[active] && !imageError[active] && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan border-t-transparent" />
-                    </div>
+                  {!imageError[active] && (
+                    <Image
+                      src={`/industries/${active}.jpg`}
+                      alt={tIndustries(`list.${active}.name`)}
+                      fill
+                      // Tells the browser/Next how big this image will actually
+                      // render so it fetches an appropriately-sized file instead
+                      // of the full original resolution.
+                      sizes="(max-width: 1024px) 100vw, 900px"
+                      // Only the very first industry loads eagerly (it's the
+                      // default active tab, so it's visible immediately).
+                      // Every other tab's image is fetched on demand when
+                      // clicked, not all at once on page load.
+                      priority={active === industryKeys[0]}
+                      quality={75}
+                      className="object-cover"
+                      onError={() =>
+                        setImageError((prev) => ({ ...prev, [active]: true }))
+                      }
+                    />
                   )}
-
-                  <img
-                    src={`/industries/${active}.jpg`}
-                    alt={tIndustries(`list.${active}.name`)}
-                    className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-                      loadedImages[active] && !imageError[active] ? "opacity-100" : "opacity-0"
-                    }`}
-                    onError={(e) => {
-                      e.currentTarget.style.opacity = "0";
-                      setImageError((prev) => ({ ...prev, [active]: true }));
-                      setLoadedImages((prev) => ({ ...prev, [active]: true })); // hide spinner
-                    }}
-                    // If the image is already preloaded, it will show immediately
-                  />
 
                   {/* Fallback when image fails */}
                   {imageError[active] && (

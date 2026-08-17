@@ -9,7 +9,7 @@ import "@/app/globals.css";
 const geistSans = GeistSans;
 const geistMono = GeistMono;
 
-const BASE_URL = "https://advisorly.tech";
+const BASE_URL = "https://www.advisorly.tech";
 
 export async function generateMetadata({
   params,
@@ -86,8 +86,8 @@ const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Advisorly",
-  url: "https://advisorly.tech",
-  logo: "https://advisorly.tech/logo.png",
+  url: "https://www.advisorly.tech",
+  logo: "https://www.advisorly.tech/logo.png",
   description:
     "Advisorly builds compliance infrastructure that turns complex regulatory requirements into scalable software for regulated industries.",
   contactPoint: {
