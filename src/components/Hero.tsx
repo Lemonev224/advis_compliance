@@ -6,6 +6,41 @@ import Image from "next/image";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
+/* Compact, muted contract-compliance snapshot for the hero card.
+   Deliberately desaturated: color is used only as a thin accent
+   (left border / small dot), never a solid fill, to keep the
+   institutional / core-banking-software feel. */
+const stats = [
+  { label: "Open requests", value: "13" },
+  { label: "Settled", value: "8" },
+  { label: "Avg time", value: "2m" },
+  { label: "Overdue", value: "13" },
+];
+
+const requests = [
+  {
+    vendor: "Beatty-Bruen",
+    type: "Nondisclosure Agreement",
+    status: 45,
+    statusLabel: "Under Review",
+    tone: "warn",
+  },
+  {
+    vendor: "Kreiger Inc",
+    type: "Partnership Agreement",
+    status: 75,
+    statusLabel: "Decision Made",
+    tone: "ok",
+  },
+  {
+    vendor: "Schroeder and Sons",
+    type: "Nondisclosure Agreement",
+    status: 75,
+    statusLabel: "Decision Made",
+    tone: "ok",
+  },
+];
+
 export function Hero() {
   const t = useTranslations("hero");
 
@@ -55,8 +90,6 @@ export function Hero() {
 
       <div className="relative mx-auto max-w-[1320px] px-6 lg:px-8 py-24 lg:py-32 w-full">
         <div className="max-w-[620px]">
-
-
           <motion.h1
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -87,152 +120,110 @@ export function Hero() {
             >
               {t("ctaPrimary")}
             </a>
- 
           </motion.div>
         </div>
 
-        {/* floating glass card, echoes the "Generating reply..." card in the reference */}
-       {/* floating browser-tab card showing the live dashboard.
-    Width is fluid via clamp() so it scales smoothly with the viewport
-    instead of jumping between fixed breakpoints. The image sits in an
-    aspect-[1895/777] box that exactly matches its native ratio, so it
-    can never be stretched or squashed at any card width. */}
-{/* floating browser-tab card with a coded dashboard mockup (no image asset).
-    Mobile: sits in normal flow, full width, below the CTAs.
-    lg+: switches to an absolutely-positioned floating card at a fluid width. */}
-{/* floating browser-tab card — coded compliance dashboard mockup (no image asset).
-    Restyled for a sober, institutional / core-banking-software feel:
-    desaturated palette, color used only as a thin accent (border-left /
-    small dot / text tint) rather than solid saturated fills, no pulsing
-    animation on status indicators, tighter tracking on labels. */}
-<motion.div
-  initial={{ opacity: 0, y: 24 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.8, delay: 0.4, ease }}
-  className="relative mt-10 w-full lg:mt-0 lg:absolute lg:top-[70px] lg:right-[10px] lg:w-[clamp(460px,42vw,700px)] rounded-2xl border border-navy/10 bg-white shadow-[0_30px_60px_-20px_rgba(7,27,58,0.25)] overflow-hidden"
->
-  {/* browser chrome — muted, uniform tone instead of red/amber/green traffic lights */}
-  <div className="flex items-center gap-2 border-b border-navy/8 bg-slate-50 px-4 py-2.5">
-    <span className="h-2.5 w-2.5 rounded-full bg-navy/15" />
-    <span className="h-2.5 w-2.5 rounded-full bg-navy/15" />
-    <span className="h-2.5 w-2.5 rounded-full bg-navy/15" />
-    <div className="ml-3 flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-medium text-navy/50">
-      <span className="h-1.5 w-1.5 rounded-full bg-navy/30" />
-      advisorly.tech/compliance
-    </div>
-  </div>
-
-  {/* app shell */}
-  <div className="flex text-navy">
-    {/* icon rail — hidden on the smallest screens to save width */}
-    <div className="hidden sm:flex w-11 flex-col items-center gap-4 border-r border-navy/8 bg-slate-50/60 py-4 shrink-0">
-
-    </div>
-
-    <div className="flex-1 min-w-0">
-      {/* top bar */}
-      <div className="flex items-center justify-between border-b border-navy/8 px-4 py-2.5">
-        <div>
-          <span className="text-[11px] font-semibold text-navy">Dashboard</span>
-          <span className="ml-2 text-[10px] text-navy/40">Alerts</span>
-        </div>
-
-      </div>
-
-      {/* action queue */}
-      <div className="divide-y divide-navy/6">
-        {[
-          {
-            severity: "CRITICAL",
-            action: "SAR Submission to UIFAND",
-            context: "Client #4992 · Suspected structuring",
-            sla: "Breached by 24h",
-            slaTone: "critical",
-            cta: "Submit SAR",
-          },
-          {
-            severity: "CRITICAL",
-            action: "AML Alerts Triage",
-            context: "Batch #882 · 5 high-risk transactions",
-            sla: "Breached by 4h",
-            slaTone: "critical",
-            cta: "Review flags",
-          },
-          {
-            severity: "HIGH",
-            action: "KYC Renewal Escalation",
-            context: "Corp Entity B · UBO missing",
-            sla: "Due in 48h",
-            slaTone: "warn",
-            cta: "Request docs",
-          },
-          {
-            severity: "HIGH",
-            action: "MiFID II Suitability",
-            context: "Client profile update · HNW",
-            sla: "Due in 3 days",
-            slaTone: "warn",
-            cta: "Update profile",
-          },
-        ].map((row) => (
-          <div
-            key={row.action}
-            className={`flex items-center gap-3 px-4 py-2.5 border-l-2 ${
-              row.slaTone === "critical" ? "border-l-[#7A2E2E]" : "border-l-[#8A6A2E]"
-            }`}
-          >
-            <span
-              className={`shrink-0 rounded-[3px] border px-1.5 py-0.5 text-[8px] font-bold tracking-wide ${
-                row.severity === "CRITICAL"
-                  ? "border-[#7A2E2E]/30 text-[#7A2E2E] bg-[#7A2E2E]/[0.04]"
-                  : "border-navy/15 text-navy/55 bg-navy/[0.02]"
-              }`}
-            >
-              {row.severity}
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-[10.5px] font-semibold text-navy">
-                {row.action}
-              </div>
-              <div className="truncate text-[9px] text-navy/40">{row.context}</div>
+        {/* Floating browser-tab card — compact, muted contract-compliance snapshot.
+            Small footprint (clamp 340–460px) so it reads as a serious product
+            preview rather than the main event of the hero. */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4, ease }}
+          className="relative mt-10 w-full max-w-[420px] mx-auto lg:mx-0 lg:mt-0 lg:absolute lg:top-[90px] lg:right-[10px] lg:w-[clamp(340px,30vw,460px)] rounded-xl border border-navy/10 bg-white shadow-[0_24px_48px_-20px_rgba(7,27,58,0.22)] overflow-hidden"
+        >
+          {/* browser chrome */}
+          <div className="flex items-center gap-2 border-b border-navy/8 bg-slate-50 px-3.5 py-2.5">
+            <span className="h-2 w-2 rounded-full bg-navy/15" />
+            <span className="h-2 w-2 rounded-full bg-navy/15" />
+            <span className="h-2 w-2 rounded-full bg-navy/15" />
+            <div className="ml-2.5 flex items-center gap-1.5 rounded-full bg-white px-2.5 py-[3px] text-[9.5px] font-medium text-navy/50">
+              <span className="h-1 w-1 rounded-full bg-navy/30" />
+              advisorly.tech/compliance
             </div>
-            <div className="hidden sm:block shrink-0 text-right">
-              <div
-                className={`text-[9px] font-semibold tabular-nums ${
-                  row.slaTone === "critical" ? "text-[#7A2E2E]" : "text-[#8A6A2E]"
-                }`}
-              >
-                {row.sla}
-              </div>
-            </div>
-            <span className="hidden md:inline-block shrink-0 rounded-md border border-navy/10 bg-slate-50 px-2 py-1 text-[9px] font-semibold text-navy/70">
-              {row.cta}
-            </span>
           </div>
-        ))}
-      </div>
 
-      {/* regulatory framework posture strip */}
-      <div className="border-t border-navy/8 bg-slate-50/60 px-4 py-2.5">
+          <div className="text-navy">
+            {/* top bar */}
+            <div className="flex items-center justify-between border-b border-navy/8 px-3.5 py-2">
+              <span className="text-[10px] font-semibold text-navy">Contract Requests</span>
+              <span className="flex items-center gap-1.5">
 
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="rounded-[3px] border border-[#7A2E2E]/25 bg-transparent px-2 py-1 text-[9px] font-medium text-[#7A2E2E]">
-            UIFAND Reporting — 2 escalated
-          </span>
-          <span className="rounded-[3px] border border-navy/10 px-2 py-1 text-[9px] font-medium text-navy/50">
-            KYC / AML
-          </span>
-          <span className="rounded-[3px] border border-navy/10 px-2 py-1 text-[9px] font-medium text-navy/50">
-            MiFID II
-          </span>
-          <span className="ml-auto rounded-[3px] border border-[#7A2E2E]/30 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-[#7A2E2E]">
-            Critical
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</motion.div>
+              </span>
+            </div>
+
+            {/* compact stat strip */}
+            <div className="grid grid-cols-4 divide-x divide-navy/6 border-b border-navy/8">
+              {stats.map((s) => (
+                <div key={s.label} className="px-2 py-2.5 text-center">
+                  <div className="text-[13px] font-semibold text-navy tabular-nums leading-none">
+                    {s.value}
+                  </div>
+                  <div className="mt-1 text-[7.5px] font-medium tracking-[0.03em] text-navy/40 uppercase leading-tight">
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* compact request list */}
+            <div className="divide-y divide-navy/6">
+              {requests.map((r) => (
+                <div
+                  key={r.vendor}
+                  className={`flex items-center gap-2.5 px-3.5 py-2.5 border-l-2 ${
+                    r.tone === "ok" ? "border-l-[#2E6B4F]" : "border-l-[#8A6A2E]"
+                  }`}
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-[10.5px] font-semibold text-navy">{r.vendor}</div>
+                    <div className="truncate text-[9px] italic text-navy/40">{r.type}</div>
+                  </div>
+                  <div className="hidden sm:flex flex-col items-end gap-1 w-[64px] shrink-0">
+                    <div className="h-1 w-full rounded-full bg-navy/8 overflow-hidden">
+                      <motion.div
+                        className={`h-full rounded-full ${
+                          r.tone === "ok" ? "bg-[#2E6B4F]" : "bg-[#8A6A2E]"
+                        }`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${r.status}%` }}
+                        transition={{ duration: 1, delay: 0.6, ease }}
+                      />
+                    </div>
+                    <span
+                      className={`text-[8px] font-semibold tabular-nums ${
+                        r.tone === "ok" ? "text-[#2E6B4F]" : "text-[#8A6A2E]"
+                      }`}
+                    >
+                      {r.status}%
+                    </span>
+                  </div>
+                  <span className="shrink-0 rounded-[3px] border border-navy/10 bg-slate-50 px-1.5 py-1 text-[8px] font-semibold text-navy/60 whitespace-nowrap">
+                    {r.statusLabel}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* framework posture strip */}
+            <div className="border-t border-navy/8 bg-slate-50/60 px-3.5 py-2">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="rounded-[3px] border border-navy/10 px-1.5 py-[3px] text-[8px] font-medium text-navy/50">
+                  ISO 27001
+                </span>
+                <span className="rounded-[3px] border border-navy/10 px-1.5 py-[3px] text-[8px] font-medium text-navy/50">
+                  SOC 2
+                </span>
+                <span className="rounded-[3px] border border-navy/10 px-1.5 py-[3px] text-[8px] font-medium text-navy/50">
+                  GDPR
+                </span>
+                <span className="ml-auto rounded-[3px] border border-[#8A6A2E]/30 px-1.5 py-[3px] text-[8px] font-bold uppercase tracking-wide text-[#8A6A2E]">
+                  2 due soon
+                </span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

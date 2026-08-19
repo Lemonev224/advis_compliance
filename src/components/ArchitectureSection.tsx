@@ -1,177 +1,204 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FileCheck2, ShieldCheck, ScanSearch } from "lucide-react";
+import {
+  FileCheck2,
+  ShieldCheck,
+  ScanSearch,
+  Pencil,
+  Mail,
+  User,
+  MapPin,
+  ShieldQuestion,
+  Handshake,
+  ScrollText,
+  ClipboardEdit,
+  LifeBuoy,
+  BarChart3,
+  Filter,
+  RefreshCcw,
+  CircleDot,
+  CheckCircle2,
+  ListChecks,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
-import { AnimatedNumber } from "./AnimatedNumber";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-/* Wavy trend line, drawn on scroll-into-view */
-function TrendChart() {
+/* ---------------------------------------------------------------- */
+/*  Dashboard data                                                   */
+/* ---------------------------------------------------------------- */
+
+const stats = [
+  { label: "OPEN REQUESTS", sub: "NEW REQUEST(S)", value: 13, delta: "+52%", up: true, ring: 24 },
+  { label: "SETTLED REQUESTS", sub: "TODAY VS. YESTERDAY", value: 8, delta: "-11%", up: false, ring: 38 },
+  { label: "AVG TIME (MIN)", sub: "TODAY VS. YESTERDAY", value: 2, delta: "+50%", up: true, ring: 16 },
+  { label: "OVERDUE", sub: "TODAY VS. OVERDUE", value: 13, delta: "-96%", up: false, ring: 82 },
+];
+
+const typeMeta: Record<string, { icon: typeof ShieldQuestion; label: string }> = {
+  nda: { icon: ShieldQuestion, label: "Nondisclosure Agreement" },
+  indemnity: { icon: ScrollText, label: "Indemnity Agreement" },
+  partnership: { icon: Handshake, label: "Partnership Agreement" },
+};
+
+const requests = [
+  {
+    vendor: "Beatty-Bruen",
+    contact: "Dallis Hunnam",
+    email: "dhunnam1@beattybruen.com",
+    address: "7591 Graceland Trail",
+    city: "Wichita, KS 67236",
+    type: "nda",
+    status: 45,
+    statusLabel: "Under Review",
+    near: false,
+  },
+  {
+    vendor: "Ferry-Bode",
+    contact: "Cherin Attenborough",
+    email: "cattenborough6@ferrybode.com",
+    address: "96 Hanover Point",
+    city: "Pensacola, FL 32511",
+    type: "indemnity",
+    status: 45,
+    statusLabel: "Under Review",
+    near: false,
+  },
+  {
+    vendor: "Kreiger Inc",
+    contact: "Jarid Hammon",
+    email: "jhammon3@kreigerinc.com",
+    address: "3 Mendota Terrace",
+    city: "Juneau, AK 99812",
+    type: "partnership",
+    status: 75,
+    statusLabel: "Decision Made",
+    near: false,
+  },
+  {
+    vendor: "Shanahan, Padberg and Wiza",
+    contact: "Koenraad Murrell",
+    email: "kmurrell7@spwlegal.com",
+    address: "2 Fairfield Way",
+    city: "Reading, PA 19610",
+    type: "indemnity",
+    status: 75,
+    statusLabel: "Decision Made",
+    near: true,
+  },
+  {
+    vendor: "Schroeder and Sons",
+    contact: "Vanny Mapam",
+    email: "vmapam5@schroederandsons.com",
+    address: "1 Debra Street",
+    city: "Irvine, CA 92717",
+    type: "nda",
+    status: 75,
+    statusLabel: "Decision Made",
+    near: true,
+  },
+];
+
+const actions = [
+  {
+    icon: ClipboardEdit,
+    title: "New Contract Change Request",
+    detail: "Request a new contract change. Make sure to have all required information ready.",
+  },
+  {
+    icon: LifeBuoy,
+    title: "Request Help From Support",
+    detail: "Open a service desk ticket, or browse our frequently asked questions.",
+  },
+  {
+    icon: BarChart3,
+    title: "View Contract Trends",
+    detail: "Analyze a full report of recent contract volume, impact, and profitability.",
+  },
+];
+
+const tasks = [
+  { title: "Sign Document", received: "Jul 20, 7:24 PM", state: "Accepted" },
+  { title: "Fill Out Request Form", received: "Jul 16, 1:10 PM", state: "Accepted" },
+  { title: "Review Asset Request #5", received: "Jul 2, 7:20 PM", state: "Assigned" },
+];
+
+/* ---------------------------------------------------------------- */
+/*  Small pieces                                                     */
+/* ---------------------------------------------------------------- */
+
+function StatRing({ percent }: { percent: number }) {
+  const radius = 24;
+  const circumference = 2 * Math.PI * radius;
   return (
-    <div className="relative h-[92px] w-full">
-      <svg viewBox="0 0 220 60" className="h-full w-full overflow-visible" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="solution-line-grad" x1="0" y1="0" x2="220" y2="0">
-            <stop offset="0%" stopColor="#2451B8" />
-            <stop offset="100%" stopColor="#18C6D1" />
-          </linearGradient>
-          <linearGradient id="solution-area-grad" x1="0" y1="0" x2="0" y2="60">
-            <stop offset="0%" stopColor="rgba(24,198,209,0.22)" />
-            <stop offset="100%" stopColor="rgba(24,198,209,0)" />
-          </linearGradient>
-        </defs>
-
-        <motion.path
-          d="M2,44 C22,44 26,14 46,14 C66,14 70,38 90,38 C110,38 114,10 134,10 C154,10 158,30 178,26 C198,22 202,6 218,6 L218,60 L2,60 Z"
-          fill="url(#solution-area-grad)"
-          stroke="none"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, delay: 0.5, ease }}
-        />
-
-        <motion.path
-          d="M2,44 C22,44 26,14 46,14 C66,14 70,38 90,38 C110,38 114,10 134,10 C154,10 158,30 178,26 C198,22 202,6 218,6"
-          fill="none"
-          stroke="url(#solution-line-grad)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          whileInView={{ pathLength: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 1.3, ease, delay: 0.15 }}
-        />
-
+    <div className="relative h-11 w-11 sm:h-12 sm:w-12 shrink-0">
+      <svg viewBox="0 0 56 56" className="-rotate-90 h-full w-full">
+        <circle cx="28" cy="28" r={radius} fill="none" stroke="rgba(7,27,58,0.08)" strokeWidth="5" />
         <motion.circle
-          cx="218"
-          cy="6"
-          r="4"
-          fill="#0A1E42"
-          stroke="#18C6D1"
-          strokeWidth="2"
-          initial={{ opacity: 0, scale: 0.4 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          cx="28"
+          cy="28"
+          r={radius}
+          fill="none"
+          stroke="#132A54"
+          strokeWidth="5"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference }}
+          whileInView={{ strokeDashoffset: circumference - (percent / 100) * circumference }}
           viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.4, delay: 1.3, ease }}
+          transition={{ duration: 1.1, ease, delay: 0.1 }}
         />
       </svg>
-
-      <motion.div
-        initial={{ opacity: 0, y: 6 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.4, delay: 1.4, ease }}
-        className="absolute -top-1 right-0 rounded-md border border-navy/10 bg-white px-2.5 py-1.5 shadow-[0_8px_20px_-8px_rgba(7,27,58,0.35)]"
-      >
-        <div className="text-[9.5px] font-medium text-navy/45 leading-none mb-1">Q3</div>
-        <div className="text-[12px] font-semibold text-navy leading-none">
-          <AnimatedNumber value={97} format={(n) => `${Math.round(n)}%`} delay={1.4} />
-        </div>
-      </motion.div>
     </div>
   );
 }
 
-/* Small animated bar chart */
-function PaperworkBars() {
-  const t = useTranslations("solution.bars");
-  const bars = [
-    { key: "policies", label: t("policies"), height: 55 },
-    { key: "contracts", label: t("contracts"), height: 88 },
-    { key: "audits", label: t("audits"), height: 40 },
-    { key: "certificates", label: t("certs"), height: 68 },
-  ];
-
+function StatCard({
+  label,
+  sub,
+  value,
+  delta,
+  up,
+  ring,
+  delay,
+}: (typeof stats)[number] & { delay: number }) {
   return (
-    <div className="flex items-end justify-between gap-2.5 h-[74px]">
-      {bars.map((b, i) => (
-        <div key={b.key} className="flex flex-1 flex-col items-center gap-2">
-          <div className="relative w-full flex-1 flex items-end overflow-hidden rounded-[5px] bg-navy/6">
-            <motion.div
-              className="w-full rounded-[5px] bg-gradient-to-t from-blue to-cyan"
-              initial={{ height: 0 }}
-              whileInView={{ height: `${b.height}%` }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.8, delay: 0.2 + i * 0.09, ease }}
-            />
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.5, delay, ease }}
+      className="rounded-lg border border-navy/10 bg-white p-3"
+    >
+      <div className="flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <div className="text-[8.5px] font-semibold tracking-[0.05em] text-navy/70 uppercase truncate">
+            {label}
           </div>
-          <span className="text-[9px] font-medium text-navy/40 text-center leading-tight">
-            {b.label}
+          <div className="text-[7.5px] text-navy/35 mt-0.5 truncate">{sub}</div>
+          <span
+            className={`inline-block mt-2 rounded px-1.5 py-[2px] text-[8.5px] font-semibold text-white ${
+              up ? "bg-[#1E9E6B]" : "bg-[#D14343]"
+            }`}
+          >
+            {delta}
           </span>
         </div>
-      ))}
-    </div>
-  );
-}
-
-/* Filing-status donut, segments drawn as stacked dasharray strokes */
-function FilingDonut() {
-  const t = useTranslations("solution.segments");
-  const radius = 26;
-  const circumference = 2 * Math.PI * radius;
-  const segments = [
-    { key: "approved", label: t("approved"), value: 62, color: "#18C6D1" },
-    { key: "review", label: t("review"), value: 26, color: "#2451B8" },
-    { key: "pending", label: t("pending"), value: 12, color: "rgba(7,27,58,0.18)" },
-  ];
-
-  let offsetAcc = 0;
-
-  return (
-    <div className="flex items-center gap-4">
-      <div className="relative h-[76px] w-[76px] shrink-0">
-        <svg viewBox="0 0 64 64" className="-rotate-90 h-full w-full">
-          <circle cx="32" cy="32" r={radius} fill="none" stroke="rgba(7,27,58,0.06)" strokeWidth="8" />
-          {segments.map((seg, i) => {
-            const dash = (seg.value / 100) * circumference;
-            const offset = offsetAcc;
-            offsetAcc += dash;
-            return (
-              <motion.circle
-                key={seg.key}
-                cx="32"
-                cy="32"
-                r={radius}
-                fill="none"
-                stroke={seg.color}
-                strokeWidth="8"
-                strokeDasharray={`${dash} ${circumference - dash}`}
-                strokeDashoffset={-offset}
-                strokeLinecap="butt"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.6, delay: 0.3 + i * 0.12, ease }}
-              />
-            );
-          })}
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-[14px] font-semibold text-navy tracking-tight">
-            <AnimatedNumber value={412} delay={0.35} />
-          </span>
+        <div className="relative shrink-0">
+          <StatRing percent={ring} />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-[12px] sm:text-[13px] font-semibold text-navy tracking-tight">{value}</span>
+          </div>
         </div>
       </div>
-
-      <div className="flex flex-col gap-1.5 min-w-0">
-        {segments.map((seg) => (
-          <div key={seg.key} className="flex items-center gap-1.5">
-            <span
-              className="h-1.5 w-1.5 rounded-full shrink-0"
-              style={{ background: seg.color }}
-            />
-            <span className="text-[10.5px] text-navy/55 truncate">
-              {seg.label} <span className="text-navy/35">· {seg.value}%</span>
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+    </motion.div>
   );
 }
+
+/* ---------------------------------------------------------------- */
+/*  Section                                                           */
+/* ---------------------------------------------------------------- */
 
 export function SolutionSection() {
   const t = useTranslations("solution");
@@ -224,7 +251,7 @@ export function SolutionSection() {
       <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
           {/* Copy */}
-          <div>
+          <div className="min-w-0">
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -261,12 +288,8 @@ export function SolutionSection() {
                       <Icon className="h-4 w-4 text-blue" strokeWidth={1.75} />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-[14.5px] font-semibold text-navy mb-0.5">
-                        {point.title}
-                      </div>
-                      <p className="text-[13.5px] leading-[1.6] text-navy/55">
-                        {point.description}
-                      </p>
+                      <div className="text-[14.5px] font-semibold text-navy mb-0.5">{point.title}</div>
+                      <p className="text-[13.5px] leading-[1.6] text-navy/55">{point.description}</p>
                     </div>
                   </motion.div>
                 );
@@ -289,13 +312,13 @@ export function SolutionSection() {
             </motion.div>
           </div>
 
-          {/* Dashboard visual */}
+          {/* Dashboard visual — built with plain responsive Tailwind, no scale hacks */}
           <motion.div
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.7, delay: 0.1, ease }}
-            className="relative"
+            className="relative min-w-0"
           >
             <div
               aria-hidden
@@ -306,60 +329,187 @@ export function SolutionSection() {
               }}
             />
 
-            <div className="rounded-2xl border border-navy/10 bg-white shadow-[0_1px_2px_rgba(7,27,58,0.04),0_32px_64px_-28px_rgba(7,27,58,0.25)] overflow-hidden">
+            <div className="w-full rounded-2xl border border-navy/10 bg-[#F5F7FA] shadow-[0_1px_2px_rgba(7,27,58,0.04),0_32px_64px_-28px_rgba(7,27,58,0.25)] overflow-hidden">
               {/* Chrome */}
-              <div className="flex items-center justify-between border-b border-navy/8 px-5 py-3.5">
+              <div className="flex items-center justify-between border-b border-navy/8 bg-white px-4 py-2.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
+                  <span className="h-2 w-2 rounded-full bg-navy/10" />
+                  <span className="h-2 w-2 rounded-full bg-navy/10" />
+                  <span className="h-2 w-2 rounded-full bg-navy/10" />
                 </div>
+                <span className="text-[8.5px] font-medium tracking-wide text-navy/35 uppercase">
+                  Illustrative data
+                </span>
               </div>
 
-              <div className="p-5 sm:p-6 space-y-5">
-                {/* Trend chart card */}
-                <div className="rounded-xl border border-navy/10 p-4 sm:p-5">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[12px] font-medium text-navy/50">
-                      {t("complianceScore")}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <motion.span
-                        className="h-1.5 w-1.5 rounded-full bg-cyan"
-                        animate={{ opacity: [0.4, 1, 0.4] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                      />
-                      <span className="text-[10.5px] text-navy/40">{t("live")}</span>
-                    </span>
-                  </div>
-                  <TrendChart />
+              <div className="p-3 sm:p-4 space-y-3">
+                {/* Stat row */}
+                <div className="grid grid-cols-2 gap-2">
+                  {stats.map((s, i) => (
+                    <StatCard key={s.label} {...s} delay={0.15 + i * 0.05} />
+                  ))}
                 </div>
 
-                {/* Bars + Donut */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="rounded-xl border border-navy/10 p-4 sm:p-5">
-                    <span className="text-[12px] font-medium text-navy/50 block mb-4">
-                      {t("paperworkByType")}
+                {/* Requests table */}
+                <div className="rounded-lg border border-navy/10 bg-white overflow-hidden">
+                  <div className="flex items-center gap-2 bg-[#132A54] px-3 py-2">
+                    <Pencil className="h-3 w-3 text-cyan shrink-0" strokeWidth={2} />
+                    <span className="text-[9.5px] font-semibold tracking-[0.03em] text-white uppercase truncate">
+                      Recent Contract Change Requests
                     </span>
-                    <PaperworkBars />
                   </div>
-                  <div className="rounded-xl border border-navy/10 p-4 sm:p-5 flex flex-col justify-between">
-                    <span className="text-[12px] font-medium text-navy/50 block mb-4">
-                      {t("filingStatus")}
-                    </span>
-                    <FilingDonut />
+
+                  {/* Scrolls horizontally on narrow screens instead of squeezing columns unreadable */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[560px] border-collapse">
+                      <thead>
+                        <tr className="border-b border-navy/8">
+                          <th className="w-6" />
+                          {["Vendor", "Contact", "Type", "Status", "Near"].map((h) => (
+                            <th
+                              key={h}
+                              className="text-left text-[8px] font-semibold tracking-[0.04em] text-navy/40 uppercase px-2 py-1.5 whitespace-nowrap"
+                            >
+                              {h}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {requests.map((r, i) => {
+                          const meta = typeMeta[r.type];
+                          const TypeIcon = meta.icon;
+                          return (
+                            <motion.tr
+                              key={i}
+                              initial={{ opacity: 0 }}
+                              whileInView={{ opacity: 1 }}
+                              viewport={{ once: true, margin: "-60px" }}
+                              transition={{ duration: 0.4, delay: 0.3 + i * 0.05, ease }}
+                              className="border-b border-navy/6 last:border-0"
+                            >
+                              <td className="pl-2 py-2">
+                                <Mail className="h-3 w-3 text-navy/30" strokeWidth={1.75} />
+                              </td>
+                              <td className="px-2 py-2">
+                                <div className="text-[9.5px] font-medium text-navy whitespace-nowrap">
+                                  {r.vendor}
+                                </div>
+                                <div className="text-[8px] text-navy/40 whitespace-nowrap flex items-center gap-1 mt-0.5">
+                                  <Mail className="h-2.5 w-2.5 shrink-0" />
+                                  {r.email}
+                                </div>
+                              </td>
+                              <td className="px-2 py-2 text-[9px] text-navy/70 whitespace-nowrap">
+                                <span className="inline-flex items-center gap-1">
+                                  <User className="h-2.5 w-2.5 text-navy/30 shrink-0" />
+                                  {r.contact}
+                                </span>
+                              </td>
+                              <td className="px-2 py-2 text-[8.5px] text-navy/60 italic whitespace-nowrap">
+                                <span className="inline-flex items-center gap-1">
+                                  <TypeIcon className="h-3 w-3 text-blue not-italic shrink-0" strokeWidth={1.75} />
+                                  {meta.label}
+                                </span>
+                              </td>
+                              <td className="px-2 py-2 min-w-[110px]">
+                                <div className="flex items-center gap-1.5">
+                                  <div className="flex-1 h-1.5 rounded-full bg-navy/8 overflow-hidden">
+                                    <motion.div
+                                      className="h-full rounded-full bg-[#132A54]"
+                                      initial={{ width: 0 }}
+                                      whileInView={{ width: `${r.status}%` }}
+                                      viewport={{ once: true, margin: "-60px" }}
+                                      transition={{ duration: 1, delay: 0.35 + i * 0.05, ease }}
+                                    />
+                                  </div>
+                                  <span className="text-[8px] font-semibold text-navy/60 whitespace-nowrap">
+                                    {r.status}%
+                                  </span>
+                                </div>
+                                <span className="text-[7.5px] italic text-navy/40 whitespace-nowrap">
+                                  {r.statusLabel}
+                                </span>
+                              </td>
+                              <td className="px-2 py-2 text-center">
+                                <span className="inline-block rounded bg-[#1E9E6B] px-1.5 py-[2px] text-[8px] font-semibold text-white">
+                                  {r.near ? "YES" : "NO"}
+                                </span>
+                              </td>
+                            </motion.tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* My Actions + My Tasks — stack on mobile, side by side from sm up */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="rounded-lg border border-navy/10 bg-white overflow-hidden">
+                    <div className="flex items-center gap-2 bg-[#132A54] px-3 py-2">
+                      <ListChecks className="h-3 w-3 text-cyan shrink-0" strokeWidth={2} />
+                      <span className="text-[9.5px] font-semibold tracking-[0.03em] text-white uppercase">
+                        My Actions
+                      </span>
+                    </div>
+                    <ul className="p-3 space-y-2.5">
+                      {actions.map((a) => {
+                        const Icon = a.icon;
+                        return (
+                          <li key={a.title} className="flex items-start gap-2">
+                            <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border border-navy/10 bg-pale">
+                              <Icon className="h-3 w-3 text-blue" strokeWidth={1.75} />
+                            </div>
+                            <div className="min-w-0">
+                              <div className="text-[9.5px] font-semibold text-navy leading-tight">{a.title}</div>
+                              <div className="text-[8px] leading-[1.4] text-navy/45 mt-0.5">{a.detail}</div>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+
+                  <div className="rounded-lg border border-navy/10 bg-white overflow-hidden">
+                    <div className="flex items-center justify-between gap-2 bg-[#132A54] px-3 py-2">
+                      <span className="text-[9.5px] font-semibold tracking-[0.03em] text-white uppercase">
+                        My Tasks
+                      </span>
+                      <div className="flex items-center gap-1.5 text-white/60">
+                        <Filter className="h-2.5 w-2.5" strokeWidth={2} />
+                        <RefreshCcw className="h-2.5 w-2.5" strokeWidth={2} />
+                      </div>
+                    </div>
+                    <ul className="p-3 space-y-2.5">
+                      {tasks.map((task) => (
+                        <li key={task.title} className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <div className="text-[9.5px] font-semibold text-navy leading-tight truncate">
+                              {task.title}
+                            </div>
+                            <div className="text-[8px] text-navy/40 mt-0.5">{task.received}</div>
+                          </div>
+                          <span className="mt-0.5 inline-flex items-center gap-1 shrink-0 text-[8px] text-navy/50">
+                            {task.state === "Accepted" ? (
+                              <CheckCircle2 className="h-2.5 w-2.5 text-[#1E9E6B]" strokeWidth={2} />
+                            ) : (
+                              <CircleDot className="h-2.5 w-2.5 text-navy/30" strokeWidth={2} />
+                            )}
+                            {task.state}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </div>
             </div>
 
-            <p className="mt-6 text-center text-[12px] text-navy/35">
-              {t("disclaimer")}
-            </p>
+            <p className="mt-6 text-center text-[12px] text-navy/35">{t("disclaimer")}</p>
           </motion.div>
         </div>
       </div>
     </section>
   );
 }
-

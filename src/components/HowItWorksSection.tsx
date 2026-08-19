@@ -70,12 +70,23 @@ export function HowItWorksSection() {
           </div>
 
           {/* Right: Circular Process Diagram */}
+          {/* The "build" and "scale" labels sit at left-0/right-0 and are pulled
+              outward by -translate-x-1/2, so roughly half the pill's width sticks
+              out past the circle's edge by design (it straddles the dashed track).
+              On desktop there's plenty of spare margin in the grid column for that
+              overflow to sit in. On mobile the diagram widens to fill almost the
+              full viewport, leaving ~0 margin — so that overflow gets pushed past
+              the section boundary and silently clipped by the section's
+              `overflow-hidden`. Fix: reserve fixed side margin around the diagram
+              (w-[calc(100%-64px)]) so there's always room for the overflow, and
+              shrink the pill padding/text a touch on small screens so there's
+              less overflow to begin with. */}
           <motion.div
             initial={{ opacity: 0, scale: 0.94 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7, ease }}
-            className="relative mx-auto my-12 w-full max-w-[340px] aspect-square"
+            className="relative mx-auto my-12 w-[calc(100%-64px)] sm:w-full max-w-[340px] aspect-square"
           >
             {/* Dashed Track */}
             <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible">
@@ -118,9 +129,9 @@ export function HowItWorksSection() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.4, delay: 0.3 + i * 0.1, ease }}
-                className={`absolute z-20 flex items-center justify-center whitespace-nowrap rounded-full border border-slate-100 bg-white px-5 py-2 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] ${positions[key]}`}
+                className={`absolute z-20 flex items-center justify-center whitespace-nowrap rounded-full border border-slate-100 bg-white px-3.5 py-1.5 sm:px-5 sm:py-2 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] ${positions[key]}`}
               >
-                <span className="text-[12.5px] font-semibold tracking-tight text-navy">
+                <span className="text-[11.5px] sm:text-[12.5px] font-semibold tracking-tight text-navy">
                   {t(`steps.${key}.title`)}
                 </span>
               </motion.div>
