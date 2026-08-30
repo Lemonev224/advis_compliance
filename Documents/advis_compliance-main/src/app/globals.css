@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #071b3a;
+  --blue: #2451b8;
+  --cyan: #18c6d1;
+  --pale: #f4f8ff;
+  --white: #ffffff;
+
+  --background: var(--white);
+  --foreground: var(--navy);
+}
+
+@theme inline {
+  --color-navy: var(--navy);
+  --color-blue: var(--blue);
+  --color-cyan: var(--cyan);
+  --color-pale: var(--pale);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "ss01" on, "cv01" on;
+}
+
+/* Fine technical grid, used as an ambient backdrop */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(7, 27, 58, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(7, 27, 58, 0.055) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.bg-grid-fade {
+  mask-image: radial-gradient(ellipse 80% 60% at 60% 20%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 60% 20%, black 40%, transparent 100%);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--cyan);
+  color: var(--navy);
+}
+
+/* Respect reduced-motion preference globally */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

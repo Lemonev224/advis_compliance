@@ -1,0 +1,238 @@
+{
+  "nav": {
+    "platform": "Plataforma",
+    "industries": "Sectores",
+    "howItWorks": "Cómo Funciona",
+    "company": "Empresa",
+    "contact": "Contacto",
+    "bookDemo": "Reservar una Demo"
+  },
+  "hero": {
+    "eyebrow": "Infraestructura de Cumplimiento",
+    "headlinePart1": "Cumplimiento normativo,",
+    "headlineHighlight": "integrado",
+    "headlinePart2": "en el negocio.",
+    "subtext": "Convertimos requisitos normativos complejos en infraestructura de software escalable para sectores regulados.",
+    "ctaPrimary": "Contáctanos",
+    "ctaSecondary": "Cómo Funciona"
+  },
+  "heroDashboard": {
+    "complianceStatus": "Estado de cumplimiento",
+    "onTrack": "Al día",
+    "controls": "Controles",
+    "evidence": "Evidencias",
+    "openRisks": "Riesgos abiertos"
+  },
+  "problem": {
+    "headline": "El cumplimiento normativo no debería vivir en hojas de cálculo.",
+    "subtext": "Las normativas son complejas. Los requisitos cambian. Las evidencias están dispersas entre sistemas. Los equipos dedican tiempo valioso a hacer seguimiento manual de controles, documentos, riesgos y obligaciones.",
+    "points": {
+      "manual": {
+        "title": "Procesos manuales",
+        "description": "Controles, políticas y revisiones gestionados a mano, una actualización de hoja de cálculo tras otra."
+      },
+      "fragmented": {
+        "title": "Evidencias fragmentadas",
+        "description": "Pruebas de cumplimiento dispersas entre herramientas, tickets, bandejas de entrada y unidades compartidas."
+      },
+      "changing": {
+        "title": "Normativas cambiantes",
+        "description": "Los requisitos cambian mientras el proceso creado para cumplirlos permanece estático."
+      },
+      "disconnected": {
+        "title": "Sistemas desconectados",
+        "description": "El cumplimiento normativo queda al margen de los sistemas donde realmente se hace el trabajo."
+      }
+    }
+  },
+  "solution": {
+    "headline": "Documentación de cumplimiento, gestionada por la plataforma.",
+    "description": "Transformamos políticas, evidencias y trámites en un único flujo de trabajo automatizado para que tu equipo dedique menos tiempo a buscar documentos y más a hacer crecer el negocio.",
+    "cta": "Habla con nosotros",
+    "live": "En vivo",
+    "complianceScore": "Puntuación de cumplimiento",
+    "paperworkByType": "Documentación por tipo",
+    "filingStatus": "Estado de tramitación",
+    "disclaimer": "Maqueta de producto mostrada con datos ilustrativos únicamente con fines demostrativos.",
+    "points": {
+      "intake": {
+        "title": "Recepción automatizada",
+        "description": "Las políticas, contratos y certificados se capturan y organizan desde el momento en que llegan."
+      },
+      "verification": {
+        "title": "Verificación continua",
+        "description": "Cada documento se verifica automáticamente contra los marcos normativos que debe cumplir."
+      },
+      "filing": {
+        "title": "Archivado listo para auditoría",
+        "description": "La documentación aprobada se archiva y gestiona por versiones, lista para presentar a cualquier auditor bajo demanda."
+      }
+    },
+    "bars": {
+      "policies": "Políticas",
+      "contracts": "Contratos",
+      "audits": "Auditorías",
+      "certs": "Certificados"
+    },
+    "segments": {
+      "approved": "Aprobado",
+      "review": "En revisión",
+      "pending": "Pendiente"
+    }
+  },
+  "architecture": {
+    "headline": "Creado una vez. Adaptado a cada sector.",
+    "subtext": "La misma infraestructura de cumplimiento se adapta a diferentes entornos normativos, ampliándose en módulos específicos de cada sector y, con el tiempo, en productos específicos de cada sector.",
+    "layerInfrastructure": "Infraestructura de Cumplimiento",
+    "coreModules": {
+      "controls": "Controles",
+      "evidence": "Evidencias",
+      "risk": "Riesgo"
+    },
+    "layerIndustryModules": "Módulos Sectoriales",
+    "industries": {
+      "hospitality": "Hostelería",
+      "logistics": "Logística",
+      "retail": "Comercio",
+      "construction": "Construcción"
+    },
+    "layerSaasProducts": "Productos SaaS",
+    "disclaimer": "Los módulos sectoriales están diseñados para dar soporte a estos sectores a medida que la plataforma se amplíe — no reflejan a los clientes actuales."
+  },
+  "dashboard": {
+    "eyebrow": "Producto",
+    "headline": "Tu centro de mando del cumplimiento.",
+    "subtext": "Controles, evidencias, riesgo y monitoreo, unificados en una sola vista operativa.",
+    "illustrativeLabel": "Datos ilustrativos de muestra",
+    "tabs": {
+      "overview": "Resumen",
+      "controls": "Controles",
+      "evidence": "Evidencias",
+      "risk": "Riesgo"
+    },
+    "complianceStatus": "Estado de cumplimiento",
+    "onTrack": "Al día",
+    "controlsLabel": "Controles",
+    "evidenceLabel": "Evidencias",
+    "evidenceCaption": "elementos recopilados",
+    "openRisksLabel": "Riesgos abiertos",
+    "openRisksCaption": "2 marcados esta semana",
+    "frameworksLabel": "Marcos normativos",
+    "coverage": "cobertura",
+    "recentActivity": "Actividad reciente",
+    "live": "En directo",
+    "activity": {
+      "evidenceVerified": { "label": "Evidencia verificada", "detail": "Revisión de accesos Q3 · automatizada", "time": "hace 2 min" },
+      "controlUpdated": { "label": "Control actualizado", "detail": "Cifrado en reposo · CC6.1", "time": "hace 18 min" },
+      "riskIdentified": { "label": "Riesgo identificado", "detail": "Alcance de acceso de proveedores · Medio", "time": "hace 41 min" },
+      "policyReviewed": { "label": "Política revisada", "detail": "Política de retención de datos · v3.2", "time": "hace 1 h" }
+    },
+    "footnote": "Este mockup de producto se muestra con datos ilustrativos únicamente con fines de demostración."
+  },
+  "integrations": {
+    "headline": "Conecta las herramientas que tus equipos ya utilizan.",
+    "cardTitle": "Sincroniza controles, evidencias y registros automáticamente.",
+    "cardSubtext": "Sin sustituir nada. Statum se conecta a los sistemas CRM, ERP y RRHH que ya utilizas.",
+    "cta": "Explora las integraciones"
+  },
+  "industries": {
+    "headline": "Infraestructura de cumplimiento para sectores regulados.",
+    "subtext": "La misma infraestructura central está diseñada para dar soporte a diversos entornos normativos a medida que la plataforma se amplíe.",
+    "ctaTalkToUs": "Habla con nosotros",
+    "moduleLabels": {
+      "controls": "Controles",
+      "evidence": "Evidencias",
+      "risk": "Riesgo",
+      "monitoring": "Monitoreo"
+    },
+    "list": {
+      "logistics": {
+        "name": "Logística",
+        "note": "Creado para dar soporte a cadenas de suministro, operaciones de transporte y gestión de flotas.",
+        "focus": ["Cumplimiento de transportistas", "Documentación de flota", "Auditorías de rutas"]
+      },
+      "construction": {
+        "name": "Construcción",
+        "note": "Diseñado para la ejecución de proyectos, contratistas, operaciones de obra y cumplimiento normativo.",
+        "focus": ["Registros de seguridad de obra", "Verificación de contratistas", "Seguimiento de permisos"]
+      },
+      "retail": {
+        "name": "Comercio",
+        "note": "Creado para dar soporte a tiendas, comercio electrónico, inventario y operaciones con clientes.",
+        "focus": ["Protección de datos", "Auditorías de proveedores", "Normativa de consumo"]
+      },
+      "hospitality": {
+        "name": "Hostelería",
+        "note": "Diseñado para hoteles, restaurantes, salas y operaciones centradas en el cliente.",
+        "focus": ["Gestión de datos de huéspedes", "Salud y seguridad", "Licencias"]
+      },
+      "tourism": {
+        "name": "Turismo",
+        "note": "Creado para dar soporte a empresas de viajes, operadores turísticos y experiencias para visitantes.",
+        "focus": ["Normativa transfronteriza", "Datos de reservas", "Licencias de operador"]
+      },
+      "other": {
+        "name": "Otros Sectores",
+        "note": "Infraestructura flexible diseñada para adaptarse a nuevos sectores y modelos de negocio.",
+        "focus": ["Conjuntos de controles personalizados", "Nuevos marcos normativos", "Normativa emergente"]
+      }
+    }
+  },
+  "howItWorks": {
+    "headline": "De la normativa a la infraestructura operativa.",
+    "subtext": "El cumplimiento normativo no es una configuración puntual. Cada ciclo entender, construir, monitorear, escalar alimenta el siguiente, de modo que la infraestructura mantiene el ritmo a medida que cambian los requisitos y las operaciones.",
+    "cta": "Más información",
+    "steps": {
+      "understand": { "title": "Entender", "description": "Traducir los requisitos normativos en controles estructurados." },
+      "build": { "title": "Construir", "description": "Convertir los controles en políticas, flujos de trabajo y procesos operativos." },
+      "monitor": { "title": "Monitorear", "description": "Hacer seguimiento continuo del cumplimiento y recopilar evidencias." },
+      "scale": { "title": "Escalar", "description": "Ampliar la misma infraestructura a nuevos requisitos, entidades y sectores." }
+    }
+  },
+    "proof": {
+  "headline": "Construido una vez. Construido para durar.",
+  "subtext": "No añadimos el cumplimiento normativo sobre software antiguo. La infraestructura —controles, evidencias, riesgo y monitoreo— se construyó primero, para que cada módulo sectorial herede el mismo rigor.",
+  "stats": {
+    "modules": { "caption": "módulos principales: controles, evidencias, riesgo y monitoreo" },
+    "frameworks": { "caption": "marcos normativos de referencia, desde ISO 27001 hasta la EU AI Act" },
+    "industries": { "caption": "sectores que la plataforma está diseñada para soportar" }
+  }
+},
+  "about": {
+    "headline": "Construyendo la infraestructura detrás de la próxima generación de negocios regulados.",
+    "subtext": "Estamos construyendo un nuevo enfoque para el cumplimiento normativo: infraestructura de software que puede adaptarse a diferentes entornos normativos, sectores y modelos de negocio. Con sede en Andorra, en el corazón de Europa.",
+    "markers": {
+      "andorra": "Creado en Andorra",
+      "europe": "Diseñado para Europa",
+      "global": "Creado para escalar globalmente"
+    }
+  },
+  "contact": {
+    "headline": "¿Listos para integrar el cumplimiento en tu negocio?",
+    "subtext": "Habla con nosotros sobre la infraestructura de cumplimiento que tu negocio necesita.",
+    "form": {
+      "name": "Nombre",
+      "namePlaceholder": "Jane Doe",
+      "email": "Correo de trabajo",
+      "emailPlaceholder": "jane@empresa.com",
+      "company": "Empresa",
+      "companyPlaceholder": "Nombre de la empresa",
+      "message": "¿Qué quieres resolver?",
+      "messagePlaceholder": "Cuéntanos un poco sobre tus necesidades de cumplimiento",
+      "submit": "Enviar mensaje",
+      "submitting": "Enviando…",
+      "success": "Gracias — nos pondremos en contacto en breve.",
+      "genericError": "Algo salió mal. Inténtalo de nuevo."
+    }
+  },
+  "footer": {
+    "location": "Andorra · Europa",
+    "links": {
+      "industries": "Sectores",
+      "howItWorks": "Cómo Funciona",
+      "terms": "Términos de Uso",
+      "privacy": "Política de Privacidad"
+    },
+    "rights": "Todos los derechos reservados."
+  }
+}
