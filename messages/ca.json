@@ -5,7 +5,8 @@
     "howItWorks": "Com Funciona",
     "company": "Empresa",
     "contact": "Contacte",
-    "bookDemo": "Reserva una Demo"
+    "bookDemo": "Reserva una Demo",
+    "shiftcomply": "ShiftComply"
   },
   "hero": {
     "eyebrow": "Infraestructura de Compliment",
@@ -122,10 +123,26 @@
     "recentActivity": "Activitat recent",
     "live": "En directe",
     "activity": {
-      "evidenceVerified": { "label": "Evidència verificada", "detail": "Revisió d'accessos Q3 · automatitzada", "time": "fa 2 min" },
-      "controlUpdated": { "label": "Control actualitzat", "detail": "Xifratge en repòs · CC6.1", "time": "fa 18 min" },
-      "riskIdentified": { "label": "Risc identificat", "detail": "Abast d'accés de proveïdors · Mitjà", "time": "fa 41 min" },
-      "policyReviewed": { "label": "Política revisada", "detail": "Política de retenció de dades · v3.2", "time": "fa 1 h" }
+      "evidenceVerified": {
+        "label": "Evidència verificada",
+        "detail": "Revisió d'accessos Q3 · automatitzada",
+        "time": "fa 2 min"
+      },
+      "controlUpdated": {
+        "label": "Control actualitzat",
+        "detail": "Xifratge en repòs · CC6.1",
+        "time": "fa 18 min"
+      },
+      "riskIdentified": {
+        "label": "Risc identificat",
+        "detail": "Abast d'accés de proveïdors · Mitjà",
+        "time": "fa 41 min"
+      },
+      "policyReviewed": {
+        "label": "Política revisada",
+        "detail": "Política de retenció de dades · v3.2",
+        "time": "fa 1 h"
+      }
     },
     "footnote": "Aquest mockup de producte es mostra amb dades il·lustratives només amb finalitats de demostració."
   },
@@ -149,32 +166,56 @@
       "logistics": {
         "name": "Logística",
         "note": "Creat per donar suport a cadenes de subministrament, operacions de transport i gestió de flotes.",
-        "focus": ["Compliment de transportistes", "Documentació de flota", "Auditories de rutes"]
+        "focus": [
+          "Compliment de transportistes",
+          "Documentació de flota",
+          "Auditories de rutes"
+        ]
       },
       "construction": {
         "name": "Construcció",
         "note": "Dissenyat per a l'execució de projectes, contractistes, operacions d'obra i compliment normatiu.",
-        "focus": ["Registres de seguretat d'obra", "Verificació de contractistes", "Seguiment de permisos"]
+        "focus": [
+          "Registres de seguretat d'obra",
+          "Verificació de contractistes",
+          "Seguiment de permisos"
+        ]
       },
       "retail": {
         "name": "Comerç",
         "note": "Creat per donar suport a botigues, comerç electrònic, inventari i operacions amb clients.",
-        "focus": ["Protecció de dades", "Auditories de proveïdors", "Normativa de consum"]
+        "focus": [
+          "Protecció de dades",
+          "Auditories de proveïdors",
+          "Normativa de consum"
+        ]
       },
       "hospitality": {
         "name": "Hostaleria",
         "note": "Dissenyat per a hotels, restaurants, sales i operacions centrades en el client.",
-        "focus": ["Gestió de dades de clients", "Salut i seguretat", "Llicències"]
+        "focus": [
+          "Gestió de dades de clients",
+          "Salut i seguretat",
+          "Llicències"
+        ]
       },
       "tourism": {
         "name": "Turisme",
         "note": "Creat per donar suport a empreses de viatges, operadors turístics i experiències per a visitants.",
-        "focus": ["Normativa transfronterera", "Dades de reserves", "Llicències d'operador"]
+        "focus": [
+          "Normativa transfronterera",
+          "Dades de reserves",
+          "Llicències d'operador"
+        ]
       },
       "other": {
         "name": "Altres Sectors",
         "note": "Infraestructura flexible dissenyada per adaptar-se a nous sectors i models de negoci.",
-        "focus": ["Conjunts de controls personalitzats", "Nous marcs normatius", "Normativa emergent"]
+        "focus": [
+          "Conjunts de controls personalitzats",
+          "Nous marcs normatius",
+          "Normativa emergent"
+        ]
       }
     }
   },
@@ -183,21 +224,39 @@
     "subtext": "El compliment normatiu no és una configuració puntual. Cada cicle entendre, construir, monitorar, escalar alimenta el següent, de manera que la infraestructura manté el ritme a mesura que canvien els requisits i les operacions.",
     "cta": "Més informació",
     "steps": {
-      "understand": { "title": "Entendre", "description": "Traduir els requisits normatius en controls estructurats." },
-      "build": { "title": "Construir", "description": "Convertir els controls en polítiques, fluxos de treball i processos operatius." },
-      "monitor": { "title": "Monitorar", "description": "Fer seguiment continu del compliment i recollir evidències." },
-      "scale": { "title": "Escalar", "description": "Ampliar la mateixa infraestructura a nous requisits, entitats i sectors." }
+      "understand": {
+        "title": "Entendre",
+        "description": "Traduir els requisits normatius en controls estructurats."
+      },
+      "build": {
+        "title": "Construir",
+        "description": "Convertir els controls en polítiques, fluxos de treball i processos operatius."
+      },
+      "monitor": {
+        "title": "Monitorar",
+        "description": "Fer seguiment continu del compliment i recollir evidències."
+      },
+      "scale": {
+        "title": "Escalar",
+        "description": "Ampliar la mateixa infraestructura a nous requisits, entitats i sectors."
+      }
     }
   },
-    "proof": {
-  "headline": "Construït una vegada. Construït per durar.",
-  "subtext": "No vam afegir el compliment normatiu sobre programari antic. La infraestructura —controls, evidències, risc i monitoratge— es va construir primer, perquè cada mòdul sectorial hereti el mateix rigor.",
-  "stats": {
-    "modules": { "caption": "mòduls principals: controls, evidències, risc i monitoratge" },
-    "frameworks": { "caption": "marcs normatius de referència, des d'ISO 27001 fins a l'EU AI Act" },
-    "industries": { "caption": "sectors que la plataforma està dissenyada per suportar" }
-  }
-},
+  "proof": {
+    "headline": "Construït una vegada. Construït per durar.",
+    "subtext": "No vam afegir el compliment normatiu sobre programari antic. La infraestructura —controls, evidències, risc i monitoratge— es va construir primer, perquè cada mòdul sectorial hereti el mateix rigor.",
+    "stats": {
+      "modules": {
+        "caption": "mòduls principals: controls, evidències, risc i monitoratge"
+      },
+      "frameworks": {
+        "caption": "marcs normatius de referència, des d'ISO 27001 fins a l'EU AI Act"
+      },
+      "industries": {
+        "caption": "sectors que la plataforma està dissenyada per suportar"
+      }
+    }
+  },
   "about": {
     "headline": "Construint la infraestructura darrere de la propera generació de negocis regulats.",
     "subtext": "Estem construint un nou enfocament per al compliment normatiu: infraestructura de programari que pot adaptar-se a diferents entorns normatius, sectors i models de negoci. Amb seu a Andorra, al cor d'Europa.",
@@ -234,5 +293,101 @@
       "privacy": "Política de Privacitat"
     },
     "rights": "Tots els drets reservats."
+  },
+  "shiftcomply": {
+    "metaTitle": "ShiftComply: personal de temporada, contractes i allotjament",
+    "metaDescription": "ShiftComply reuneix els contractes de temporada, les habitacions del personal i els documents laborals dels hotels, i t'avisa abans que res caduqui.",
+    "headline": "Personal de temporada, contractes i allotjament, en un sol lloc.",
+    "subtext": "ShiftComply reuneix cada contracte de temporada, habitació del personal i document laboral, i t'avisa abans que res caduqui, perquè ningú es quedi en una habitació després que el seu contracte hagi acabat.",
+    "ctaDemo": "Prova la demo",
+    "ctaContact": "Parla amb nosaltres",
+    "builtFor": "Pensat per als hotels de temporada d'Andorra",
+    "problemTitle": "El final de temporada és quan tot s'escapa",
+    "problems": {
+      "rooms": {
+        "title": "Habitacions sense contracte",
+        "text": "Un contracte s'acaba, però l'empleat continua en una habitació del personal, sense cap pròrroga registrada."
+      },
+      "documents": {
+        "title": "Documents que caduquen en silenci",
+        "text": "Permisos de treball, documents d'identitat i certificats caduquen sense que ningú se n'adoni fins a una inspecció."
+      },
+      "spreadsheets": {
+        "title": "Tot està dispers",
+        "text": "Els contractes en una carpeta, les habitacions en un full de càlcul i els permisos a la bústia d'algú."
+      }
+    },
+    "featuresTitle": "Què fa ShiftComply",
+    "featuresSubtext": "Una sola vista de qui treballa per a tu, on viu i què falta.",
+    "features": {
+      "contracts": {
+        "title": "Contractes amb avisos",
+        "text": "Mira quins contractes acaben els propers 30 dies, renova'ls en un sol pas i conserva l'historial."
+      },
+      "housing": {
+        "title": "Allotjament lligat als contractes",
+        "text": "Cada estada segueix el contracte que l'empara, i les sortides endarrerides queden marcades."
+      },
+      "documents": {
+        "title": "Documents arxivats",
+        "text": "Contractes signats, documents d'identitat, permisos i certificats per a cada empleat, amb dates de caducitat i versions anteriors."
+      },
+      "reminders": {
+        "title": "Recordatoris i calendari",
+        "text": "Un calendari i una cronologia de finals de contracte, sortides i documents que caduquen."
+      },
+      "team": {
+        "title": "El teu equip, la teva gestoria",
+        "text": "Convida els responsables i dona accés de només lectura a la gestoria en lloc d'enviar fulls de càlcul."
+      },
+      "import": {
+        "title": "Configuració en minuts",
+        "text": "Importa el personal des d'un full de càlcul i afegeix tot un edifici de personal de cop."
+      }
+    },
+    "stepsTitle": "Com funciona",
+    "steps": {
+      "one": {
+        "title": "Afegeix habitacions i personal",
+        "text": "Importa la llista del personal i descriu els edificis del personal."
+      },
+      "two": {
+        "title": "ShiftComply vigila les dates",
+        "text": "Els finals de contracte, les sortides i les caducitats dels documents es controlen per tu."
+      },
+      "three": {
+        "title": "Actua sobre el que cal",
+        "text": "El tauler mostra què cal renovar, qui ha de sortir i què cal recollir."
+      }
+    },
+    "privacyTitle": "Pensat per a dades del personal",
+    "privacy": {
+      "access": "Només les persones que convidis poden veure el teu hotel, amb accés d'administrador, responsable o només lectura.",
+      "files": "Els documents es desen de forma privada, s'obren amb enllaços de curta durada i cada consulta queda registrada.",
+      "control": "Arxiva les persones que marxen, exporta les teves dades o elimina registres definitivament."
+    },
+    "ctaTitle": "Mira-ho amb un hotel d'exemple",
+    "ctaText": "La demo funciona amb dades inventades d'un hotel de temporada. Demana'ns un codi d'accés.",
+    "screenshotAlt": "El tauler de ShiftComply amb contractes que acaben aviat, habitacions endarrerides i documents que falten",
+    "demo": {
+      "metaTitle": "Demo de ShiftComply",
+      "title": "Prova la demo de ShiftComply",
+      "text": "Explora un hotel de temporada d'exemple amb personal, habitacions, contractes i documents. Introdueix el codi d'accés que t'han donat.",
+      "label": "Codi d'accés",
+      "placeholder": "El teu codi",
+      "submit": "Obre la demo",
+      "checking": "Comprovant",
+      "wrong": "Aquest codi no és correcte. Revisa'l i torna-ho a provar.",
+      "failed": "No s'ha pogut comprovar el codi. Torna-ho a provar.",
+      "noCode": "Encara no tens codi?",
+      "askUs": "Demana'ns-en un",
+      "points": {
+        "staff": "18 empleats d'exemple amb contractes de temporada",
+        "housing": "Allotjament del personal amb sortides endarrerides per resoldre",
+        "documents": "Documents, avisos de caducitat i historial"
+      },
+      "note": "Tot el que hi ha a la demo és inventat. Els canvis que facis es queden al teu navegador i no es desen.",
+      "back": "Sobre ShiftComply"
+    }
   }
 }
