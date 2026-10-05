@@ -162,23 +162,7 @@ function DocCard({ doc, unified, isMobile }: { doc: Doc; unified: boolean; isMob
       whileHover={{ scale: 1.05, rotate: 0, zIndex: 20 }}
       transition={{ type: "spring", stiffness: 260, damping: 24 }}
     >
-
-
-      <div className="flex items-center gap-1.5">
-
-        <span className="text-[9px] font-semibold uppercase tracking-wide text-navy/40">
-          {doc.kind === "pdf"
-            ? "Document"
-            : doc.kind === "sheet"
-            ? "Spreadsheet"
-            : doc.kind === "email"
-            ? "Email"
-            : doc.kind === "checklist"
-            ? "Checklist"
-            : "Note"}
-        </span>
-      </div>
-      <div className="mt-1 text-[11px] font-semibold leading-snug text-navy">
+      <div className="text-[11px] font-semibold leading-snug text-navy">
         {doc.title}
       </div>
       {doc.meta && (

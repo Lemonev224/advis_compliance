@@ -5,7 +5,8 @@
     "howItWorks": "How It Works",
     "company": "Company",
     "contact": "Contact",
-    "bookDemo": "Book a Demo"
+    "bookDemo": "Book a Demo",
+    "shiftcomply": "ShiftComply"
   },
   "hero": {
     "eyebrow": "Compliance Infrastructure",
@@ -122,10 +123,26 @@
     "recentActivity": "Recent activity",
     "live": "Live",
     "activity": {
-      "evidenceVerified": { "label": "Evidence verified", "detail": "Access review Q3 · automated", "time": "2m ago" },
-      "controlUpdated": { "label": "Control updated", "detail": "Encryption at rest · CC6.1", "time": "18m ago" },
-      "riskIdentified": { "label": "Risk identified", "detail": "Vendor access scope · Medium", "time": "41m ago" },
-      "policyReviewed": { "label": "Policy reviewed", "detail": "Data retention policy · v3.2", "time": "1h ago" }
+      "evidenceVerified": {
+        "label": "Evidence verified",
+        "detail": "Access review Q3 · automated",
+        "time": "2m ago"
+      },
+      "controlUpdated": {
+        "label": "Control updated",
+        "detail": "Encryption at rest · CC6.1",
+        "time": "18m ago"
+      },
+      "riskIdentified": {
+        "label": "Risk identified",
+        "detail": "Vendor access scope · Medium",
+        "time": "41m ago"
+      },
+      "policyReviewed": {
+        "label": "Policy reviewed",
+        "detail": "Data retention policy · v3.2",
+        "time": "1h ago"
+      }
     },
     "footnote": "Product mockup shown with illustrative data for demonstration purposes only."
   },
@@ -138,7 +155,7 @@
   "industries": {
     "headline": "Compliance infrastructure for regulated industries.",
     "subtext": "The same core infrastructure is designed to support a range of regulatory environments as the platform expands.",
-      "ctaTalkToUs": "Talk to us",
+    "ctaTalkToUs": "Talk to us",
     "moduleLabels": {
       "controls": "Controls",
       "evidence": "Evidence",
@@ -149,32 +166,56 @@
       "logistics": {
         "name": "Logistics",
         "note": "Built to support supply chains, transport operations and fleet management.",
-        "focus": ["Carrier compliance", "Fleet documentation", "Route audits"]
+        "focus": [
+          "Carrier compliance",
+          "Fleet documentation",
+          "Route audits"
+        ]
       },
       "construction": {
         "name": "Construction",
         "note": "Designed for project delivery, contractors, site operations and compliance.",
-        "focus": ["Site safety records", "Contractor vetting", "Permit tracking"]
+        "focus": [
+          "Site safety records",
+          "Contractor vetting",
+          "Permit tracking"
+        ]
       },
       "retail": {
         "name": "Retail",
         "note": "Built to support stores, ecommerce, inventory and customer operations.",
-        "focus": ["Data protection", "Supplier audits", "Consumer regulations"]
+        "focus": [
+          "Data protection",
+          "Supplier audits",
+          "Consumer regulations"
+        ]
       },
       "hospitality": {
         "name": "Hospitality",
         "note": "Designed for hotels, restaurants, venues and guest-focused operations.",
-        "focus": ["Guest data handling", "Health & safety", "Licensing"]
+        "focus": [
+          "Guest data handling",
+          "Health & safety",
+          "Licensing"
+        ]
       },
       "tourism": {
         "name": "Tourism",
         "note": "Built to support travel businesses, tour operators and visitor experiences.",
-        "focus": ["Cross-border rules", "Booking data", "Operator licensing"]
+        "focus": [
+          "Cross-border rules",
+          "Booking data",
+          "Operator licensing"
+        ]
       },
       "other": {
         "name": "Other Industries",
         "note": "Flexible infrastructure designed to adapt to new sectors and business models.",
-        "focus": ["Custom control sets", "New frameworks", "Emerging regulation"]
+        "focus": [
+          "Custom control sets",
+          "New frameworks",
+          "Emerging regulation"
+        ]
       }
     }
   },
@@ -183,20 +224,39 @@
     "subtext": "Compliance isn't a one time setup. Each cycle understand, build, monitor, scale feeds the next, so the infrastructure keeps pace as requirements and operations change.",
     "cta": "Learn more",
     "steps": {
-      "understand": { "title": "Understand", "description": "Translate regulatory requirements into structured controls." },
-      "build": { "title": "Build", "description": "Turn controls into policies, workflows and operational processes." },
-      "monitor": { "title": "Monitor", "description": "Continuously track compliance and collect evidence." },
-      "scale": { "title": "Scale", "description": "Extend the same infrastructure across new requirements, entities and industries." }
+      "understand": {
+        "title": "Understand",
+        "description": "Translate regulatory requirements into structured controls."
+      },
+      "build": {
+        "title": "Build",
+        "description": "Turn controls into policies, workflows and operational processes."
+      },
+      "monitor": {
+        "title": "Monitor",
+        "description": "Continuously track compliance and collect evidence."
+      },
+      "scale": {
+        "title": "Scale",
+        "description": "Extend the same infrastructure across new requirements, entities and industries."
+      }
     }
   },
-    "proof": {
-  "headline": "Built once. Built to hold up.",
-  "subtext": "We didn't bolt compliance onto old software. The infrastructure — controls, evidence, risk and monitoring — was built first, so every industry module inherits the same rigor.",
-  "stats": {
-    "modules": { "caption": "core modules — controls, evidence, risk and monitoring" },
-    "frameworks": { "caption": "regulatory frameworks referenced, from ISO 27001 to the EU AI Act" },
-    "industries": { "caption": "industries the platform is designed to support" }
-  }},
+  "proof": {
+    "headline": "Built once. Built to hold up.",
+    "subtext": "We didn't bolt compliance onto old software. The infrastructure — controls, evidence, risk and monitoring — was built first, so every industry module inherits the same rigor.",
+    "stats": {
+      "modules": {
+        "caption": "core modules — controls, evidence, risk and monitoring"
+      },
+      "frameworks": {
+        "caption": "regulatory frameworks referenced, from ISO 27001 to the EU AI Act"
+      },
+      "industries": {
+        "caption": "industries the platform is designed to support"
+      }
+    }
+  },
   "about": {
     "headline": "Building the infrastructure behind the next generation of regulated businesses.",
     "subtext": "We're building a new approach to compliance: software infrastructure that can adapt to different regulatory environments, industries and business models. Based in Andorra, at the heart of Europe.",
@@ -233,7 +293,101 @@
       "privacy": "Privacy Policy"
     },
     "rights": "All rights reserved."
+  },
+  "shiftcomply": {
+    "metaTitle": "ShiftComply: seasonal staff, contracts and housing",
+    "metaDescription": "ShiftComply keeps seasonal contracts, staff rooms and work documents in one place for hotels, and warns you before anything expires.",
+    "headline": "Seasonal staff, contracts and housing, in one place.",
+    "subtext": "ShiftComply keeps every seasonal contract, staff room and work document together, and warns you before anything expires, so nobody stays in a room after their contract has ended.",
+    "ctaDemo": "Try the demo",
+    "ctaContact": "Talk to us",
+    "builtFor": "Built for seasonal hotels in Andorra",
+    "problemTitle": "The end of the season is where things slip",
+    "problems": {
+      "rooms": {
+        "title": "Rooms outlive contracts",
+        "text": "A contract ends, but the employee is still in a staff room, with no extension on file."
+      },
+      "documents": {
+        "title": "Documents expire quietly",
+        "text": "Work permits, IDs and certificates run out without anyone noticing until an inspection."
+      },
+      "spreadsheets": {
+        "title": "Everything is scattered",
+        "text": "Contracts in one folder, rooms in a spreadsheet, permits in someone's inbox."
+      }
+    },
+    "featuresTitle": "What ShiftComply does",
+    "featuresSubtext": "One view of who works for you, where they live and what is missing.",
+    "features": {
+      "contracts": {
+        "title": "Contracts with warnings",
+        "text": "See which contracts end in the next 30 days, renew them in one step and keep the history."
+      },
+      "housing": {
+        "title": "Housing linked to contracts",
+        "text": "Every room stay follows the contract behind it, and overdue checkouts are flagged."
+      },
+      "documents": {
+        "title": "Documents on file",
+        "text": "Signed contracts, IDs, permits and certificates per employee, with expiry dates and earlier versions."
+      },
+      "reminders": {
+        "title": "Reminders and calendar",
+        "text": "A calendar and timeline of contract ends, checkouts and expiring documents."
+      },
+      "team": {
+        "title": "Your team, your gestoria",
+        "text": "Invite managers, and give your gestoria read-only access instead of emailing spreadsheets."
+      },
+      "import": {
+        "title": "Set up in minutes",
+        "text": "Import staff from a spreadsheet and add a whole staff building at once."
+      }
+    },
+    "stepsTitle": "How it works",
+    "steps": {
+      "one": {
+        "title": "Add your rooms and staff",
+        "text": "Import your staff list and describe your staff buildings."
+      },
+      "two": {
+        "title": "ShiftComply watches the dates",
+        "text": "Contract ends, checkouts and document expiry dates are tracked for you."
+      },
+      "three": {
+        "title": "Act on what needs attention",
+        "text": "The dashboard shows what to renew, who to check out and what to collect."
+      }
+    },
+    "privacyTitle": "Built for employee data",
+    "privacy": {
+      "access": "Only people you invite can see your hotel, with administrator, manager or read-only access.",
+      "files": "Documents are stored privately, open through short-lived links, and every view is recorded.",
+      "control": "Archive people who leave, export your data, or delete records permanently."
+    },
+    "ctaTitle": "See it with a sample hotel",
+    "ctaText": "The demo runs on made-up data for a seasonal hotel. Ask us for an access code.",
+    "screenshotAlt": "The ShiftComply dashboard with contracts ending soon, overdue rooms and missing documents",
+    "demo": {
+      "metaTitle": "ShiftComply demo",
+      "title": "Try the ShiftComply demo",
+      "text": "Explore a sample seasonal hotel with staff, rooms, contracts and documents. Enter the access code you were given.",
+      "label": "Access code",
+      "placeholder": "Your code",
+      "submit": "Open the demo",
+      "checking": "Checking",
+      "wrong": "That code is not right. Check it and try again.",
+      "failed": "The code could not be checked. Try again.",
+      "noCode": "No code yet?",
+      "askUs": "Ask us for one",
+      "points": {
+        "staff": "18 sample employees with seasonal contracts",
+        "housing": "Staff housing with overdue checkouts to resolve",
+        "documents": "Documents, expiry reminders and history"
+      },
+      "note": "Everything in the demo is made up. Changes you make stay in your browser and are not saved.",
+      "back": "About ShiftComply"
+    }
   }
-  
-  
 }

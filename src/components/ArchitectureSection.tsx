@@ -29,10 +29,10 @@ const ease = [0.16, 1, 0.3, 1] as const;
 /* ---------------------------------------------------------------- */
 
 const stats = [
-  { label: "OPEN REQUESTS", sub: "NEW REQUEST(S)", value: 13, delta: "+52%", up: true, ring: 24 },
-  { label: "SETTLED REQUESTS", sub: "TODAY VS. YESTERDAY", value: 8, delta: "-11%", up: false, ring: 38 },
-  { label: "AVG TIME (MIN)", sub: "TODAY VS. YESTERDAY", value: 2, delta: "+50%", up: true, ring: 16 },
-  { label: "OVERDUE", sub: "TODAY VS. OVERDUE", value: 13, delta: "-96%", up: false, ring: 82 },
+  { label: "Open Requests", sub: "New Request(s)", value: 13, delta: "+52%", up: true, ring: 24 },
+  { label: "Settled Requests", sub: "Today Vs. Yesterday", value: 8, delta: "-11%", up: false, ring: 38 },
+  { label: "Avg Time (Min)", sub: "Today Vs. Yesterday", value: 2, delta: "+50%", up: true, ring: 16 },
+  { label: "Overdue", sub: "Today Vs. Overdue", value: 13, delta: "-96%", up: false, ring: 82 },
 ];
 
 const typeMeta: Record<string, { icon: typeof ShieldQuestion; label: string }> = {
@@ -162,7 +162,7 @@ function StatCard({
     >
       <div className="flex items-center justify-between gap-2">
         <div className="min-w-0">
-          <div className="text-[7.5px] font-semibold tracking-[0.05em] text-navy/70 uppercase truncate">
+          <div className="text-[7.5px] font-semibold text-navy/70 truncate">
             {label}
           </div>
           <div className="text-[6.5px] text-navy/35 mt-0.5 truncate">{sub}</div>
@@ -382,11 +382,8 @@ export function SolutionSection() {
               {/* Chrome */}
               <div className="flex items-center justify-between border-b border-navy/8 bg-white px-3.5 py-2">
                 <div className="flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-navy/10" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-navy/10" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-navy/10" />
                 </div>
-                <span className="text-[7.5px] font-medium tracking-wide text-navy/35 uppercase">
+                <span className="text-[7.5px] font-medium text-navy/35">
                   Illustrative data
                 </span>
               </div>
@@ -403,7 +400,7 @@ export function SolutionSection() {
                 <div className="rounded-lg border border-navy/10 bg-white overflow-hidden">
                   <div className="flex items-center gap-2 bg-[#132A54] px-3 py-1.5">
                     <Pencil className="h-2.5 w-2.5 text-cyan shrink-0" strokeWidth={2} />
-                    <span className="text-[8.5px] font-semibold tracking-[0.03em] text-white uppercase truncate">
+                    <span className="text-[8.5px] font-semibold text-white truncate">
                       Recent Contract Change Requests
                     </span>
                   </div>

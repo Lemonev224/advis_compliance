@@ -28,32 +28,32 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 const stats = [
   {
-    label: "OPEN REQUESTS",
-    sub: "NEW REQUEST(S)",
+    label: "Open Requests",
+    sub: "New Request(s)",
     value: 13,
     delta: "+52%",
     up: true,
     ring: 24,
   },
   {
-    label: "SETTLED REQUESTS",
-    sub: "TODAY VS. YESTERDAY",
+    label: "Settled Requests",
+    sub: "Today Vs. Yesterday",
     value: 8,
     delta: "-11%",
     up: false,
     ring: 38,
   },
   {
-    label: "AVG TIME (MIN)",
-    sub: "TODAY VS. YESTERDAY",
+    label: "Avg Time (Min)",
+    sub: "Today Vs. Yesterday",
     value: 2,
     delta: "+50%",
     up: true,
     ring: 16,
   },
   {
-    label: "OVERDUE",
-    sub: "TODAY VS. OVERDUE",
+    label: "Overdue",
+    sub: "Today Vs. Overdue",
     value: 13,
     delta: "-96%",
     up: false,
@@ -213,7 +213,7 @@ function StatCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-[10.5px] sm:text-[11px] font-semibold tracking-[0.06em] text-navy/70 uppercase">
+          <div className="text-[10.5px] sm:text-[11px] font-semibold text-navy/70">
             {label}
           </div>
           <div className="text-[10px] sm:text-[10.5px] text-navy/35 mt-1 truncate">{sub}</div>
@@ -232,7 +232,7 @@ function StatCard({
               {value}
             </span>
           </div>
-          <span className="mt-1.5 text-[9px] font-medium tracking-[0.08em] text-navy/30 uppercase">
+          <span className="mt-1.5 text-[9px] font-medium text-navy/30">
             Recent
           </span>
         </div>
@@ -302,8 +302,7 @@ export function DashboardSection() {
             transition={{ duration: 0.5, ease }}
             className="inline-flex items-center gap-2 rounded-full border border-navy/10 bg-pale px-3.5 py-1.5 mb-6"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-cyan" />
-            <span className="text-[12px] font-semibold tracking-[0.08em] text-navy/60 uppercase">
+            <span className="text-[12px] font-semibold text-navy/60">
               {t("eyebrow")}
             </span>
           </motion.div>
@@ -349,11 +348,8 @@ export function DashboardSection() {
               {/* Chrome bar */}
               <div className="flex items-center justify-between border-b border-navy/8 bg-white px-4 sm:px-7 py-3.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-navy/10" />
                 </div>
-                <span className="text-[9.5px] sm:text-[10.5px] font-medium tracking-wide text-navy/35 uppercase whitespace-nowrap">
+                <span className="text-[9.5px] sm:text-[10.5px] font-medium text-navy/35 whitespace-nowrap">
                   {t("illustrativeLabel")}
                 </span>
               </div>
@@ -378,7 +374,7 @@ export function DashboardSection() {
                   >
                     <div className="flex items-center gap-2 bg-[#132A54] px-4 sm:px-5 py-3">
                       <FileSignature className="h-3.5 w-3.5 text-cyan" strokeWidth={2} />
-                      <span className="text-[11px] sm:text-[12px] font-semibold tracking-[0.04em] text-white uppercase">
+                      <span className="text-[11px] sm:text-[12px] font-semibold text-white">
                         Recent Contract Change Requests
                       </span>
                     </div>
@@ -398,7 +394,7 @@ export function DashboardSection() {
                             ].map((h) => (
                               <th
                                 key={h}
-                                className="text-left text-[10px] font-semibold tracking-[0.05em] text-navy/40 uppercase px-4 py-2.5 whitespace-nowrap"
+                                className="text-left text-[10px] font-semibold text-navy/40 px-4 py-2.5 whitespace-nowrap"
                               >
                                 {h}
                               </th>
@@ -493,7 +489,7 @@ export function DashboardSection() {
                     >
                       <div className="flex items-center gap-2 bg-[#132A54] px-4 sm:px-5 py-3">
                         <ShieldQuestion className="h-3.5 w-3.5 text-cyan" strokeWidth={2} />
-                        <span className="text-[11px] sm:text-[12px] font-semibold tracking-[0.04em] text-white uppercase">
+                        <span className="text-[11px] sm:text-[12px] font-semibold text-white">
                           My Actions
                         </span>
                       </div>
@@ -526,7 +522,7 @@ export function DashboardSection() {
                       className="rounded-xl border border-navy/10 bg-white overflow-hidden"
                     >
                       <div className="flex items-center justify-between gap-2 bg-[#132A54] px-4 sm:px-5 py-3">
-                        <span className="text-[11px] sm:text-[12px] font-semibold tracking-[0.04em] text-white uppercase">
+                        <span className="text-[11px] sm:text-[12px] font-semibold text-white">
                           My Tasks
                         </span>
                         <div className="flex items-center gap-2.5 text-white/60">

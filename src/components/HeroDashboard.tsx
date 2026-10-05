@@ -1,9 +1,42 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShieldCheck, Database, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, Database, AlertTriangle, CheckCircle2, ShieldQuestion } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AnimatedNumber } from "./AnimatedNumber";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+const metrics = [
+  { icon: ShieldCheck, value: 184, label: "controls", delta: "+12%", up: true, ring: 72, delay: 0.55 },
+  { icon: Database, value: 1248, label: "evidence", delta: "+8%", up: true, ring: 58, delay: 0.62, format: (n: number) => Math.round(n).toLocaleString("en-US") },
+  { icon: AlertTriangle, value: 8, label: "openRisks", delta: "-24%", up: false, ring: 20, delay: 0.69 },
+];
+
+function MetricRing({ percent }: { percent: number }) {
+  const radius = 22;
+  const circumference = 2 * Math.PI * radius;
+  return (
+    <div className="relative h-12 w-12 shrink-0">
+      <svg viewBox="0 0 52 52" className="-rotate-90 h-full w-full">
+        <circle cx="26" cy="26" r={radius} fill="none" stroke="rgba(7,27,58,0.08)" strokeWidth="4.5" />
+        <motion.circle
+          cx="26"
+          cy="26"
+          r={radius}
+          fill="none"
+          stroke="#132A54"
+          strokeWidth="4.5"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset: circumference - (percent / 100) * circumference }}
+          transition={{ duration: 1.1, ease, delay: 0.5 }}
+        />
+      </svg>
+    </div>
+  );
+}
 
 export function HeroDashboard() {
   const t = useTranslations("heroDashboard");
@@ -12,109 +45,110 @@ export function HeroDashboard() {
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.8, delay: 0.35, ease }}
       className="relative w-full max-w-[520px] mx-auto"
     >
       {/* Muted enterprise backdrop glow */}
       <div
         aria-hidden
-        className="absolute -inset-8 -z-10 rounded-[32px] opacity-40 blur-3xl"
+        className="absolute -inset-8 -z-10 rounded-[32px] opacity-50 blur-3xl"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(7, 27, 58, 0.25), rgba(30, 58, 138, 0.12), transparent)",
+            "radial-gradient(ellipse 60% 50% at 50% 20%, rgba(24,198,209,0.14), transparent 70%)",
         }}
       />
 
       {/* Enterprise Card Container */}
-      <div className="rounded-xl border border-slate-200/80 bg-white shadow-[0_1px_3px_rgba(7,27,58,0.06),0_20px_40px_-20px_rgba(7,27,58,0.15)] overflow-hidden">
-        {/* Sleek Dark Navy Window Header */}
-        <div className="flex items-center justify-between border-b border-navy/10 bg-[#071B3A] px-4 py-3">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-white/20" />
-              <span className="h-2 w-2 rounded-full bg-white/20" />
-              <span className="h-2 w-2 rounded-full bg-white/20" />
-            </div>
-            <span className="ml-2 text-[11px] font-medium tracking-wider text-slate-300 uppercase">
-              Compliance Monitor
-            </span>
+      <div className="rounded-2xl border border-navy/10 bg-[#F5F7FA] shadow-[0_1px_2px_rgba(7,27,58,0.04),0_40px_80px_-32px_rgba(7,27,58,0.22)] overflow-hidden">
+        <div className="flex items-center justify-between border-b border-navy/8 bg-white px-4 py-3.5">
+          <div className="flex items-center gap-1.5">
           </div>
-
           <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 border border-emerald-500/20">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[10.5px] font-medium text-emerald-300 tracking-wide uppercase">
+            <span className="text-[10px] font-medium text-emerald-700">
               Active
             </span>
           </div>
         </div>
 
-        {/* Dashboard Content */}
-        <div className="p-5 bg-slate-50/40">
-          {/* Main Status Row */}
-          <div className="flex items-center gap-4 rounded-lg border border-slate-200/90 bg-white p-4 mb-3 shadow-xs">
-            <div className="relative h-15 w-15 shrink-0">
-              <svg width="60" height="60" viewBox="0 0 60 60" className="-rotate-90">
-                <circle cx="30" cy="30" r="24" fill="none" stroke="#E2E8F0" strokeWidth="5" />
-                <motion.circle
-                  cx="30"
-                  cy="30"
-                  r="24"
-                  fill="none"
-                  stroke="url(#hero-ring)"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  strokeDasharray={2 * Math.PI * 24}
-                  initial={{ strokeDashoffset: 2 * Math.PI * 24 }}
-                  animate={{ strokeDashoffset: 2 * Math.PI * 24 * 0.06 }}
-                  transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                />
-                <defs>
-                  <linearGradient id="hero-ring" x1="0" y1="0" x2="60" y2="60">
-                    <stop stopColor="#071B3A" />
-                    <stop offset="100%" stopColor="#2563EB" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center text-[13px] font-semibold text-navy">
-                <AnimatedNumber value={94} format={(n) => `${Math.round(n)}%`} delay={0.6} />
-              </div>
+        <div className="p-4 sm:p-5">
+          {/* Navy header panel, like the section cards */}
+          <div className="rounded-xl border border-navy/10 bg-white overflow-hidden mb-3">
+            <div className="flex items-center gap-2 bg-[#132A54] px-4 py-3">
+              <ShieldQuestion className="h-3.5 w-3.5 text-cyan" strokeWidth={2} />
+              <span className="text-[11px] font-semibold text-white">
+                {t("complianceStatus")}
+              </span>
             </div>
 
-            <div>
-              <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-0.5">
-                {t("complianceStatus")}
+            <div className="flex items-center gap-4 p-4">
+              <div className="relative h-14 w-14 shrink-0">
+                <svg width="56" height="56" viewBox="0 0 56 56" className="-rotate-90">
+                  <circle cx="28" cy="28" r="22" fill="none" stroke="#E2E8F0" strokeWidth="5" />
+                  <motion.circle
+                    cx="28"
+                    cy="28"
+                    r="22"
+                    fill="none"
+                    stroke="url(#hero-ring)"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 22}
+                    initial={{ strokeDashoffset: 2 * Math.PI * 22 }}
+                    animate={{ strokeDashoffset: 2 * Math.PI * 22 * 0.06 }}
+                    transition={{ duration: 1.4, delay: 0.4, ease }}
+                  />
+                  <defs>
+                    <linearGradient id="hero-ring" x1="0" y1="0" x2="56" y2="56">
+                      <stop stopColor="#132A54" />
+                      <stop offset="100%" stopColor="#18C6D1" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center text-[12px] font-semibold text-navy">
+                  <AnimatedNumber value={94} format={(n) => `${Math.round(n)}%`} delay={0.4} />
+                </div>
               </div>
-              <div className="text-[13px] font-medium text-slate-800 flex items-center gap-1.5">
+
+              <div className="text-[13px] font-medium text-navy flex items-center gap-1.5">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> {t("onTrack")}
               </div>
             </div>
           </div>
 
-          {/* Key Metrics Grid */}
+          {/* Key metrics — ring + delta badge, like StatCard */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-lg border border-slate-200/90 bg-white p-3.5 shadow-xs">
-              <ShieldCheck className="h-4 w-4 text-slate-600 mb-2" strokeWidth={1.75} />
-              <div className="text-[16px] font-semibold text-slate-900 tracking-tight">
-                <AnimatedNumber value={184} delay={0.7} />
-              </div>
-              <div className="text-[10.5px] font-medium text-slate-500">{t("controls")}</div>
-            </div>
-
-            <div className="rounded-lg border border-slate-200/90 bg-white p-3.5 shadow-xs">
-              <Database className="h-4 w-4 text-slate-600 mb-2" strokeWidth={1.75} />
-              <div className="text-[16px] font-semibold text-slate-900 tracking-tight">
-                <AnimatedNumber value={1248} delay={0.75} format={(n) => Math.round(n).toLocaleString("en-US")} />
-              </div>
-              <div className="text-[10.5px] font-medium text-slate-500">{t("evidence")}</div>
-            </div>
-
-            <div className="rounded-lg border border-slate-200/90 bg-white p-3.5 shadow-xs">
-              <AlertTriangle className="h-4 w-4 text-amber-600 mb-2" strokeWidth={1.75} />
-              <div className="text-[16px] font-semibold text-slate-900 tracking-tight">
-                <AnimatedNumber value={8} delay={0.8} />
-              </div>
-              <div className="text-[10.5px] font-medium text-slate-500">{t("openRisks")}</div>
-            </div>
+            {metrics.map((m, i) => {
+              const Icon = m.icon;
+              return (
+                <motion.div
+                  key={m.label}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: m.delay, ease }}
+                  className="rounded-xl border border-navy/10 bg-white p-3"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <Icon className="h-3.5 w-3.5 text-navy/50" strokeWidth={1.75} />
+                    <div className="relative h-6 w-6 shrink-0">
+                      <MetricRing percent={m.ring} />
+                    </div>
+                  </div>
+                  <div className="text-[15px] font-semibold text-navy tracking-tight">
+                    <AnimatedNumber value={m.value} delay={m.delay + 0.1} format={m.format} />
+                  </div>
+                  <div className="text-[9.5px] font-medium text-navy/40 mb-1.5">
+                    {t(m.label)}
+                  </div>
+                  <span
+                    className={`inline-block rounded-md px-1.5 py-[2px] text-[9.5px] font-semibold text-white ${
+                      m.up ? "bg-[#1E9E6B]" : "bg-[#D14343]"
+                    }`}
+                  >
+                    {m.delta}
+                  </span>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

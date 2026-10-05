@@ -123,103 +123,107 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Floating browser-tab card — compact, muted contract-compliance snapshot.
+               {/* Floating browser-tab card — compact, muted contract-compliance snapshot.
             Small footprint (clamp 340–460px) so it reads as a serious product
             preview rather than the main event of the hero. */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease }}
-          className="relative mt-10 w-full max-w-[420px] mx-auto lg:mx-0 lg:mt-0 lg:absolute lg:top-[90px] lg:right-[10px] lg:w-[clamp(340px,30vw,460px)] rounded-xl border border-navy/10 bg-white shadow-[0_24px_48px_-20px_rgba(7,27,58,0.22)] overflow-hidden"
+          className="relative mt-10 w-full max-w-[420px] mx-auto lg:mx-0 lg:mt-0 lg:absolute lg:top-[90px] lg:right-[10px] lg:w-[clamp(340px,30vw,460px)] rounded-2xl border border-navy/10 bg-[#F5F7FA] shadow-[0_24px_48px_-20px_rgba(7,27,58,0.22)] overflow-hidden"
         >
           {/* browser chrome */}
-          <div className="flex items-center gap-2 border-b border-navy/8 bg-slate-50 px-3.5 py-2.5">
-            <span className="h-2 w-2 rounded-full bg-navy/15" />
-            <span className="h-2 w-2 rounded-full bg-navy/15" />
-            <span className="h-2 w-2 rounded-full bg-navy/15" />
-            <div className="ml-2.5 flex items-center gap-1.5 rounded-full bg-white px-2.5 py-[3px] text-[9.5px] font-medium text-navy/50">
-              <span className="h-1 w-1 rounded-full bg-navy/30" />
+          <div className="flex items-center gap-2 border-b border-navy/8 bg-white px-3.5 py-2.5">
+            <div className="ml-2.5 flex items-center gap-1.5 rounded-full bg-slate-50 px-2.5 py-[3px] text-[9.5px] font-medium text-navy/50">
               advisorly.tech/compliance
             </div>
           </div>
 
-          <div className="text-navy">
-            {/* top bar */}
-            <div className="flex items-center justify-between border-b border-navy/8 px-3.5 py-2">
-              <span className="text-[10px] font-semibold text-navy">Contract Requests</span>
-              <span className="flex items-center gap-1.5">
+          <div className="p-3.5">
+            {/* Navy header panel — matches DashboardSection's card headers */}
+            <div className="rounded-xl border border-navy/10 bg-white overflow-hidden mb-3">
+              <div className="flex items-center gap-2 bg-[#132A54] px-3.5 py-2.5">
+                <span className="text-[10px] font-semibold text-white">
+                  Contract Requests
+                </span>
+              </div>
 
-              </span>
+              {/* Stat cards — ring + delta badge, like StatCard in DashboardSection */}
+              <div className="grid grid-cols-4 gap-2 p-3">
+                {stats.map((s, i) => (
+                  <div key={s.label} className="rounded-lg border border-navy/8 bg-slate-50/40 p-2 text-center">
+                    <div className="text-[13px] font-semibold text-navy tabular-nums leading-none">
+                      {s.value}
+                    </div>
+                    <div className="mt-1 text-[7px] font-medium text-navy/40 leading-tight">
+                      {s.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* compact stat strip */}
-            <div className="grid grid-cols-4 divide-x divide-navy/6 border-b border-navy/8">
-              {stats.map((s) => (
-                <div key={s.label} className="px-2 py-2.5 text-center">
-                  <div className="text-[13px] font-semibold text-navy tabular-nums leading-none">
-                    {s.value}
-                  </div>
-                  <div className="mt-1 text-[7.5px] font-medium tracking-[0.03em] text-navy/40 uppercase leading-tight">
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* compact request list — icon, progress bar, status badge like the product table */}
+            <div className="rounded-xl border border-navy/10 bg-white overflow-hidden">
+              <div className="flex items-center gap-2 bg-[#132A54] px-3.5 py-2.5">
+                <span className="text-[10px] font-semibold text-white">
+                  Recent Activity
+                </span>
+              </div>
 
-            {/* compact request list */}
-            <div className="divide-y divide-navy/6">
-              {requests.map((r) => (
-                <div
-                  key={r.vendor}
-                  className={`flex items-center gap-2.5 px-3.5 py-2.5 border-l-2 ${
-                    r.tone === "ok" ? "border-l-[#2E6B4F]" : "border-l-[#8A6A2E]"
-                  }`}
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-[10.5px] font-semibold text-navy">{r.vendor}</div>
-                    <div className="truncate text-[9px] italic text-navy/40">{r.type}</div>
-                  </div>
-                  <div className="hidden sm:flex flex-col items-end gap-1 w-[64px] shrink-0">
-                    <div className="h-1 w-full rounded-full bg-navy/8 overflow-hidden">
-                      <motion.div
-                        className={`h-full rounded-full ${
-                          r.tone === "ok" ? "bg-[#2E6B4F]" : "bg-[#8A6A2E]"
-                        }`}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${r.status}%` }}
-                        transition={{ duration: 1, delay: 0.6, ease }}
-                      />
+              <div className="divide-y divide-navy/6">
+                {requests.map((r, i) => (
+                  <motion.div
+                    key={r.vendor}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.55 + i * 0.06, ease }}
+                    className="flex items-center gap-2.5 px-3.5 py-2.5"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-[10.5px] font-semibold text-navy">{r.vendor}</div>
+                      <div className="truncate text-[9px] italic text-navy/40">{r.type}</div>
+                    </div>
+                    <div className="hidden sm:flex flex-col items-end gap-1 w-[64px] shrink-0">
+                      <div className="h-1.5 w-full rounded-full bg-navy/8 overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full bg-[#132A54]"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${r.status}%` }}
+                          transition={{ duration: 1, delay: 0.6 + i * 0.06, ease }}
+                        />
+                      </div>
+                      <span className="text-[8px] font-semibold tabular-nums text-navy/60">
+                        {r.status}%
+                      </span>
                     </div>
                     <span
-                      className={`text-[8px] font-semibold tabular-nums ${
-                        r.tone === "ok" ? "text-[#2E6B4F]" : "text-[#8A6A2E]"
+                      className={`shrink-0 rounded-md px-1.5 py-1 text-[8px] font-semibold text-white whitespace-nowrap ${
+                        r.tone === "ok" ? "bg-[#1E9E6B]" : "bg-[#D14343]"
                       }`}
                     >
-                      {r.status}%
+                      {r.statusLabel}
                     </span>
-                  </div>
-                  <span className="shrink-0 rounded-[3px] border border-navy/10 bg-slate-50 px-1.5 py-1 text-[8px] font-semibold text-navy/60 whitespace-nowrap">
-                    {r.statusLabel}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* framework posture strip */}
+              <div className="border-t border-navy/8 bg-slate-50/60 px-3.5 py-2">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="rounded-md border border-navy/10 px-1.5 py-[3px] text-[8px] font-medium text-navy/50">
+                    ISO 27001
+                  </span>
+                  <span className="rounded-md border border-navy/10 px-1.5 py-[3px] text-[8px] font-medium text-navy/50">
+                    SOC 2
+                  </span>
+                  <span className="rounded-md border border-navy/10 px-1.5 py-[3px] text-[8px] font-medium text-navy/50">
+                    GDPR
+                  </span>
+                  <span className="ml-auto rounded-md bg-[#D14343] px-1.5 py-[3px] text-[8px] font-bold text-white">
+                    2 due soon
                   </span>
                 </div>
-              ))}
-            </div>
-
-            {/* framework posture strip */}
-            <div className="border-t border-navy/8 bg-slate-50/60 px-3.5 py-2">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span className="rounded-[3px] border border-navy/10 px-1.5 py-[3px] text-[8px] font-medium text-navy/50">
-                  ISO 27001
-                </span>
-                <span className="rounded-[3px] border border-navy/10 px-1.5 py-[3px] text-[8px] font-medium text-navy/50">
-                  SOC 2
-                </span>
-                <span className="rounded-[3px] border border-navy/10 px-1.5 py-[3px] text-[8px] font-medium text-navy/50">
-                  GDPR
-                </span>
-                <span className="ml-auto rounded-[3px] border border-[#8A6A2E]/30 px-1.5 py-[3px] text-[8px] font-bold uppercase tracking-wide text-[#8A6A2E]">
-                  2 due soon
-                </span>
               </div>
             </div>
           </div>
