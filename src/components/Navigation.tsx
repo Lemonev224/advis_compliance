@@ -23,7 +23,6 @@ export function Navigation() {
   const [langOpen, setLangOpen] = useState(false); // globe dropdown
 
   const links = [
-    { label: t("shiftcomply"), href: "/shiftcomply" },
     { label: t("industries"), href: "/#industries" },
     { label: t("howItWorks"), href: "/#how-it-works" },
     { label: t("company"), href: "/#company" },

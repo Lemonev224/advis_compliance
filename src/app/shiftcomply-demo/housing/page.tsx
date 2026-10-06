@@ -8,12 +8,14 @@ import { RoomBadge } from "@/shiftcomply/components/status";
 import { AddRoomModal, AssignRoomModal, RenewContractModal } from "@/shiftcomply/components/actions";
 import { useStore } from "@/shiftcomply/lib/store";
 import { roomStatus, type RoomStatus } from "@/shiftcomply/lib/derive";
-import { daysUntil, fmt } from "@/shiftcomply/lib/dates";
+import { daysUntil } from "@/shiftcomply/lib/dates";
+import { useI18n } from "@/shiftcomply/lib/i18n";
 
 type Filter = "all" | RoomStatus;
 
 export default function HousingPage() {
   const { rooms, employees, checkOut, extendStay, deleteRoom, canEdit, createDemoHotel, myHotels } = useStore();
+  const { t, fmt } = useI18n();
   const [addingRoom, setAddingRoom] = useState(false);
   const [filter, setFilter] = useState<Filter>("all");
   const [openRoom, setOpenRoom] = useState<string | null>(null);
@@ -45,22 +47,22 @@ export default function HousingPage() {
   return (
     <>
       <PageHeader
-        title="Staff housing"
+        title={t("Staff housing")}
         description={
           rooms.length
-            ? `${rooms.length - count("vacant")} of ${rooms.length} staff rooms occupied`
-            : "Add your staff rooms to start assigning employees"
+            ? t("{n} of {total} staff rooms occupied", { n: rooms.length - count("vacant"), total: rooms.length })
+            : t("Add your staff rooms to start assigning employees")
         }
         actions={
           canEdit && (
             <>
               <Button onClick={() => setAddingRoom(true)}>
                 <Plus size={16} />
-                Add room
+                {t("Add room")}
               </Button>
               <Button variant="primary" onClick={() => setAssignFor(null)}>
                 <KeyRound size={16} />
-                Assign room
+                {t("Assign room")}
               </Button>
             </>
           )
@@ -70,21 +72,22 @@ export default function HousingPage() {
       {rooms.length === 0 ? (
         <Card className="flex flex-col items-center px-6 py-14 text-center">
           <BedDouble size={28} strokeWidth={1.5} className="text-subtle" />
-          <h2 className="mt-3 text-[16px] font-semibold">No staff rooms yet</h2>
+          <h2 className="mt-3 text-[16px] font-semibold">{t("No staff rooms yet")}</h2>
           <p className="mt-1 max-w-md text-[13px] text-muted">
-            Add each room in your staff residence. You can then assign employees, track checkout dates and spot anyone
-            still in a room after their contract ends.
+            {t(
+              "Add each room in your staff residence. You can then assign employees, track checkout dates and spot anyone still in a room after their contract ends.",
+            )}
           </p>
           {canEdit && (
             <>
               <Button variant="primary" className="mt-5" onClick={() => setAddingRoom(true)}>
                 <Plus size={16} />
-                Add your first room
+                {t("Add your first room")}
               </Button>
               <p className="mt-4 text-[13px] text-muted">
-                Want to see how it works first?{" "}
+                {t("Want to see how it works first?")}{" "}
                 <button onClick={() => createDemoHotel()} className="font-medium text-primary hover:underline">
-                  {myHotels.some((h) => h.isDemo) ? "Open the demo hotel" : "Try the demo hotel"}
+                  {myHotels.some((h) => h.isDemo) ? t("Open the demo hotel") : t("Try the demo hotel")}
                 </button>
               </p>
             </>
@@ -94,19 +97,17 @@ export default function HousingPage() {
         <>
       <Card className="mb-5">
         <div className="flex items-center justify-between border-b border-line px-[18px] py-3.5">
-          <span className="text-[15px] font-semibold">Occupancy by building</span>
+          <span className="text-[15px] font-semibold">{t("Occupancy by building")}</span>
           <span className="text-[13px] text-muted tabular">
-            {rooms.length - count("vacant")} of {rooms.length} rooms
+            {t("{n} of {total} rooms", { n: rooms.length - count("vacant"), total: rooms.length })}
           </span>
         </div>
         <div className="grid grid-cols-1 gap-x-8 gap-y-4 px-[18px] py-4 md:grid-cols-2 xl:grid-cols-3">
           {occupancy.map((o) => (
             <div key={o.building}>
               <div className="mb-1.5 flex justify-between text-[13px]">
-                <span>{o.building}</span>
-                <span className="text-muted tabular">
-                  {o.occupied} / {o.total} rooms
-                </span>
+                <span>{t(o.building)}</span>
+                <span className="text-muted tabular">{t("{n} / {total} rooms", { n: o.occupied, total: o.total })}</span>
               </div>
               <Progress value={o.occupied} max={o.total} />
             </div>
@@ -119,11 +120,11 @@ export default function HousingPage() {
           value={filter}
           onChange={setFilter}
           items={[
-            { value: "all", label: "All rooms", count: rooms.length },
-            { value: "occupied", label: "Occupied", count: count("occupied") },
-            { value: "checkout-soon", label: "Checkout this week", count: count("checkout-soon") },
-            { value: "overdue", label: "Overdue", count: count("overdue") },
-            { value: "vacant", label: "Vacant", count: count("vacant") },
+            { value: "all", label: t("All rooms"), count: rooms.length },
+            { value: "occupied", label: t("Occupied"), count: count("occupied") },
+            { value: "checkout-soon", label: t("Checkout this week"), count: count("checkout-soon") },
+            { value: "overdue", label: t("Overdue"), count: count("overdue") },
+            { value: "vacant", label: t("Vacant"), count: count("vacant") },
           ]}
         />
       </div>
@@ -133,7 +134,7 @@ export default function HousingPage() {
           .filter((b) => visible.some((x) => (x.room.building || "Staff rooms") === b))
           .map((building) => (
           <section key={building}>
-            <h2 className="mb-2 text-[14px] font-semibold text-body">{building}</h2>
+            <h2 className="mb-2 text-[14px] font-semibold text-body">{t(building)}</h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
               {visible
                 .filter((x) => (x.room.building || "Staff rooms") === building)
@@ -150,22 +151,24 @@ export default function HousingPage() {
                     <div className="flex w-full items-start justify-between gap-2">
                       <span>
                         <span className="block text-[18px] leading-tight font-semibold tabular">{room.id}</span>
-                        <span className="text-[12px] text-muted">Floor {room.floor}</span>
+                        <span className="text-[12px] text-muted">{t("Floor {floor}", { floor: room.floor })}</span>
                       </span>
                       <RoomBadge status={status} />
                     </div>
                     {occupant ? (
                       <div className="mt-3">
                         <div className="truncate text-[14px] font-medium text-ink">{occupant.name}</div>
-                        <div className="truncate text-[13px] text-muted">{occupant.role}</div>
+                        <div className="truncate text-[13px] text-muted">{t(occupant.role)}</div>
                         <div className={cx("mt-2 text-[13px] tabular", status === "overdue" ? "text-danger" : "text-body")}>
                           {status === "overdue"
-                            ? `${Math.abs(daysUntil(occupant.checkout) ?? 0)} days overdue`
-                            : `Checkout ${fmt(occupant.checkout, false)}`}
+                            ? t("{n} days overdue", { n: Math.abs(daysUntil(occupant.checkout) ?? 0) })
+                            : t("Checkout {date}", { date: fmt(occupant.checkout, false) })}
                         </div>
                       </div>
                     ) : (
-                      <div className="mt-3 text-[13px] text-muted">{room.type} room, available</div>
+                      <div className="mt-3 text-[13px] text-muted">
+                        {room.type === "Double" ? t("Double room, available") : t("Single room, available")}
+                      </div>
                     )}
                   </button>
                 ))}
@@ -173,7 +176,7 @@ export default function HousingPage() {
           </section>
         ))}
         {visible.length === 0 && (
-          <Card className="px-6 py-10 text-center text-[13px] text-muted">No rooms in this view.</Card>
+          <Card className="px-6 py-10 text-center text-[13px] text-muted">{t("No rooms in this view.")}</Card>
         )}
       </div>
         </>
@@ -185,41 +188,41 @@ export default function HousingPage() {
           setOpenRoom(null);
           setNewCheckout("");
         }}
-        title={current ? `Room ${current.room.id}` : ""}
+        title={current ? t("Room {room}", { room: current.room.id }) : ""}
       >
         {current && (
           <div className="space-y-5">
             <div>
               <RoomBadge status={current.status} />
               <div className="mt-3">
-                <KeyValue label="Type">{current.room.type}</KeyValue>
-                <KeyValue label="Floor">{current.room.floor}</KeyValue>
-                <KeyValue label="Building">{current.room.building}</KeyValue>
+                <KeyValue label={t("Type")}>{t(current.room.type)}</KeyValue>
+                <KeyValue label={t("Floor")}>{current.room.floor}</KeyValue>
+                <KeyValue label={t("Building")}>{t(current.room.building)}</KeyValue>
               </div>
             </div>
 
             {current.occupant ? (
               <>
                 <div className="border-t border-line pt-4">
-                  <h3 className="mb-1 text-[14px] font-semibold">Occupant</h3>
-                  <KeyValue label="Name">
+                  <h3 className="mb-1 text-[14px] font-semibold">{t("Occupant")}</h3>
+                  <KeyValue label={t("Name")}>
                     <Link href={`/shiftcomply-demo/staff/${current.occupant.id}`} className="text-primary hover:underline">
                       {current.occupant.name}
                     </Link>
                   </KeyValue>
-                  <KeyValue label="Role">{current.occupant.role}</KeyValue>
-                  <KeyValue label="Contract ends">{fmt(current.occupant.contract.end)}</KeyValue>
-                  <KeyValue label="Checkout">{fmt(current.occupant.checkout)}</KeyValue>
+                  <KeyValue label={t("Role")}>{t(current.occupant.role)}</KeyValue>
+                  <KeyValue label={t("Contract ends")}>{fmt(current.occupant.contract.end)}</KeyValue>
+                  <KeyValue label={t("Checkout")}>{fmt(current.occupant.checkout)}</KeyValue>
                 </div>
 
                 {current.status === "overdue" && (
                   <p className="rounded-md bg-danger-soft px-3 py-2.5 text-[13px] text-danger">
-                    This employee&apos;s contract has ended. Check them out, or renew the contract to keep the room.
+                    {t("This employee's contract has ended. Check them out, or renew the contract to keep the room.")}
                   </p>
                 )}
 
                 <div className="border-t border-line pt-4">
-                  <h3 className="mb-3 text-[14px] font-semibold">Change checkout date</h3>
+                  <h3 className="mb-3 text-[14px] font-semibold">{t("Change checkout date")}</h3>
                   <div className="flex gap-2">
                     <input
                       type="date"
@@ -234,33 +237,35 @@ export default function HousingPage() {
                         setNewCheckout("");
                       }}
                     >
-                      Save
+                      {t("Save")}
                     </Button>
                   </div>
                   {newCheckout && current.occupant.contract.end && newCheckout > current.occupant.contract.end && (
                     <p className="mt-2 rounded-md bg-warning-soft px-3 py-2 text-[13px] text-warning">
-                      This is after the contract ends on {fmt(current.occupant.contract.end)}. Renew the contract, or make
-                      sure a housing extension is agreed in writing.
+                      {t(
+                        "This is after the contract ends on {date}. Renew the contract, or make sure a housing extension is agreed in writing.",
+                        { date: fmt(current.occupant.contract.end) },
+                      )}
                     </p>
                   )}
                 </div>
 
                 <div className="flex flex-wrap gap-2 border-t border-line pt-4">
                   <Button variant="primary" onClick={() => setRenewId(current.occupant!.id)}>
-                    Renew contract
+                    {t("Renew contract")}
                   </Button>
                   <Button variant="danger" onClick={() => checkOut(current.room.id)}>
-                    Check out
+                    {t("Check out")}
                   </Button>
                 </div>
               </>
             ) : (
               <div className="border-t border-line pt-4">
-                <p className="mb-3 text-[13px] text-muted">This room is available.</p>
+                <p className="mb-3 text-[13px] text-muted">{t("This room is available.")}</p>
                 {canEdit && (
                   <div className="flex flex-wrap gap-2">
                     <Button variant="primary" onClick={() => setAssignFor(current.room.id)}>
-                      Assign someone
+                      {t("Assign someone")}
                     </Button>
                     <Button
                       variant="danger"
@@ -269,7 +274,7 @@ export default function HousingPage() {
                         setOpenRoom(null);
                       }}
                     >
-                      Remove room
+                      {t("Remove room")}
                     </Button>
                   </div>
                 )}

@@ -6,6 +6,7 @@ import { Badge, Card, CardHeader, cx, PageHeader } from "@/shiftcomply/component
 import { RenewContractModal } from "@/shiftcomply/components/actions";
 import { useStore } from "@/shiftcomply/lib/store";
 import { buildAlerts } from "@/shiftcomply/lib/derive";
+import { useI18n } from "@/shiftcomply/lib/i18n";
 
 const DEFAULT_RULES = [
   { id: "contract", label: "Contract ending", detail: "30, 14 and 7 days before the end date", on: true },
@@ -35,7 +36,8 @@ function Toggle({ on, onChange }: { on: boolean; onChange: () => void }) {
 
 export default function RemindersPage() {
   const { employees, rooms, documents, notify } = useStore();
-  const alerts = useMemo(() => buildAlerts(employees, rooms, documents), [employees, rooms, documents]);
+  const { t } = useI18n();
+  const alerts = useMemo(() => buildAlerts(employees, rooms, documents, t), [employees, rooms, documents, t]);
   const [rules, setRules] = useState(DEFAULT_RULES);
   const [renewId, setRenewId] = useState<string | null>(null);
   const [handled, setHandled] = useState<string[]>([]);
@@ -43,17 +45,17 @@ export default function RemindersPage() {
 
   return (
     <>
-      <PageHeader title="Reminders" description="What needs action, and when you get notified" />
+      <PageHeader title={t("Reminders")} description={t("What needs action, and when you get notified")} />
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.5fr_1fr]">
         <Card>
           <CardHeader
-            title="Open reminders"
-            description={`${open.length} items`}
+            title={t("Open reminders")}
+            description={open.length === 1 ? t("1 item") : t("{n} items", { n: open.length })}
             action={
               handled.length > 0 && (
                 <button onClick={() => setHandled([])} className="text-[13px] font-medium text-primary hover:underline">
-                  Show {handled.length} handled
+                  {t("Show {n} handled", { n: handled.length })}
                 </button>
               )
             }
@@ -64,7 +66,7 @@ export default function RemindersPage() {
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-[14px] font-medium text-ink">{a.title}</span>
-                    {a.severity === "critical" && <Badge tone="danger">Urgent</Badge>}
+                    {a.severity === "critical" && <Badge tone="danger">{t("Urgent")}</Badge>}
                   </div>
                   <div className="mt-0.5 text-[13px] text-muted">{a.detail}</div>
                 </div>
@@ -83,40 +85,40 @@ export default function RemindersPage() {
                 <button
                   onClick={() => {
                     setHandled((h) => [...h, a.id]);
-                    notify("Marked as handled");
+                    notify(t("Marked as handled"));
                   }}
                   className="shrink-0 text-[13px] text-muted hover:text-ink"
-                  title="Use this when the issue was resolved outside ShiftComply"
+                  title={t("Use this when the issue was resolved outside ShiftComply")}
                 >
-                  Mark handled
+                  {t("Mark handled")}
                 </button>
               </li>
             ))}
           </ul>
-          {open.length === 0 && <p className="border-t border-line px-5 py-8 text-[13px] text-muted">Nothing needs action.</p>}
+          {open.length === 0 && <p className="border-t border-line px-5 py-8 text-[13px] text-muted">{t("Nothing needs action.")}</p>}
         </Card>
 
         <Card className="h-fit">
-          <CardHeader title="Notification rules" description="Sent by email to administrators" />
+          <CardHeader title={t("Notification rules")} description={t("Sent by email to administrators")} />
           <ul>
             {rules.map((r) => (
               <li key={r.id} className="flex items-center justify-between gap-4 border-t border-line px-5 py-3.5">
                 <div>
-                  <div className="text-[14px] font-medium text-ink">{r.label}</div>
-                  <div className="text-[13px] text-muted">{r.detail}</div>
+                  <div className="text-[14px] font-medium text-ink">{t(r.label)}</div>
+                  <div className="text-[13px] text-muted">{t(r.detail)}</div>
                 </div>
                 <Toggle
                   on={r.on}
                   onChange={() => {
                     setRules((list) => list.map((x) => (x.id === r.id ? { ...x, on: !x.on } : x)));
-                    notify(`${r.label} reminders ${r.on ? "turned off" : "turned on"}`);
+                    notify(t(r.on ? "{rule} reminders turned off" : "{rule} reminders turned on", { rule: t(r.label) }));
                   }}
                 />
               </li>
             ))}
           </ul>
           <p className="border-t border-line px-5 py-3 text-[12px] text-muted">
-            Reminders help you stay organised but are not legal advice. You remain responsible for meeting deadlines.
+            {t("Reminders help you stay organised but are not legal advice. You remain responsible for meeting deadlines.")}
           </p>
         </Card>
       </div>

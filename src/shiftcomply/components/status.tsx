@@ -1,4 +1,7 @@
+"use client";
+
 import { Badge, type Tone } from "./ui";
+import { useI18n } from "@/shiftcomply/lib/i18n";
 import {
   contractStatusLabel,
   docStatusLabel,
@@ -32,13 +35,16 @@ export const docTone: Record<DocStatus, Tone> = {
 };
 
 export function ContractBadge({ status }: { status: ContractStatus }) {
-  return <Badge tone={contractTone[status]}>{contractStatusLabel[status]}</Badge>;
+  const { t } = useI18n();
+  return <Badge tone={contractTone[status]}>{t(contractStatusLabel[status])}</Badge>;
 }
 
 export function RoomBadge({ status }: { status: RoomStatus }) {
-  return <Badge tone={roomTone[status]}>{roomStatusLabel[status]}</Badge>;
+  const { t } = useI18n();
+  return <Badge tone={roomTone[status]}>{t(roomStatusLabel[status])}</Badge>;
 }
 
 export function DocBadge({ status }: { status: DocStatus }) {
-  return <Badge tone={docTone[status]}>{docStatusLabel[status]}</Badge>;
+  const { t } = useI18n();
+  return <Badge tone={docTone[status]}>{t(docStatusLabel[status])}</Badge>;
 }

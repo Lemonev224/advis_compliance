@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft, ArrowRight, BedDouble, FileCheck2, Users } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 
 /** The access-code form for the ShiftComply demo. A correct code opens /shiftcomply-demo. */
 export function DemoAccess() {
   const t = useTranslations("shiftcomply.demo");
+  const locale = useLocale();
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +20,7 @@ export function DemoAccess() {
     const res = await fetch("/api/shiftcomply-demo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ code, locale }),
     }).catch(() => null);
     if (res?.ok) {
       // Full page load: the demo app has its own layout.

@@ -6,20 +6,20 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, Card, PageHeader, Segmented } from "@/shiftcomply/components/ui";
 import { useStore } from "@/shiftcomply/lib/store";
 import { contractStatus } from "@/shiftcomply/lib/derive";
-import { addMonths, fmt, parse, TODAY, toISO } from "@/shiftcomply/lib/dates";
+import { addMonths, parse, TODAY, toISO } from "@/shiftcomply/lib/dates";
+import { useI18n } from "@/shiftcomply/lib/i18n";
 
 // Read-only season view: who is under contract, who is housed, and where the two do not line up.
 
 const MONTHS_SHOWN = 8;
-const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const MS_DAY = 86_400_000;
 
 type View = "all" | "housed";
 
-const monthLabel = (iso: string) => `${MONTH_NAMES[parse(iso).getMonth()]} ${parse(iso).getFullYear()}`;
-
 export default function TimelinePage() {
   const { employees } = useStore();
+  const { t, fmt, monthShort, monthShortYear } = useI18n();
+  const monthLabel = (iso: string) => monthShortYear(parse(iso).getMonth(), parse(iso).getFullYear());
   const [windowStart, setWindowStart] = useState(() => addMonths(`${toISO(TODAY).slice(0, 7)}-01`, -1));
   const [view, setView] = useState<View>("all");
 
@@ -45,17 +45,17 @@ export default function TimelinePage() {
   return (
     <>
       <PageHeader
-        title="Timeline"
-        description="Contracts and room stays across the season. Gaps between the two are where compliance risk sits."
+        title={t("Timeline")}
+        description={t("Contracts and room stays across the season. Gaps between the two are where compliance risk sits.")}
         actions={
           <div className="flex items-center gap-2">
-            <Button size="sm" onClick={() => setWindowStart(addMonths(windowStart, -1))} aria-label="Earlier">
+            <Button size="sm" onClick={() => setWindowStart(addMonths(windowStart, -1))} aria-label={t("Earlier")}>
               <ChevronLeft size={16} />
             </Button>
             <span className="min-w-[150px] text-center text-[13px] font-medium">
-              {monthLabel(windowStart)} to {monthLabel(addMonths(windowEnd, -1))}
+              {t("{from} to {to}", { from: monthLabel(windowStart), to: monthLabel(addMonths(windowEnd, -1)) })}
             </span>
-            <Button size="sm" onClick={() => setWindowStart(addMonths(windowStart, 1))} aria-label="Later">
+            <Button size="sm" onClick={() => setWindowStart(addMonths(windowStart, 1))} aria-label={t("Later")}>
               <ChevronRight size={16} />
             </Button>
           </div>
@@ -67,22 +67,22 @@ export default function TimelinePage() {
           value={view}
           onChange={setView}
           items={[
-            { value: "all", label: "Everyone" },
-            { value: "housed", label: "Housed on site" },
+            { value: "all", label: t("Everyone") },
+            { value: "housed", label: t("Housed on site") },
           ]}
         />
         <div className="flex flex-wrap items-center gap-4 text-[12px] text-muted">
           <span className="flex items-center gap-2">
             <span className="h-2.5 w-6 rounded-sm bg-primary/80" />
-            Contract
+            {t("Contract")}
           </span>
           <span className="flex items-center gap-2">
             <span className="h-1.5 w-6 rounded-sm bg-[#8a94a6]" />
-            Room stay
+            {t("Room stay")}
           </span>
           <span className="flex items-center gap-2">
             <span className="h-1.5 w-6 rounded-sm bg-danger" />
-            Housed without a contract
+            {t("Housed without a contract")}
           </span>
         </div>
       </div>
@@ -92,11 +92,11 @@ export default function TimelinePage() {
           <div className="min-w-[900px]">
             {/* Month header */}
             <div className="flex border-b border-line bg-sunken">
-              <div className="w-60 shrink-0 px-4 py-2.5 text-[12px] font-medium text-muted">Employee</div>
+              <div className="w-60 shrink-0 px-4 py-2.5 text-[12px] font-medium text-muted">{t("Employee")}</div>
               <div className="relative flex flex-1">
                 {months.map((m) => (
                   <div key={m} className="flex-1 border-l border-line px-2 py-2.5 text-[12px] font-medium text-muted">
-                    {MONTH_NAMES[parse(m).getMonth()]} {m.slice(2, 4)}
+                    {monthShort(parse(m).getMonth())} {m.slice(2, 4)}
                   </div>
                 ))}
               </div>
@@ -121,8 +121,8 @@ export default function TimelinePage() {
                       {e.name}
                     </Link>
                     <div className="truncate text-[12px] text-muted">
-                      {e.role}
-                      {e.roomId ? `, room ${e.roomId}` : ""}
+                      {t(e.role)}
+                      {e.roomId ? `, ${t("room {room}", { room: e.roomId })}` : ""}
                     </div>
                   </div>
                   <div className="relative flex-1">
@@ -140,7 +140,10 @@ export default function TimelinePage() {
                       <div
                         className={`absolute top-3 h-2.5 rounded-sm ${status === "unsigned" ? "border border-dashed border-primary bg-primary-soft" : "bg-primary/80"}`}
                         style={{ left: `${left}%`, width: `${width}%` }}
-                        title={`Contract ${fmt(e.contract.start)} to ${e.contract.end ? fmt(e.contract.end) : "no end date"}`}
+                        title={t("Contract {from} to {to}", {
+                          from: fmt(e.contract.start),
+                          to: e.contract.end ? fmt(e.contract.end) : t("no end date"),
+                        })}
                       />
                     )}
 
@@ -149,26 +152,26 @@ export default function TimelinePage() {
                       <div
                         className="absolute top-7 h-1.5 rounded-sm bg-[#8a94a6]"
                         style={{ left: `${pos(stayStart)}%`, width: `${pos(overdueFrom ?? stayEnd) - pos(stayStart)}%` }}
-                        title={`Room ${e.roomId}, checkout ${fmt(e.checkout)}`}
+                        title={t("Room {room}, checkout {date}", { room: e.roomId, date: fmt(e.checkout) })}
                       />
                     )}
                     {overdueFrom && (
                       <div
                         className="absolute top-7 h-1.5 rounded-sm bg-danger"
                         style={{ left: `${pos(overdueFrom)}%`, width: `${pos(today) - pos(overdueFrom)}%` }}
-                        title={`In room ${e.roomId} since the contract ended on ${fmt(overdueFrom)}`}
+                        title={t("In room {room} since the contract ended on {date}", { room: e.roomId, date: fmt(overdueFrom) })}
                       />
                     )}
                   </div>
                 </div>
               );
             })}
-            {rows.length === 0 && <p className="px-4 py-10 text-center text-[13px] text-muted">Nobody in this period.</p>}
+            {rows.length === 0 && <p className="px-4 py-10 text-center text-[13px] text-muted">{t("Nobody in this period.")}</p>}
           </div>
         </div>
       </Card>
       <p className="mt-3 text-[12px] text-muted">
-        The blue line is today. Dashed bars are contracts not yet signed.
+        {t("The blue line is today. Dashed bars are contracts not yet signed.")}
       </p>
     </>
   );

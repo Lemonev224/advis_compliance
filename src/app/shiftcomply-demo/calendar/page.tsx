@@ -5,7 +5,8 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, Card, cx, PageHeader } from "@/shiftcomply/components/ui";
 import { useStore } from "@/shiftcomply/lib/store";
-import { fmt, MONTHS_LONG, TODAY, toISO } from "@/shiftcomply/lib/dates";
+import { TODAY, toISO } from "@/shiftcomply/lib/dates";
+import { useI18n } from "@/shiftcomply/lib/i18n";
 
 type Kind = "contract-end" | "checkout" | "start";
 
@@ -13,7 +14,8 @@ interface CalEvent {
   date: string;
   kind: Kind;
   employeeId: string;
-  label: string;
+  name: string;
+  room?: string;
 }
 
 const KIND_STYLE: Record<Kind, string> = {
@@ -28,10 +30,9 @@ const KIND_LABEL: Record<Kind, string> = {
   start: "Contract starts",
 };
 
-const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
 export default function CalendarPage() {
   const { employees } = useStore();
+  const { t, fmt, monthYear, weekdaysShort } = useI18n();
   const [year, setYear] = useState(TODAY.getFullYear());
   const [month, setMonth] = useState(TODAY.getMonth());
   const [selected, setSelected] = useState(toISO(TODAY));
@@ -39,9 +40,9 @@ export default function CalendarPage() {
   const events = useMemo(() => {
     const list: CalEvent[] = [];
     for (const e of employees) {
-      if (e.contract.end) list.push({ date: e.contract.end, kind: "contract-end", employeeId: e.id, label: e.name });
-      if (e.roomId && e.checkout) list.push({ date: e.checkout, kind: "checkout", employeeId: e.id, label: `${e.name}, room ${e.roomId}` });
-      if (e.contract.start > toISO(TODAY)) list.push({ date: e.contract.start, kind: "start", employeeId: e.id, label: e.name });
+      if (e.contract.end) list.push({ date: e.contract.end, kind: "contract-end", employeeId: e.id, name: e.name });
+      if (e.roomId && e.checkout) list.push({ date: e.checkout, kind: "checkout", employeeId: e.id, name: e.name, room: e.roomId });
+      if (e.contract.start > toISO(TODAY)) list.push({ date: e.contract.start, kind: "start", employeeId: e.id, name: e.name });
     }
     return list;
   }, [employees]);
@@ -73,33 +74,33 @@ export default function CalendarPage() {
 
   return (
     <>
-      <PageHeader title="Calendar" description="Contract start and end dates, and room checkouts" />
+      <PageHeader title={t("Calendar")} description={t("Contract start and end dates, and room checkouts")} />
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_300px]">
         <Card>
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
             <div className="flex items-center gap-2">
-              <Button size="sm" onClick={() => shift(-1)} aria-label="Previous month">
+              <Button size="sm" onClick={() => shift(-1)} aria-label={t("Previous month")}>
                 <ChevronLeft size={16} />
               </Button>
-              <Button size="sm" onClick={() => shift(1)} aria-label="Next month">
+              <Button size="sm" onClick={() => shift(1)} aria-label={t("Next month")}>
                 <ChevronRight size={16} />
               </Button>
               <span className="ml-2 text-[15px] font-semibold">
-                {MONTHS_LONG[month]} {year}
+                {monthYear(month, year)}
               </span>
             </div>
             <div className="flex flex-wrap gap-2">
               {(Object.keys(KIND_LABEL) as Kind[]).map((k) => (
                 <span key={k} className={cx("rounded px-2 py-0.5 text-[12px] font-medium", KIND_STYLE[k])}>
-                  {KIND_LABEL[k]}
+                  {t(KIND_LABEL[k])}
                 </span>
               ))}
             </div>
           </div>
 
           <div className="grid grid-cols-7 border-b border-line bg-sunken">
-            {WEEKDAYS.map((d) => (
+            {weekdaysShort.map((d) => (
               <div key={d} className="px-2 py-2 text-[12px] font-medium text-muted">
                 {d}
               </div>
@@ -132,10 +133,10 @@ export default function CalendarPage() {
                       <div className="mt-1 space-y-1">
                         {evs.slice(0, 3).map((ev, j) => (
                           <div key={j} className={cx("truncate rounded px-1.5 py-0.5 text-[11px] font-medium", KIND_STYLE[ev.kind])}>
-                            {ev.label.split(",")[0]}
+                            {ev.name}
                           </div>
                         ))}
-                        {evs.length > 3 && <div className="px-1.5 text-[11px] text-muted">{evs.length - 3} more</div>}
+                        {evs.length > 3 && <div className="px-1.5 text-[11px] text-muted">{t("{n} more", { n: evs.length - 3 })}</div>}
                       </div>
                     </>
                   )}
@@ -149,15 +150,19 @@ export default function CalendarPage() {
           <div className="border-b border-line px-5 py-3">
             <div className="text-[15px] font-semibold">{fmt(selected)}</div>
             <div className="text-[13px] text-muted">
-              {dayEvents.length === 0 ? "Nothing scheduled" : `${dayEvents.length} events`}
+              {dayEvents.length === 0
+                ? t("Nothing scheduled")
+                : dayEvents.length === 1
+                  ? t("1 event")
+                  : t("{n} events", { n: dayEvents.length })}
             </div>
           </div>
           <ul>
             {dayEvents.map((ev, i) => (
               <li key={i} className="border-b border-line px-5 py-3 last:border-0">
-                <div className="text-[12px] text-muted">{KIND_LABEL[ev.kind]}</div>
+                <div className="text-[12px] text-muted">{t(KIND_LABEL[ev.kind])}</div>
                 <Link href={`/shiftcomply-demo/staff/${ev.employeeId}`} className="text-[14px] font-medium text-ink hover:text-primary">
-                  {ev.label}
+                  {ev.room ? `${ev.name}, ${t("room {room}", { room: ev.room })}` : ev.name}
                 </Link>
               </li>
             ))}

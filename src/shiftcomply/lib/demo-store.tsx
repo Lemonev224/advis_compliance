@@ -4,6 +4,8 @@ import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
 import * as sample from "./mock-data";
 import type { ActivityItem, DocumentItem, Employee, Room } from "./mock-data";
 import { addDays, TODAY, toISO } from "./dates";
+import { useI18n, type TFunction } from "./i18n";
+import { sitePath } from "./lang";
 import {
   Ctx,
   requiredDocuments,
@@ -62,17 +64,18 @@ function seed() {
 type State = ReturnType<typeof seed>;
 
 /** A sample "file" so demo documents open with something to look at. */
-function sampleFileUrl(doc: DocumentItem, employeeName: string) {
+function sampleFileUrl(doc: DocumentItem, employeeName: string, t: TFunction) {
   const html = `<!doctype html><html><body style="font:15px system-ui,sans-serif;color:#1a2433;padding:48px;max-width:640px">
-<p style="color:#8a5a0b;background:#fbf1dc;display:inline-block;padding:4px 10px;border-radius:3px;font-size:13px">Sample document, demo only</p>
-<h1 style="font-size:24px;margin:20px 0 4px">${doc.type}</h1>
+<p style="color:#8a5a0b;background:#fbf1dc;display:inline-block;padding:4px 10px;border-radius:3px;font-size:13px">${t("Sample document, demo only")}</p>
+<h1 style="font-size:24px;margin:20px 0 4px">${t(doc.type)}</h1>
 <p style="color:#5b6678;margin:0 0 24px">${employeeName}</p>
-<p>In the real app, this is where the uploaded PDF or photo opens, through a private link that stops working after five minutes.</p>
-<p style="color:#5b6678">File: ${doc.fileName ?? ""}</p></body></html>`;
+<p>${t("In the real app, this is where the uploaded PDF or photo opens, through a private link that stops working after five minutes.")}</p>
+<p style="color:#5b6678">${t("File: {name}", { name: doc.fileName ?? "" })}</p></body></html>`;
   return URL.createObjectURL(new Blob([html], { type: "text/html" }));
 }
 
 export function DemoStoreProvider({ children }: { children: ReactNode }) {
+  const { t, lang } = useI18n();
   const [s, setS] = useState<State>(seed);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const counter = useRef(1);
@@ -85,13 +88,16 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
   }, []);
   const dismissToast = useCallback((id: number) => setToasts((t) => t.filter((x) => x.id !== id)), []);
 
-  const logEntry = (text: string, employeeId?: string): ActivityItem => ({
+  // History entries keep the English text and its values, and are translated when shown.
+  const logEntry = (text: string, vars?: Record<string, string>, employeeId?: string): ActivityItem => ({
     id: nextId("a"),
     when: "Just now",
-    actor: "You",
+    actor: "actor:You",
     text,
+    vars,
     employeeId,
   });
+  const ddmmyyyy = (iso: string) => iso.split("-").reverse().join("/");
 
   /** Applies a change to the demo data and shows a message. */
   const change = useCallback(
@@ -193,8 +199,8 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
 
       renewContract: (id, newEnd, extendHousing) => {
         const e = emp(id);
-        if (!e) return fail("Employee not found");
-        if (e.contract.end && newEnd <= e.contract.end) return fail("The new end date must be after the current end date");
+        if (!e) return fail(t("Employee not found"));
+        if (e.contract.end && newEnd <= e.contract.end) return fail(t("The new end date must be after the current end date"));
         return change((st) => ({
           next: {
             ...st,
@@ -219,16 +225,16 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
                 ? { ...d, expires: newEnd, ...(d.type === "Employment contract" ? { fileName: null, uploaded: null, filePath: null } : {}) }
                 : d,
             ),
-            activity: [logEntry(`renewed ${e.name}'s contract until ${newEnd.split("-").reverse().join("/")}`, id), ...st.activity],
+            activity: [logEntry("renewed {name}'s contract until {date}", { name: e.name, date: ddmmyyyy(newEnd) }, id), ...st.activity],
           },
-          message: `Contract renewed for ${e.name}. Upload the newly signed copy when you have it.`,
+          message: t("Contract renewed for {name}. Upload the newly signed copy when you have it.", { name: e.name }),
         }), s);
       },
 
       assignRoom: (id, roomId, checkout) => {
         const e = emp(id);
-        if (!e || !s.rooms.some((r) => r.id === roomId)) return fail("Employee or room not found");
-        if (s.employees.some((x) => x.roomId === roomId)) return fail(`Room ${roomId} is already taken`);
+        if (!e || !s.rooms.some((r) => r.id === roomId)) return fail(t("Employee or room not found"));
+        if (s.employees.some((x) => x.roomId === roomId)) return fail(t("Room {room} is already taken", { room: roomId }));
         const date = checkout ?? e.contract.end;
         const hasAgreement = s.documents.some((d) => d.employeeId === id && d.type === "Housing agreement");
         return change((st) => ({
@@ -241,41 +247,41 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
                   ...st.documents,
                   { id: nextId("d"), employeeId: id, type: "Housing agreement", fileName: null, uploaded: null, expires: date, required: true },
                 ],
-            activity: [logEntry(`assigned room ${roomId} to ${e.name}`, id), ...st.activity],
+            activity: [logEntry("assigned room {room} to {name}", { room: roomId, name: e.name }, id), ...st.activity],
           },
-          message: `Room ${roomId} assigned to ${e.name}`,
+          message: t("Room {room} assigned to {name}", { room: roomId, name: e.name }),
         }), s);
       },
 
       checkOut: (roomId) => {
         const e = s.employees.find((x) => x.roomId === roomId);
-        if (!e) return fail("Nobody is in this room");
+        if (!e) return fail(t("Nobody is in this room"));
         return change((st) => ({
           next: {
             ...st,
             employees: st.employees.map((x) => (x.id === e.id ? { ...x, roomId: null, checkout: null } : x)),
-            activity: [logEntry(`checked ${e.name} out of room ${roomId}`, e.id), ...st.activity],
+            activity: [logEntry("checked {name} out of room {room}", { name: e.name, room: roomId }, e.id), ...st.activity],
           },
-          message: `Room ${roomId} is now vacant`,
+          message: t("Room {room} is now vacant", { room: roomId }),
         }), s);
       },
 
       extendStay: (id, checkout) => {
         const e = emp(id);
-        if (!e?.roomId) return fail("This employee has no room");
+        if (!e?.roomId) return fail(t("This employee has no room"));
         return change((st) => ({
           next: {
             ...st,
             employees: st.employees.map((x) => (x.id === id ? { ...x, checkout } : x)),
             documents: st.documents.map((d) => (d.employeeId === id && d.type === "Housing agreement" ? { ...d, expires: checkout } : d)),
-            activity: [logEntry(`changed ${e.name}'s checkout date to ${checkout.split("-").reverse().join("/")}`, id), ...st.activity],
+            activity: [logEntry("changed {name}'s checkout date to {date}", { name: e.name, date: ddmmyyyy(checkout) }, id), ...st.activity],
           },
-          message: `Checkout date updated for ${e.name}`,
+          message: t("Checkout date updated for {name}", { name: e.name }),
         }), s);
       },
 
       uploadDocument: (id, type, file, expires) => {
-        if (!file) return fail("Choose a file to upload");
+        if (!file) return fail(t("Choose a file to upload"));
         const e = emp(id);
         const url = URL.createObjectURL(file);
         const existing = s.documents.find((d) => d.employeeId === id && d.type === type);
@@ -308,9 +314,9 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
                 type === "Employment contract"
                   ? st.employees.map((x) => (x.id === id ? { ...x, contract: { ...x.contract, signed: true } } : x))
                   : st.employees,
-              activity: [logEntry(`uploaded ${type.toLowerCase()} for ${e?.name}`, id), ...st.activity],
+              activity: [logEntry("uploaded {type} for {name}", { type: `~${type}`, name: e?.name ?? "" }, id), ...st.activity],
             },
-            message: `${type} uploaded`,
+            message: t("{type} uploaded", { type: t(type) }),
           };
         }, s);
       },
@@ -318,7 +324,7 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       documentUrl: async (doc, opts) => {
         const e = emp(doc.employeeId);
         const path = opts?.version?.filePath ?? doc.filePath;
-        const url = path?.startsWith("blob:") ? path : sampleFileUrl(doc, e?.name ?? "");
+        const url = path?.startsWith("blob:") ? path : sampleFileUrl(doc, e?.name ?? "", t);
         const entry = {
           id: nextId("x"),
           actor: ME,
@@ -348,9 +354,9 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
             documents: doc.required
               ? st.documents.map((d) => (d.id === doc.id ? { ...d, fileName: null, filePath: null, uploaded: null } : d))
               : st.documents.filter((d) => d.id !== doc.id),
-            activity: [logEntry(`deleted the ${doc.type.toLowerCase()} file for ${e?.name}`, doc.employeeId), ...st.activity],
+            activity: [logEntry("deleted the {type} file for {name}", { type: `~${doc.type}`, name: e?.name ?? "" }, doc.employeeId), ...st.activity],
           },
-          message: `${doc.type} deleted`,
+          message: t("{type} deleted", { type: t(doc.type) }),
         }), s);
       },
 
@@ -362,11 +368,13 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
             employees: [...st.employees, e].sort((a, b) => a.name.localeCompare(b.name)),
             documents: [...st.documents, ...docs],
             activity: [
-              logEntry(`added ${n.name} with a ${n.contract.type.toLowerCase()} contract${e.roomId ? ` and room ${e.roomId}` : ""}`, e.id),
+              e.roomId
+                ? logEntry("added {name} with a {type} contract and room {room}", { name: n.name, type: `~${n.contract.type}`, room: e.roomId }, e.id)
+                : logEntry("added {name} with a {type} contract", { name: n.name, type: `~${n.contract.type}` }, e.id),
               ...st.activity,
             ],
           },
-          message: `${n.name} added`,
+          message: t("{name} added", { name: n.name }),
         }), s);
       },
 
@@ -382,44 +390,49 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
             ...st,
             employees: [...st.employees, ...built.map((b) => b.e)].sort((a, b) => a.name.localeCompare(b.name)),
             documents: [...st.documents, ...built.flatMap((b) => b.docs)],
-            activity: [logEntry(`imported ${built.length} employees from a spreadsheet`), ...st.activity],
+            activity: [logEntry("imported {n} employees from a spreadsheet", { n: String(built.length) }), ...st.activity],
           },
-          message: `${built.length} employee${built.length === 1 ? "" : "s"} imported`,
+          message: built.length === 1 ? t("1 employee imported") : t("{n} employees imported", { n: built.length }),
         }), s);
         return { added: built.length, failed: [] };
       },
 
       archiveEmployee: (id) => {
         const e = emp(id);
-        if (!e) return fail("Employee not found");
+        if (!e) return fail(t("Employee not found"));
         return change((st) => ({
           next: {
             ...st,
             employees: st.employees.filter((x) => x.id !== id),
             archived: [{ employee: { ...e, roomId: null, checkout: null }, archivedAt: new Date().toISOString() }, ...st.archived],
-            activity: [logEntry(`archived ${e.name}${e.roomId ? ` and checked them out of room ${e.roomId}` : ""}`, id), ...st.activity],
+            activity: [
+              e.roomId
+                ? logEntry("archived {name} and checked them out of room {room}", { name: e.name, room: e.roomId }, id)
+                : logEntry("archived {name}", { name: e.name }, id),
+              ...st.activity,
+            ],
           },
-          message: `${e.name} archived`,
+          message: t("{name} archived", { name: e.name }),
         }), s);
       },
 
       restoreEmployee: (id) => {
         const a = s.archived.find((x) => x.employee.id === id);
-        if (!a) return fail("Employee not found");
+        if (!a) return fail(t("Employee not found"));
         return change((st) => ({
           next: {
             ...st,
             archived: st.archived.filter((x) => x.employee.id !== id),
             employees: [...st.employees, a.employee].sort((x, y) => x.name.localeCompare(y.name)),
-            activity: [logEntry(`restored ${a.employee.name} from the archive`, id), ...st.activity],
+            activity: [logEntry("restored {name} from the archive", { name: a.employee.name }, id), ...st.activity],
           },
-          message: `${a.employee.name} restored`,
+          message: t("{name} restored", { name: a.employee.name }),
         }), s);
       },
 
       eraseEmployee: (id) => {
         const name = emp(id)?.name ?? s.archived.find((x) => x.employee.id === id)?.employee.name;
-        if (!name) return fail("Employee not found");
+        if (!name) return fail(t("Employee not found"));
         return change((st) => ({
           next: {
             ...st,
@@ -431,28 +444,32 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
             activity: [
               logEntry("permanently deleted an employee record"),
               ...st.activity.map((a) =>
-                a.employeeId === id || a.text.includes(name)
-                  ? { ...a, employeeId: undefined, text: a.text.split(name).join("a deleted employee") }
+                a.employeeId === id || Object.values(a.vars ?? {}).includes(name)
+                  ? {
+                      ...a,
+                      employeeId: undefined,
+                      vars: Object.fromEntries(Object.entries(a.vars ?? {}).map(([k, v]) => [k, v === name ? "a deleted employee" : v])),
+                    }
                   : a,
               ),
             ],
           },
-          message: `${name} permanently deleted`,
+          message: t("{name} permanently deleted", { name }),
         }), s);
       },
 
-      createHotel: () => fail("Creating a hotel is not available in the demo. Sign in to set up your own hotel."),
+      createHotel: () => fail(t("Creating a hotel is not available in the demo. Sign in to set up your own hotel.")),
       createDemoHotel: async () => true,
       switchHotel: () => {},
       acceptTerms: () =>
         change((st) => ({
           next: { ...st, hotel: { ...st.hotel, termsAcceptedAt: new Date().toISOString(), termsAcceptedBy: ME } },
-          message: `Agreements accepted (version ${TERMS_VERSION})`,
+          message: t("Agreements accepted (version {version})", { version: TERMS_VERSION }),
         }), s),
       updateHotel: (h) =>
-        change((st) => ({ next: { ...st, hotel: { ...st.hotel, ...h } }, message: "Hotel details saved" }), s),
+        change((st) => ({ next: { ...st, hotel: { ...st.hotel, ...h } }, message: t("Hotel details saved") }), s),
       deleteHotel: () =>
-        change(() => ({ next: seed(), message: "The demo has been reset to its sample data" }), s),
+        change(() => ({ next: seed(), message: t("The demo has been reset to its sample data") }), s),
       exportHotelData: async () => {
         const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), demo: true, ...s }, null, 2)], {
           type: "application/json",
@@ -467,61 +484,64 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       updateMemberRole: (userId, role) => {
         const m = s.members.find((x) => x.userId === userId);
         if (m?.role === "admin" && role !== "admin" && s.members.filter((x) => x.role === "admin").length <= 1) {
-          return fail("Every hotel needs at least one administrator. Make someone else an administrator first.");
+          return fail(t("Every hotel needs at least one administrator. Make someone else an administrator first."));
         }
         return change((st) => ({
           next: { ...st, members: st.members.map((x) => (x.userId === userId ? { ...x, role } : x)) },
-          message: `${m?.email} now has ${ROLE_NAMES[role].toLowerCase()} access`,
+          message: t("{email} now has {role} access", { email: m?.email, role: t(ROLE_NAMES[role]).toLowerCase() }),
         }), s);
       },
       removeMember: (userId) => {
         const m = s.members.find((x) => x.userId === userId);
         return change((st) => ({
           next: { ...st, members: st.members.filter((x) => x.userId !== userId) },
-          message: `${m?.email} no longer has access to this hotel`,
+          message: t("{email} no longer has access to this hotel", { email: m?.email }),
         }), s);
       },
-      leaveHotel: () => fail("Leaving the hotel is not available in the demo"),
-      deleteMyAccount: () => fail("There is no account to delete in the demo. Use Exit demo instead."),
+      leaveHotel: () => fail(t("Leaving the hotel is not available in the demo")),
+      deleteMyAccount: () => fail(t("There is no account to delete in the demo. Use Exit demo instead.")),
 
       addRoom: (r) => {
-        if (s.rooms.some((x) => x.id === r.number)) return fail(`Room ${r.number} already exists`);
+        if (s.rooms.some((x) => x.id === r.number)) return fail(t("Room {room} already exists", { room: r.number }));
         return change((st) => ({
           next: { ...st, rooms: [...st.rooms, { id: r.number, floor: r.floor, type: r.type, building: r.building }] },
-          message: `Room ${r.number} added`,
+          message: t("Room {room} added", { room: r.number }),
         }), s);
       },
       addRooms: (list) => {
         const fresh = list.filter((r) => !s.rooms.some((x) => x.id === r.number));
-        if (!fresh.length) return fail("All of these rooms already exist");
+        if (!fresh.length) return fail(t("All of these rooms already exist"));
         return change((st) => ({
           next: {
             ...st,
             rooms: [...st.rooms, ...fresh.map((r): Room => ({ id: r.number, floor: r.floor, type: r.type, building: r.building }))],
           },
-          message: `${fresh.length} rooms added${list.length > fresh.length ? `, ${list.length - fresh.length} already existed` : ""}`,
+          message:
+            list.length > fresh.length
+              ? t("{n} rooms added, {m} already existed", { n: fresh.length, m: list.length - fresh.length })
+              : t("{n} rooms added", { n: fresh.length }),
         }), s);
       },
       deleteRoom: (roomId) => {
-        if (s.employees.some((e) => e.roomId === roomId)) return fail("Check the occupant out before removing this room");
-        return change((st) => ({ next: { ...st, rooms: st.rooms.filter((r) => r.id !== roomId) }, message: `Room ${roomId} removed` }), s);
+        if (s.employees.some((e) => e.roomId === roomId)) return fail(t("Check the occupant out before removing this room"));
+        return change((st) => ({ next: { ...st, rooms: st.rooms.filter((r) => r.id !== roomId) }, message: t("Room {room} removed", { room: roomId }) }), s);
       },
 
       invite: (email, role) => {
         const e = email.trim().toLowerCase();
-        if (s.invites.some((i) => i.email === e) || s.members.some((m) => m.email === e)) return fail(`${email} is already on the team`);
+        if (s.invites.some((i) => i.email === e) || s.members.some((m) => m.email === e)) return fail(t("{email} is already on the team", { email }));
         return change((st) => ({
           next: { ...st, invites: [...st.invites, { email: e, role }] },
-          message: `Invitation saved. In the real app, ${email} joins the first time they sign in.`,
+          message: t("Invitation saved. In the real app, {email} joins the first time they sign in.", { email }),
         }), s);
       },
       cancelInvite: (email) =>
-        change((st) => ({ next: { ...st, invites: st.invites.filter((i) => i.email !== email) }, message: "Invitation removed" }), s),
-      loadDemoData: () => change(() => ({ next: seed(), message: "Sample data restored" }), s),
+        change((st) => ({ next: { ...st, invites: st.invites.filter((i) => i.email !== email) }, message: t("Invitation removed") }), s),
+      loadDemoData: () => change(() => ({ next: seed(), message: t("Sample data restored") }), s),
 
       signOut: async () => {
         await fetch("/api/shiftcomply-demo", { method: "DELETE" });
-        window.location.href = "/shiftcomply";
+        window.location.href = sitePath(lang, "/shiftcomply");
       },
       notify,
       dismissToast,
@@ -529,7 +549,7 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
     return store;
     // nextId, logEntry and the helpers only read refs or the current state captured here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [s, toasts, change, notify, dismissToast]);
+  }, [s, toasts, change, notify, dismissToast, t, lang]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
