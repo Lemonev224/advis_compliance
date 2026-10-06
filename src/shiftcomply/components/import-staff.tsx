@@ -6,6 +6,7 @@ import { Button, cx } from "./ui";
 import { useStore, type NewEmployee } from "@/shiftcomply/lib/store";
 import { roomStatus } from "@/shiftcomply/lib/derive";
 import type { ContractType, Department } from "@/shiftcomply/lib/mock-data";
+import { useI18n, type TFunction } from "@/shiftcomply/lib/i18n";
 
 const DEPARTMENTS: Department[] = [
   "Reception", "Housekeeping", "Kitchen", "Restaurant", "Spa", "Facilities", "Guest services", "Administration",
@@ -17,18 +18,19 @@ const HEADERS = [
 ];
 
 // Column names we recognise, after lower-casing and removing spaces and punctuation.
+// Includes the Catalan and Spanish template headers.
 const ALIASES: Record<string, string[]> = {
   name: ["name", "fullname", "employee", "nom", "nombre"],
   role: ["jobtitle", "role", "position", "title", "carrec", "puesto"],
   department: ["department", "dept", "departament", "departamento"],
-  email: ["email", "mail", "correu", "correo"],
+  email: ["email", "mail", "correu", "correo", "correuelectronic", "correoelectronico"],
   phone: ["phone", "telephone", "mobile", "telefon", "telefono"],
   nationality: ["nationality", "nacionalitat", "nacionalidad"],
-  type: ["contracttype", "contract", "type", "tipuscontracte", "tipocontrato"],
-  start: ["startdate", "start", "datainici", "inici", "fechainicio", "inicio"],
-  end: ["enddate", "end", "datafi", "fi", "fechafin", "fin"],
-  hours: ["hoursperweek", "hours", "hores", "horas"],
-  signed: ["contractsigned", "signed", "signat", "firmado"],
+  type: ["contracttype", "contract", "type", "tipuscontracte", "tipocontrato", "tipusdecontracte", "tipodecontrato"],
+  start: ["startdate", "start", "datainici", "inici", "fechainicio", "inicio", "datadinici", "fechadeinicio"],
+  end: ["enddate", "end", "datafi", "fi", "fechafin", "fin", "datadefi", "fechadefin"],
+  hours: ["hoursperweek", "hours", "hores", "horas", "horessetmanals", "horassemanales"],
+  signed: ["contractsigned", "signed", "signat", "firmado", "contractesignat", "contratofirmado"],
   room: ["room", "habitacio", "habitacion"],
 };
 
@@ -40,6 +42,7 @@ const DEPT_ALIASES: Record<string, Department> = {
   manteniment: "Facilities", mantenimiento: "Facilities", maintenance: "Facilities",
   administracio: "Administration", administracion: "Administration", admin: "Administration",
   animacio: "Guest services", animacion: "Guest services",
+  atencioalclient: "Guest services", atencionalcliente: "Guest services",
 };
 
 const TYPE_ALIASES: Record<string, ContractType> = {
@@ -47,6 +50,8 @@ const TYPE_ALIASES: Record<string, ContractType> = {
   parttime: "Part-time", tempsparcial: "Part-time", parcial: "Part-time",
   fixedterm: "Fixed-term", determinat: "Fixed-term", obraiservei: "Fixed-term",
   indefinite: "Indefinite", indefinit: "Indefinite", indefinido: "Indefinite", permanent: "Indefinite",
+  detemporada: "Seasonal", atempsparcial: "Part-time", atiempoparcial: "Part-time",
+  deduradadeterminada: "Fixed-term", deduraciondeterminada: "Fixed-term",
 };
 
 const norm = (s: string) =>
@@ -110,12 +115,13 @@ interface Row {
   warnings: string[];
 }
 
-function downloadTemplate() {
+/** The template in the app's language. Headers and values are recognised again on import. */
+function downloadTemplate(t: TFunction) {
   const example = [
-    "Laia Puig", "Receptionist", "Reception", "laia@example.com", "+376 600 000", "Spanish",
-    "Seasonal", "01/12/2026", "15/04/2027", "40", "no", "204",
+    "Laia Puig", t("Receptionist"), t("Reception"), "laia@example.com", "+376 600 000", t("Spanish"),
+    t("Seasonal"), "01/12/2026", "15/04/2027", "40", "no", "204",
   ];
-  const csv = "﻿" + [HEADERS, example].map((r) => r.map((v) => `"${v}"`).join(",")).join("\r\n");
+  const csv = "﻿" + [HEADERS.map((h) => t(h)), example].map((r) => r.map((v) => `"${v}"`).join(",")).join("\r\n");
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
   a.download = "shiftcomply-staff-template.csv";
@@ -126,6 +132,7 @@ function downloadTemplate() {
 /** Upload a CSV of employees, check every row, then import the valid ones. */
 export function ImportStaff({ onDone }: { onDone?: () => void }) {
   const { rooms, employees, importEmployees } = useStore();
+  const { t, rich } = useI18n();
   const [fileName, setFileName] = useState<string | null>(null);
   const [grid, setGrid] = useState<string[][] | null>(null);
   const [busy, setBusy] = useState(false);
@@ -144,48 +151,48 @@ export function ImportStaff({ onDone }: { onDone?: () => void }) {
       const errors: string[] = [];
       const warnings: string[] = [];
       const name = get("name");
-      if (!name) errors.push("Name is missing");
+      if (!name) errors.push(t("Name is missing"));
 
       const deptRaw = get("department");
       let department: Department | undefined =
         DEPARTMENTS.find((d) => norm(d) === norm(deptRaw)) ?? DEPT_ALIASES[norm(deptRaw)];
       if (!department) {
-        if (deptRaw) warnings.push(`Unknown department "${deptRaw}", saved as Administration`);
-        else warnings.push("No department, saved as Administration");
+        if (deptRaw) warnings.push(t('Unknown department "{value}", saved as Administration', { value: deptRaw }));
+        else warnings.push(t("No department, saved as Administration"));
         department = "Administration";
       }
 
       const typeRaw = get("type");
       const type: ContractType | undefined = typeRaw ? TYPE_ALIASES[norm(typeRaw)] : "Seasonal";
-      if (!type) errors.push(`Unknown contract type "${typeRaw}"`);
+      if (!type) errors.push(t('Unknown contract type "{value}"', { value: typeRaw }));
 
       const start = parseDate(get("start"));
-      if (!get("start")) errors.push("Start date is missing");
-      else if (!start) errors.push(`Start date "${get("start")}" is not a date`);
+      if (!get("start")) errors.push(t("Start date is missing"));
+      else if (!start) errors.push(t('Start date "{value}" is not a date', { value: get("start") }));
       const end = parseDate(get("end"));
-      if (get("end") && !end) errors.push(`End date "${get("end")}" is not a date`);
-      if (start && end && end < start) errors.push("End date is before the start date");
-      if (type && type !== "Indefinite" && !end && !errors.length) warnings.push("No end date");
+      if (get("end") && !end) errors.push(t('End date "{value}" is not a date', { value: get("end") }));
+      if (start && end && end < start) errors.push(t("End date is before the start date"));
+      if (type && type !== "Indefinite" && !end && !errors.length) warnings.push(t("No end date"));
 
       const hoursRaw = get("hours").replace(",", ".");
       const hours = hoursRaw ? Number(hoursRaw) : 40;
-      if (Number.isNaN(hours) || hours <= 0 || hours > 80) errors.push(`Hours per week "${get("hours")}" is not valid`);
+      if (Number.isNaN(hours) || hours <= 0 || hours > 80) errors.push(t('Hours per week "{value}" is not valid', { value: get("hours") }));
 
       const signed = ["yes", "y", "si", "true", "1", "x", "signed", "signat", "firmado"].includes(norm(get("signed")));
 
       let roomId: string | null = get("room") || null;
       if (roomId) {
         if (!rooms.some((r) => r.id === roomId)) {
-          warnings.push(`Room ${roomId} does not exist, no room assigned`);
+          warnings.push(t("Room {room} does not exist, no room assigned", { room: roomId }));
           roomId = null;
         } else if (!vacant.has(roomId) || claimed.has(roomId)) {
-          warnings.push(`Room ${roomId} is already taken, no room assigned`);
+          warnings.push(t("Room {room} is already taken, no room assigned", { room: roomId }));
           roomId = null;
         } else claimed.add(roomId);
       }
 
       if (name && employees.some((e) => e.name.toLowerCase() === name.toLowerCase())) {
-        warnings.push("Someone with this name already exists");
+        warnings.push(t("Someone with this name already exists"));
       }
 
       const data: NewEmployee | null =
@@ -201,9 +208,9 @@ export function ImportStaff({ onDone }: { onDone?: () => void }) {
               roomId,
             }
           : null;
-      return { line: i + 2, data, name: name || `Row ${i + 2}`, errors, warnings };
+      return { line: i + 2, data, name: name || t("Row {n}", { n: i + 2 }), errors, warnings };
     });
-  }, [grid, rooms, employees]);
+  }, [grid, rooms, employees, t]);
 
   const missingName = grid && grid.length > 0 && !grid[0].map(norm).some((h) => ALIASES.name.includes(h));
   const valid = rows.filter((r) => r.data);
@@ -212,12 +219,13 @@ export function ImportStaff({ onDone }: { onDone?: () => void }) {
     return (
       <div className="space-y-3 text-[14px]">
         <p>
-          <span className="font-semibold">{result.added}</span> employee{result.added === 1 ? "" : "s"} imported, each with a
-          contract and a document checklist.
+          {result.added === 1
+            ? t("1 employee imported, with a contract and a document checklist.")
+            : t("{n} employees imported, each with a contract and a document checklist.", { n: result.added })}
         </p>
         {result.failed.length > 0 && (
           <div className="rounded bg-danger-soft px-3 py-2 text-[13px] text-danger">
-            <div className="font-medium">Not imported:</div>
+            <div className="font-medium">{t("Not imported:")}</div>
             <ul className="mt-1 list-disc pl-5">
               {result.failed.map((f) => (
                 <li key={f.name}>
@@ -235,11 +243,11 @@ export function ImportStaff({ onDone }: { onDone?: () => void }) {
               setFileName(null);
             }}
           >
-            Import another file
+            {t("Import another file")}
           </Button>
           {onDone && (
             <Button variant="primary" onClick={onDone}>
-              Done
+              {t("Done")}
             </Button>
           )}
         </div>
@@ -251,19 +259,21 @@ export function ImportStaff({ onDone }: { onDone?: () => void }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3 text-[13px] text-muted">
         <span>
-          Use a CSV file, with one row per employee. In Excel or Google Sheets, choose <i>Save as / Download → CSV</i>.
+          {rich("Use a CSV file, with one row per employee. In Excel or Google Sheets, choose {menu}.", {
+            menu: <i>{t("Save as / Download → CSV")}</i>,
+          })}
         </span>
-        <Button size="sm" onClick={downloadTemplate}>
+        <Button size="sm" onClick={() => downloadTemplate(t)}>
           <Download size={14} />
-          Download template
+          {t("Download template")}
         </Button>
       </div>
 
       <label className="flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-line-strong bg-sunken px-4 py-6 text-center hover:border-primary">
         <FileSpreadsheet size={22} className="text-muted" />
-        <span className="mt-2 text-[13px] font-medium text-ink">{fileName ?? "Choose a CSV file"}</span>
+        <span className="mt-2 text-[13px] font-medium text-ink">{fileName ?? t("Choose a CSV file")}</span>
         <span className="text-[12px] text-muted">
-          Columns: name, job title, department, email, phone, nationality, contract type, start date, end date, hours, signed, room
+          {t("Columns: name, job title, department, email, phone, nationality, contract type, start date, end date, hours, signed, room")}
         </span>
         <input
           type="file"
@@ -280,26 +290,31 @@ export function ImportStaff({ onDone }: { onDone?: () => void }) {
 
       {missingName && (
         <p className="flex items-center gap-2 rounded bg-danger-soft px-3 py-2 text-[13px] text-danger">
-          <CircleAlert size={15} /> The first row must be column names, including a &quot;Name&quot; column. Start from the
-          template if unsure.
+          <CircleAlert size={15} />{" "}
+          {t('The first row must be column names, including a "Name" column. Start from the template if unsure.')}
         </p>
       )}
 
       {rows.length > 0 && !missingName && (
         <>
           <div className="text-[13px]">
-            <span className="font-medium">{valid.length}</span> of {rows.length} rows ready to import
-            {rows.length - valid.length > 0 && <span className="text-danger">, {rows.length - valid.length} with problems</span>}
+            {rich("{ready} of {total} rows ready to import", {
+              ready: <span className="font-medium">{valid.length}</span>,
+              total: rows.length,
+            })}
+            {rows.length - valid.length > 0 && (
+              <span className="text-danger">, {t("{n} with problems", { n: rows.length - valid.length })}</span>
+            )}
           </div>
           <div className="max-h-[320px] overflow-auto rounded border border-line">
             <table className="w-full border-collapse text-[13px]">
               <thead className="sticky top-0 bg-sunken text-left text-[12px] text-muted">
                 <tr>
-                  <th className="px-3 py-2 font-medium">Row</th>
-                  <th className="px-3 py-2 font-medium">Name</th>
-                  <th className="px-3 py-2 font-medium">Contract</th>
-                  <th className="px-3 py-2 font-medium">Room</th>
-                  <th className="px-3 py-2 font-medium">Check</th>
+                  <th className="px-3 py-2 font-medium">{t("Row")}</th>
+                  <th className="px-3 py-2 font-medium">{t("Name")}</th>
+                  <th className="px-3 py-2 font-medium">{t("Contract")}</th>
+                  <th className="px-3 py-2 font-medium">{t("Room")}</th>
+                  <th className="px-3 py-2 font-medium">{t("Check")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -308,10 +323,14 @@ export function ImportStaff({ onDone }: { onDone?: () => void }) {
                     <td className="px-3 py-2 text-muted tabular">{r.line}</td>
                     <td className="px-3 py-2">
                       <div className="font-medium">{r.name}</div>
-                      {r.data && <div className="text-[12px] text-muted">{[r.data.role, r.data.department].filter(Boolean).join(", ")}</div>}
+                      {r.data && (
+                        <div className="text-[12px] text-muted">
+                          {[r.data.role, t(r.data.department)].filter(Boolean).join(", ")}
+                        </div>
+                      )}
                     </td>
                     <td className="px-3 py-2 text-body tabular">
-                      {r.data ? `${r.data.contract.type}, ${r.data.contract.start} → ${r.data.contract.end ?? "no end"}` : ""}
+                      {r.data ? `${t(r.data.contract.type)}, ${r.data.contract.start} → ${r.data.contract.end ?? t("no end")}` : ""}
                     </td>
                     <td className="px-3 py-2 tabular">{r.data?.roomId ?? "—"}</td>
                     <td className="px-3 py-2">
@@ -325,7 +344,7 @@ export function ImportStaff({ onDone }: { onDone?: () => void }) {
                           {w}
                         </div>
                       ))}
-                      {!r.errors.length && !r.warnings.length && <span className="text-success">Ready</span>}
+                      {!r.errors.length && !r.warnings.length && <span className="text-success">{t("Ready")}</span>}
                     </td>
                   </tr>
                 ))}
@@ -342,7 +361,11 @@ export function ImportStaff({ onDone }: { onDone?: () => void }) {
                 setBusy(false);
               }}
             >
-              {busy ? `Importing ${valid.length}` : `Import ${valid.length} employee${valid.length === 1 ? "" : "s"}`}
+              {busy
+                ? t("Importing {n}", { n: valid.length })
+                : valid.length === 1
+                  ? t("Import 1 employee")
+                  : t("Import {n} employees", { n: valid.length })}
             </Button>
           </div>
         </>

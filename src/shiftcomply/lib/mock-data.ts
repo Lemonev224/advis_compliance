@@ -285,27 +285,31 @@ export const documents: DocumentItem[] = buildDocuments();
 
 export interface ActivityItem {
   id: string;
+  /** English, e.g. "Today, 09:12". Shown through when() from useI18n(). */
   when: string;
   actor: string;
+  /** English text with {placeholders}. Shown through t(text, tv(vars)) from useI18n(). */
   text: string;
+  /** Values for the placeholders. Dates are YYYY-MM-DD; "~Text" is translated and lower-cased. */
+  vars?: Record<string, string>;
   employeeId?: string;
 }
 
 export const activity: ActivityItem[] = [
-  { id: "a1", when: "Today, 09:12", actor: "Mireia Soler", text: "requested renewal for Jordi Serra's contract", employeeId: "e2" },
-  { id: "a2", when: "Today, 08:00", actor: "ShiftComply", text: "sent 3 contract expiry reminders" },
-  { id: "a3", when: "Yesterday, 17:40", actor: "Mireia Soler", text: "uploaded a food handler certificate for Diego Herrera", employeeId: "e10" },
-  { id: "a4", when: "Yesterday, 11:05", actor: "ShiftComply", text: "sent a checkout reminder to Sofia Mendes for room 103", employeeId: "e9" },
-  { id: "a5", when: "2 Oct, 15:22", actor: "Marta Puig", text: "assigned room 204 to Joana Costa", employeeId: "e17" },
-  { id: "a6", when: "1 Oct, 10:03", actor: "Mireia Soler", text: "created a draft contract for Èlia Grau", employeeId: "e13" },
-  { id: "a7", when: "27 Sep, 09:30", actor: "ShiftComply", text: "flagged room 103 as overdue: Sofia Mendes's contract ended on 26 Sep", employeeId: "e9" },
-  { id: "a8", when: "10 Sep, 09:30", actor: "ShiftComply", text: "flagged room 208 as overdue: Pol Casals's contract ended on 9 Sep", employeeId: "e4" },
-  { id: "a9", when: "2 Sep, 16:12", actor: "Marta Puig", text: "sent Pol Casals a checkout reminder for room 208", employeeId: "e4" },
-  { id: "a10", when: "15 Jun, 11:00", actor: "Mireia Soler", text: "added Anna Vila with a seasonal contract and room 211", employeeId: "e3" },
-  { id: "a11", when: "15 Jun, 11:04", actor: "Mireia Soler", text: "requested a work and residence permit from Anna Vila", employeeId: "e3" },
-  { id: "a12", when: "1 Jun, 10:20", actor: "Mireia Soler", text: "added Jordi Serra with a seasonal contract and room 108", employeeId: "e2" },
-  { id: "a13", when: "1 Jun, 10:31", actor: "Mireia Soler", text: "added Sofia Mendes with a seasonal contract and room 103", employeeId: "e9" },
-  { id: "a14", when: "15 May, 09:45", actor: "Mireia Soler", text: "added Pol Casals with a seasonal contract and room 208", employeeId: "e4" },
+  { id: "a1", when: "Today, 09:12", actor: "Mireia Soler", text: "requested renewal for {name}'s contract", vars: { name: "Jordi Serra" }, employeeId: "e2" },
+  { id: "a2", when: "Today, 08:00", actor: "ShiftComply", text: "sent {n} contract expiry reminders", vars: { n: "3" } },
+  { id: "a3", when: "Yesterday, 17:40", actor: "Mireia Soler", text: "uploaded a food handler certificate for {name}", vars: { name: "Diego Herrera" }, employeeId: "e10" },
+  { id: "a4", when: "Yesterday, 11:05", actor: "ShiftComply", text: "sent a checkout reminder to {name} for room {room}", vars: { name: "Sofia Mendes", room: "103" }, employeeId: "e9" },
+  { id: "a5", when: "2 Oct, 15:22", actor: "Marta Puig", text: "assigned room {room} to {name}", vars: { room: "204", name: "Joana Costa" }, employeeId: "e17" },
+  { id: "a6", when: "1 Oct, 10:03", actor: "Mireia Soler", text: "created a draft contract for {name}", vars: { name: "Èlia Grau" }, employeeId: "e13" },
+  { id: "a7", when: "27 Sep, 09:30", actor: "ShiftComply", text: "flagged room {room} as overdue: {name}'s contract ended on {date}", vars: { room: "103", name: "Sofia Mendes", date: "2026-09-26" }, employeeId: "e9" },
+  { id: "a8", when: "10 Sep, 09:30", actor: "ShiftComply", text: "flagged room {room} as overdue: {name}'s contract ended on {date}", vars: { room: "208", name: "Pol Casals", date: "2026-09-09" }, employeeId: "e4" },
+  { id: "a9", when: "2 Sep, 16:12", actor: "Marta Puig", text: "sent {name} a checkout reminder for room {room}", vars: { name: "Pol Casals", room: "208" }, employeeId: "e4" },
+  { id: "a10", when: "15 Jun, 11:00", actor: "Mireia Soler", text: "added {name} with a {type} contract and room {room}", vars: { name: "Anna Vila", type: "~Seasonal", room: "211" }, employeeId: "e3" },
+  { id: "a11", when: "15 Jun, 11:04", actor: "Mireia Soler", text: "requested a work and residence permit from {name}", vars: { name: "Anna Vila" }, employeeId: "e3" },
+  { id: "a12", when: "1 Jun, 10:20", actor: "Mireia Soler", text: "added {name} with a {type} contract and room {room}", vars: { name: "Jordi Serra", type: "~Seasonal", room: "108" }, employeeId: "e2" },
+  { id: "a13", when: "1 Jun, 10:31", actor: "Mireia Soler", text: "added {name} with a {type} contract and room {room}", vars: { name: "Sofia Mendes", type: "~Seasonal", room: "103" }, employeeId: "e9" },
+  { id: "a14", when: "15 May, 09:45", actor: "Mireia Soler", text: "added {name} with a {type} contract and room {room}", vars: { name: "Pol Casals", type: "~Seasonal", room: "208" }, employeeId: "e4" },
 ];
 
 // ---------- Users ----------

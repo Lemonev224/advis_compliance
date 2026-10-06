@@ -14,6 +14,7 @@ import {
   CircleHelp,
   LogOut,
   ChartGantt,
+  Globe,
   FileUp,
   KeyRound,
   LayoutGrid,
@@ -28,6 +29,8 @@ import {
 import { Avatar, Button, cx } from "./ui";
 import { useStore } from "@/shiftcomply/lib/store";
 import { buildAlerts, initials } from "@/shiftcomply/lib/derive";
+import { useI18n } from "@/shiftcomply/lib/i18n";
+import { LANGS } from "@/shiftcomply/lib/lang";
 
 /** "marta.vidal@hotel.com" -> "Marta Vidal" */
 function nameFromEmail(email: string) {
@@ -73,6 +76,7 @@ function useClickOutside(ref: React.RefObject<HTMLElement | null>, onOut: () => 
 
 function SideNav({ mobileOpen, onClose }: { mobileOpen: boolean; onClose: () => void }) {
   const pathname = usePathname();
+  const { t } = useI18n();
   const item = (n: (typeof NAV)[number]) => {
     const active = isActive(pathname, n.href);
     const Icon = n.icon;
@@ -87,7 +91,7 @@ function SideNav({ mobileOpen, onClose }: { mobileOpen: boolean; onClose: () => 
         )}
       >
         <Icon size={20} strokeWidth={active ? 2 : 1.75} className={active ? "text-white" : "text-[#7c8799] group-hover:text-ink"} />
-        <span>{n.label}</span>
+        <span>{t(n.label)}</span>
       </Link>
     );
   };
@@ -108,7 +112,7 @@ function SideNav({ mobileOpen, onClose }: { mobileOpen: boolean; onClose: () => 
             className="group flex flex-col items-center gap-1 rounded-md px-1 py-2 text-[11px] font-medium text-muted hover:bg-sunken hover:text-ink"
           >
             <CircleHelp size={20} strokeWidth={1.75} className="text-[#7c8799] group-hover:text-ink" />
-            <span>Help</span>
+            <span>{t("Help")}</span>
           </a>
         </div>
       </nav>
@@ -120,15 +124,16 @@ function SideNav({ mobileOpen, onClose }: { mobileOpen: boolean; onClose: () => 
 
 function NewMenu() {
   const { canEdit } = useStore();
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [modal, setModal] = useState<null | "employee" | "room" | "doc">(null);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
 
   const items = [
-    { label: "Add employee", icon: UserPlus, run: () => setModal("employee") },
-    { label: "Assign room", icon: KeyRound, run: () => setModal("room") },
-    { label: "Upload document", icon: FileUp, run: () => setModal("doc") },
+    { label: t("Add employee"), icon: UserPlus, run: () => setModal("employee") },
+    { label: t("Assign room"), icon: KeyRound, run: () => setModal("room") },
+    { label: t("Upload document"), icon: FileUp, run: () => setModal("doc") },
   ];
 
   if (!canEdit) return null;
@@ -140,7 +145,7 @@ function NewMenu() {
         className="flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-[13px] font-medium text-white hover:bg-primary-hover"
       >
         <Plus size={16} />
-        New
+        {t("New")}
       </button>
       {open && (
         <div className="absolute top-10 right-0 z-50 w-56 rounded-md border border-line bg-surface py-1 text-ink shadow-pop">
@@ -170,6 +175,7 @@ function NewMenu() {
 
 function HotelSwitcher() {
   const { hotel, myHotels, switchHotel, createDemoHotel, demoMode } = useStore();
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
@@ -187,8 +193,8 @@ function HotelSwitcher() {
         <div className="absolute top-10 right-0 z-50 w-72 rounded-md border border-line bg-surface py-1 text-ink shadow-pop">
           {hotel.seasonLabel && (
             <div className="border-b border-line px-3 py-2 text-[12px] text-muted">
-              Season
-              <div className="text-[13px] font-medium text-ink">{hotel.seasonLabel}</div>
+              {t("Season")}
+              <div className="text-[13px] font-medium text-ink">{t(hotel.seasonLabel)}</div>
             </div>
           )}
           {myHotels.map((h) => (
@@ -202,7 +208,7 @@ function HotelSwitcher() {
             >
               <span className="truncate">
                 {h.name}
-                {h.isDemo && <span className="ml-1.5 rounded-[3px] bg-warning-soft px-1.5 py-px text-[11px] text-warning">Demo</span>}
+                {h.isDemo && <span className="ml-1.5 rounded-[3px] bg-warning-soft px-1.5 py-px text-[11px] text-warning">{t("Demo")}</span>}
               </span>
               {h.id === hotel.id && <Check size={15} className="shrink-0 text-primary" />}
             </button>
@@ -216,11 +222,11 @@ function HotelSwitcher() {
                 }}
                 className="block w-full px-3 py-2 text-left text-[13px] text-primary hover:bg-sunken"
               >
-                Try the demo hotel
+                {t("Try the demo hotel")}
               </button>
             )}
             <Link href="/shiftcomply-demo/welcome" onClick={() => setOpen(false)} className="block px-3 py-2 text-[13px] text-primary hover:bg-sunken">
-              Set up another hotel
+              {t("Set up another hotel")}
             </Link>
           </div>}
         </div>
@@ -233,6 +239,7 @@ function HotelSwitcher() {
 
 function GlobalSearch() {
   const { employees } = useStore();
+  const { t } = useI18n();
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -243,9 +250,15 @@ function GlobalSearch() {
     const s = q.trim().toLowerCase();
     if (!s) return [];
     return employees
-      .filter((e) => e.name.toLowerCase().includes(s) || e.role.toLowerCase().includes(s) || e.roomId?.includes(s))
+      .filter(
+        (e) =>
+          e.name.toLowerCase().includes(s) ||
+          e.role.toLowerCase().includes(s) ||
+          t(e.role).toLowerCase().includes(s) ||
+          e.roomId?.includes(s),
+      )
       .slice(0, 6);
-  }, [q, employees]);
+  }, [q, employees, t]);
 
   return (
     <div ref={ref} className="relative hidden w-full max-w-[420px] md:block">
@@ -258,7 +271,7 @@ function GlobalSearch() {
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          placeholder="Search staff, rooms, documents"
+          placeholder={t("Search staff, rooms, documents")}
           className="w-full bg-transparent text-[13px] text-white outline-none placeholder:text-[#9fb1cc] focus:text-ink focus:placeholder:text-subtle"
         />
       </div>
@@ -278,8 +291,8 @@ function GlobalSearch() {
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-[13px] font-medium text-ink">{e.name}</span>
                 <span className="block truncate text-[12px] text-muted">
-                  {e.role}
-                  {e.roomId ? `, room ${e.roomId}` : ""}
+                  {t(e.role)}
+                  {e.roomId ? `, ${t("room {room}", { room: e.roomId })}` : ""}
                 </span>
               </span>
             </button>
@@ -294,7 +307,8 @@ function GlobalSearch() {
 
 function NotificationsMenu() {
   const { employees, rooms, documents } = useStore();
-  const alerts = useMemo(() => buildAlerts(employees, rooms, documents), [employees, rooms, documents]);
+  const { t } = useI18n();
+  const alerts = useMemo(() => buildAlerts(employees, rooms, documents, t), [employees, rooms, documents, t]);
   const urgent = alerts.filter((a) => a.severity === "critical");
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -305,7 +319,7 @@ function NotificationsMenu() {
       <button
         onClick={() => setOpen((o) => !o)}
         className="relative flex h-8 w-8 items-center justify-center rounded-md text-white/80 hover:bg-navy-soft hover:text-white"
-        aria-label="Notifications"
+        aria-label={t("Notifications")}
       >
         <Bell size={18} />
         {urgent.length > 0 && (
@@ -317,8 +331,8 @@ function NotificationsMenu() {
       {open && (
         <div className="absolute top-10 right-0 z-50 w-[360px] rounded-md border border-line bg-surface shadow-pop">
           <div className="flex items-center justify-between border-b border-line px-4 py-3">
-            <span className="text-[14px] font-semibold text-ink">Needs attention</span>
-            <span className="text-[12px] text-muted">{alerts.length} open</span>
+            <span className="text-[14px] font-semibold text-ink">{t("Needs attention")}</span>
+            <span className="text-[12px] text-muted">{t("{n} open", { n: alerts.length })}</span>
           </div>
           <div className="scroll-thin max-h-[360px] overflow-y-auto">
             {alerts.slice(0, 8).map((a) => (
@@ -338,7 +352,7 @@ function NotificationsMenu() {
             onClick={() => setOpen(false)}
             className="block border-t border-line px-4 py-2.5 text-center text-[13px] font-medium text-primary hover:bg-sunken"
           >
-            View all reminders
+            {t("View all reminders")}
           </Link>
         </div>
       )}
@@ -350,6 +364,7 @@ function NotificationsMenu() {
 
 function Toasts() {
   const { toasts, dismissToast } = useStore();
+  const { t: tr } = useI18n();
   return (
     <div className="pointer-events-none fixed right-5 bottom-5 z-[60] flex max-w-[420px] flex-col gap-2">
       {toasts.map((t) => (
@@ -363,7 +378,7 @@ function Toasts() {
             <Check size={16} className="mt-0.5 shrink-0 text-success-bar" />
           )}
           <span className="flex-1">{t.text}</span>
-          <button onClick={() => dismissToast(t.id)} className="mt-0.5 text-white/50 hover:text-white" aria-label="Dismiss">
+          <button onClick={() => dismissToast(t.id)} className="mt-0.5 text-white/50 hover:text-white" aria-label={tr("Dismiss")}>
             <X size={14} />
           </button>
         </div>
@@ -376,14 +391,15 @@ function Toasts() {
 
 function AccountMenu() {
   const { userEmail, hotel, myRole, signOut, demoMode } = useStore();
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
-  const roleLabel = { admin: "Administrator", housing_manager: "Housing manager", viewer: "Read only" }[myRole];
+  const roleLabel = t({ admin: "Administrator", housing_manager: "Housing manager", viewer: "Read only" }[myRole]);
   const displayName = nameFromEmail(userEmail);
   return (
     <div ref={ref} className="relative ml-2">
-      <button onClick={() => setOpen((o) => !o)} aria-label="Account" className="flex items-center gap-2.5 text-[13px] text-white">
+      <button onClick={() => setOpen((o) => !o)} aria-label={t("Account")} className="flex items-center gap-2.5 text-[13px] text-white">
         <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#2d5ea8] text-[12px] font-semibold">
           {initials(displayName) || "?"}
         </span>
@@ -398,12 +414,51 @@ function AccountMenu() {
             </div>
           </div>
           <Link href="/shiftcomply-demo/settings" onClick={() => setOpen(false)} className="block px-3 py-2 text-[13px] hover:bg-sunken">
-            Settings
+            {t("Settings")}
           </Link>
           <button onClick={signOut} className="flex w-full items-center gap-2 px-3 py-2 text-left text-[13px] hover:bg-sunken">
             <LogOut size={15} className="text-muted" />
-            {demoMode ? "Exit demo" : "Sign out"}
+            {demoMode ? t("Exit demo") : t("Sign out")}
           </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Language ---------- */
+
+function LanguageMenu() {
+  const { lang, setLang, t } = useI18n();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useClickOutside(ref, () => setOpen(false));
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        aria-label={t("Language")}
+        title={t("Language")}
+        className="flex h-8 items-center gap-1 rounded-md px-1.5 text-[12px] font-medium text-white/80 hover:bg-navy-soft hover:text-white"
+      >
+        <Globe size={17} />
+        <span className="uppercase">{lang}</span>
+      </button>
+      {open && (
+        <div className="absolute top-10 right-0 z-50 w-40 rounded-md border border-line bg-surface py-1 text-ink shadow-pop">
+          {LANGS.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => {
+                setOpen(false);
+                if (l.code !== lang) setLang(l.code);
+              }}
+              className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-[13px] hover:bg-sunken"
+            >
+              {l.name}
+              {l.code === lang && <Check size={15} className="shrink-0 text-primary" />}
+            </button>
+          ))}
         </div>
       )}
     </div>
@@ -428,11 +483,12 @@ function CenterCard({ children }: { children: ReactNode }) {
 
 function LoadError() {
   const { errorMessage, signOut } = useStore();
+  const { t } = useI18n();
   const notSetUp =
     errorMessage?.includes("does not exist") || errorMessage?.includes("schema cache") || errorMessage?.includes("Could not find");
   return (
     <CenterCard>
-      <h1 className="text-[20px] font-semibold">Could not load your data</h1>
+      <h1 className="text-[20px] font-semibold">{t("Could not load your data")}</h1>
       <p className="mt-2 text-[14px] text-muted">
         {notSetUp
           ? "The database is missing some tables or columns. In the Supabase SQL editor, run supabase/setup.sql (new projects only) and then supabase/upgrade-2026-10-team-and-onboarding.sql, then reload this page."
@@ -440,9 +496,9 @@ function LoadError() {
       </p>
       <div className="mt-5 flex gap-2">
         <Button variant="primary" onClick={() => window.location.reload()}>
-          Try again
+          {t("Try again")}
         </Button>
-        <Button onClick={signOut}>Sign out</Button>
+        <Button onClick={signOut}>{t("Sign out")}</Button>
       </div>
     </CenterCard>
   );
@@ -453,6 +509,7 @@ function LoadError() {
 export function AppShell({ children }: { children: ReactNode }) {
   const [mobileNav, setMobileNav] = useState(false);
   const { status, hotel, myHotels, switchHotel, demoMode, loadDemoData, signOut } = useStore();
+  const { t, rich } = useI18n();
   const pathname = usePathname();
 
   if (status === "no-hotel" || (pathname === "/shiftcomply-demo/welcome" && status === "ready")) return <OnboardingWizard />;
@@ -465,11 +522,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           <button
             className="flex h-8 w-8 items-center justify-center rounded text-white/80 hover:bg-navy-soft lg:hidden"
             onClick={() => setMobileNav((o) => !o)}
-            aria-label="Menu"
+            aria-label={t("Menu")}
           >
             <Menu size={18} />
           </button>
-          <Link href="/shiftcomply-demo" className="lg:w-[184px]" aria-label="ShiftComply home">
+          <Link href="/shiftcomply-demo" className="lg:w-[184px]" aria-label={t("ShiftComply home")}>
             <BrandLogo />
           </Link>
         </div>
@@ -482,10 +539,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link
             href="/shiftcomply-demo/calendar"
             className="hidden h-8 w-8 items-center justify-center rounded text-white/80 hover:bg-navy-soft hover:text-white sm:flex"
-            aria-label="Calendar"
+            aria-label={t("Calendar")}
           >
             <CalendarDays size={18} />
           </Link>
+          <LanguageMenu />
           <NotificationsMenu />
           <AccountMenu />
         </div>
@@ -497,28 +555,32 @@ export function AppShell({ children }: { children: ReactNode }) {
         {demoMode && (
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-b border-[#f0dca8] bg-warning-soft px-4 py-2 text-[13px] text-warning">
             <span>
-              <span className="font-semibold">Demo.</span> Sample data only. Changes stay in this browser tab and are not saved.
+              {rich("{demo} Sample data only. Changes stay in this browser tab and are not saved.", {
+                demo: <span className="font-semibold">{t("Demo.")}</span>,
+              })}
             </span>
             <button onClick={() => loadDemoData()} className="font-medium underline">
-              Reset sample data
+              {t("Reset sample data")}
             </button>
             <button onClick={signOut} className="font-medium underline">
-              Exit demo
+              {t("Exit demo")}
             </button>
           </div>
         )}
         {hotel?.isDemo && !demoMode && status === "ready" && (
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-b border-[#f0dca8] bg-warning-soft px-4 py-2 text-[13px] text-warning">
             <span>
-              <span className="font-semibold">Demo hotel.</span> Everything here is sample data. Changes are safe to try.
+              {rich("{demo} Everything here is sample data. Changes are safe to try.", {
+                demo: <span className="font-semibold">{t("Demo hotel.")}</span>,
+              })}
             </span>
             {myHotels.some((h) => !h.isDemo) ? (
               <button onClick={() => switchHotel(myHotels.find((h) => !h.isDemo)!.id)} className="font-medium underline">
-                Back to my hotel
+                {t("Back to my hotel")}
               </button>
             ) : (
               <Link href="/shiftcomply-demo/welcome" className="font-medium underline">
-                Set up my real hotel
+                {t("Set up my real hotel")}
               </Link>
             )}
           </div>
@@ -527,7 +589,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           {status === "ready" ? (
             children
           ) : (
-            <div className="flex items-center justify-center py-32 text-[14px] text-muted">Loading your hotel</div>
+            <div className="flex items-center justify-center py-32 text-[14px] text-muted">{t("Loading your hotel")}</div>
           )}
         </div>
       </main>

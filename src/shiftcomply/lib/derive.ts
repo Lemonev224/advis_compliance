@@ -1,5 +1,8 @@
 import { daysUntil, TODAY, toISO } from "./dates";
 import type { DocumentItem, Employee, Room } from "./mock-data";
+import type { TFunction } from "./i18n";
+
+// Status labels below are English; show them through t() from useI18n().
 
 export const EXPIRING_WINDOW = 30;
 export const CHECKOUT_WINDOW = 7;
@@ -99,7 +102,10 @@ export interface Alert {
   id: string;
   severity: "critical" | "warning" | "info";
   kind: "overdue-room" | "contract-expiring" | "contract-expired" | "document" | "signature" | "checkout";
+  /** The issue followed by the employee's name, when there is one. */
   title: string;
+  /** The issue on its own, for tables that show the name in its own column. */
+  issue: string;
   detail: string;
   employeeId: string;
   action: string;
@@ -107,21 +113,26 @@ export interface Alert {
   days: number;
 }
 
-export function buildAlerts(employees: Employee[], rooms: Room[], docs: DocumentItem[]): Alert[] {
+const ddmmyyyy = (iso: string | null | undefined) => iso?.split("-").reverse().join("/") ?? "";
+
+export function buildAlerts(employees: Employee[], rooms: Room[], docs: DocumentItem[], t: TFunction): Alert[] {
   const alerts: Alert[] = [];
+  const withName = (issue: string, name: string) => `${issue} — ${name}`;
 
   for (const room of rooms) {
     const { status, occupant } = roomStatus(room, employees);
     if (status === "overdue" && occupant) {
       const d = Math.abs(daysUntil(occupant.checkout ?? occupant.contract.end) ?? 0);
+      const issue = t("Room {room} checkout overdue by {n} days", { room: room.id, n: d });
       alerts.push({
         id: `r-${room.id}`,
         severity: "critical",
         kind: "overdue-room",
-        title: `Room ${room.id} checkout overdue by ${d} days`,
-        detail: `${occupant.name}, ${occupant.role}, contract ended, no extension on file`,
+        title: issue,
+        issue,
+        detail: t("{name}, {role}, contract ended, no extension on file", { name: occupant.name, role: t(occupant.role) }),
         employeeId: occupant.id,
-        action: "Resolve",
+        action: t("Resolve"),
         href: `/shiftcomply-demo/housing?room=${room.id}`,
         days: -d,
       });
@@ -132,27 +143,37 @@ export function buildAlerts(employees: Employee[], rooms: Room[], docs: Document
     const s = contractStatus(e);
     if (s === "expiring") {
       const d = daysUntil(e.contract.end)!;
+      const issue = d === 1 ? t("Contract ends in 1 day") : t("Contract ends in {n} days", { n: d });
       alerts.push({
         id: `c-${e.id}`,
         severity: d <= 10 ? "critical" : "warning",
         kind: "contract-expiring",
-        title: `Contract ends in ${d} days — ${e.name}`,
-        detail: `${e.role}${e.roomId ? `, Room ${e.roomId}` : ""}, ${e.contract.renewal === "pending" ? "Renewal requested" : "Renewal not started"}`,
+        title: withName(issue, e.name),
+        issue,
+        detail: [
+          t(e.role),
+          e.roomId ? t("Room {room}", { room: e.roomId }) : null,
+          e.contract.renewal === "pending" ? t("Renewal requested") : t("Renewal not started"),
+        ]
+          .filter(Boolean)
+          .join(", "),
         employeeId: e.id,
-        action: "Renew",
+        action: t("Renew"),
         href: `/shiftcomply-demo/staff/${e.id}`,
         days: d,
       });
     }
     if (s === "unsigned") {
+      const issue = t("Contract awaiting signature");
       alerts.push({
         id: `s-${e.id}`,
         severity: "warning",
         kind: "signature",
-        title: `Contract awaiting signature — ${e.name}`,
-        detail: `${e.role}, starts ${e.contract.start.split("-").reverse().join("/")}`,
+        title: withName(issue, e.name),
+        issue,
+        detail: t("{role}, starts {date}", { role: t(e.role), date: ddmmyyyy(e.contract.start) }),
         employeeId: e.id,
-        action: "Review",
+        action: t("Review"),
         href: `/shiftcomply-demo/staff/${e.id}`,
         days: daysUntil(e.contract.start) ?? 0,
       });
@@ -164,17 +185,23 @@ export function buildAlerts(employees: Employee[], rooms: Room[], docs: Document
     const e = employees.find((x) => x.id === d.employeeId);
     if (!e || d.type === "Employment contract" || d.type === "Housing agreement") continue;
     if (st === "missing" || st === "expired" || st === "expiring") {
+      const issue = t(st === "missing" ? "{doc} missing" : st === "expired" ? "{doc} expired" : "{doc} expiring", {
+        doc: t(d.type),
+      });
       alerts.push({
         id: `d-${d.id}`,
         severity: st === "expiring" ? "warning" : "critical",
         kind: "document",
-        title: `${d.type} ${st === "missing" ? "missing" : st === "expired" ? "expired" : "expiring"} — ${e.name}`,
+        title: withName(issue, e.name),
+        issue,
         detail:
           st === "missing"
-            ? `${e.role}, required before ${contractStatus(e) === "upcoming" ? "start date" : "next inspection"}`
-            : `${e.role}, expires ${d.expires?.split("-").reverse().join("/")}`,
+            ? contractStatus(e) === "upcoming"
+              ? t("{role}, required before the start date", { role: t(e.role) })
+              : t("{role}, required before the next inspection", { role: t(e.role) })
+            : t("{role}, expires {date}", { role: t(e.role), date: ddmmyyyy(d.expires) }),
         employeeId: e.id,
-        action: "Upload",
+        action: t("Upload"),
         href: `/shiftcomply-demo/staff/${e.id}?tab=documents`,
         days: daysUntil(d.expires) ?? 0,
       });

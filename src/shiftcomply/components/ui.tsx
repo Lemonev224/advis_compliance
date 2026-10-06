@@ -4,6 +4,7 @@ import Link from "next/link";
 import { X } from "lucide-react";
 import { useEffect, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { initials } from "@/shiftcomply/lib/derive";
+import { useI18n } from "@/shiftcomply/lib/i18n";
 
 export function cx(...c: (string | false | null | undefined)[]) {
   return c.filter(Boolean).join(" ");
@@ -362,6 +363,7 @@ export function Modal({
   footer?: ReactNode;
   width?: number;
 }) {
+  const { t } = useI18n();
   useEscape(onClose);
   if (!open) return null;
   return (
@@ -373,7 +375,7 @@ export function Modal({
             <h3 className="text-[16px] font-semibold">{title}</h3>
             {description && <p className="mt-0.5 text-[13px] text-muted">{description}</p>}
           </div>
-          <button onClick={onClose} className="rounded p-1 text-muted hover:bg-sunken" aria-label="Close">
+          <button onClick={onClose} className="rounded p-1 text-muted hover:bg-sunken" aria-label={t("Close")}>
             <X size={18} />
           </button>
         </div>
@@ -397,6 +399,7 @@ export function Drawer({
   children: ReactNode;
   footer?: ReactNode;
 }) {
+  const { t } = useI18n();
   useEscape(onClose);
   if (!open) return null;
   return (
@@ -405,7 +408,7 @@ export function Drawer({
       <aside className="absolute top-0 right-0 flex h-full w-full max-w-[420px] flex-col bg-surface shadow-pop [animation:drawer-in_.16s_ease-out]">
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
           <div className="text-[16px] font-semibold">{title}</div>
-          <button onClick={onClose} className="rounded p-1 text-muted hover:bg-sunken" aria-label="Close">
+          <button onClick={onClose} className="rounded p-1 text-muted hover:bg-sunken" aria-label={t("Close")}>
             <X size={18} />
           </button>
         </div>
@@ -474,6 +477,7 @@ export function ConfirmModal({
   confirmText?: string;
   danger?: boolean;
 }) {
+  const { t, rich } = useI18n();
   const [typed, setTyped] = useState("");
   const [busy, setBusy] = useState(false);
   const ready = !confirmText || typed.trim().toLowerCase() === confirmText.trim().toLowerCase();
@@ -485,7 +489,7 @@ export function ConfirmModal({
       footer={
         <>
           <Button onClick={onClose} disabled={busy}>
-            Cancel
+            {t("Cancel")}
           </Button>
           <Button
             variant={danger ? "dangerSolid" : "primary"}
@@ -497,7 +501,7 @@ export function ConfirmModal({
               onClose();
             }}
           >
-            {busy ? "Working" : confirmLabel}
+            {busy ? t("Working") : confirmLabel}
           </Button>
         </>
       }
@@ -506,7 +510,7 @@ export function ConfirmModal({
       {confirmText && (
         <label className="mt-4 block">
           <span className="mb-1 block text-[13px] font-medium text-body">
-            Type <span className="font-semibold text-ink">{confirmText}</span> to confirm
+            {rich("Type {text} to confirm", { text: <span className="font-semibold text-ink">{confirmText}</span> })}
           </span>
           <input autoFocus className={inputClass} value={typed} onChange={(e) => setTyped(e.target.value)} />
         </label>

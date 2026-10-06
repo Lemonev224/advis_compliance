@@ -35,29 +35,7 @@ export function addMonths(iso: string, months: number): string {
   return toISO(d);
 }
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-export const MONTHS_LONG = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
-
-export function fmt(iso: string | null | undefined, withYear = true): string {
-  if (!iso) return "—";
-  const d = parse(iso);
-  return withYear
-    ? `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`
-    : `${d.getDate()} ${MONTHS[d.getMonth()]}`;
-}
-
-export function relative(iso: string | null | undefined): string {
-  const n = daysUntil(iso);
-  if (n === null) return "No end date";
-  if (n === 0) return "Today";
-  if (n === 1) return "Tomorrow";
-  if (n === -1) return "Yesterday";
-  if (n > 0) return `In ${n} days`;
-  return `${Math.abs(n)} days ago`;
-}
+// Formatting dates for display (month names, "In 3 days") lives in i18n.tsx, so it follows the chosen language.
 
 export function monthsBetween(a: string, b: string): number {
   const d1 = parse(a);

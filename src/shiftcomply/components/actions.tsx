@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import { Upload } from "lucide-react";
 import { Button, Field, inputClass, Modal, Select } from "./ui";
 import { useStore } from "@/shiftcomply/lib/store";
-import { addMonths, fmt, TODAY, toISO } from "@/shiftcomply/lib/dates";
+import { addMonths, TODAY, toISO } from "@/shiftcomply/lib/dates";
+import { useI18n } from "@/shiftcomply/lib/i18n";
 import { roomStatus } from "@/shiftcomply/lib/derive";
 import type { ContractType, Department, DocType } from "@/shiftcomply/lib/mock-data";
 
@@ -20,6 +21,7 @@ export function RenewContractModal({
   onClose: () => void;
 }) {
   const { getEmployee, renewContract } = useStore();
+  const { t, fmt } = useI18n();
   const e = employeeId ? getEmployee(employeeId) : undefined;
   const base = e?.contract.end ?? toISO(TODAY);
   const [months, setMonths] = useState("4");
@@ -33,11 +35,11 @@ export function RenewContractModal({
     <Modal
       open={open}
       onClose={onClose}
-      title="Renew contract"
-      description={`${e.name}, ${e.role}, current end ${fmt(e.contract.end)}`}
+      title={t("Renew contract")}
+      description={t("{name}, {role}, current end {date}", { name: e.name, role: t(e.role), date: fmt(e.contract.end) })}
       footer={
         <>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>{t("Cancel")}</Button>
           <Button
             variant="primary"
             disabled={!newEnd}
@@ -46,23 +48,23 @@ export function RenewContractModal({
               onClose();
             }}
           >
-            Renew contract
+            {t("Renew contract")}
           </Button>
         </>
       }
     >
       <div className="space-y-4">
-        <Field label="Extend by">
+        <Field label={t("Extend by")}>
           <Select value={months} onChange={setMonths}>
-            <option value="1">1 month</option>
-            <option value="3">3 months</option>
-            <option value="4">4 months (winter season)</option>
-            <option value="6">6 months</option>
-            <option value="custom">Custom end date</option>
+            <option value="1">{t("1 month")}</option>
+            <option value="3">{t("{n} months", { n: 3 })}</option>
+            <option value="4">{t("4 months (winter season)")}</option>
+            <option value="6">{t("{n} months", { n: 6 })}</option>
+            <option value="custom">{t("Custom end date")}</option>
           </Select>
         </Field>
         {months === "custom" && (
-          <Field label="New end date">
+          <Field label={t("New end date")}>
             <input type="date" className={inputClass} value={custom} onChange={(ev) => setCustom(ev.target.value)} />
           </Field>
         )}
@@ -75,19 +77,19 @@ export function RenewContractModal({
               onChange={(ev) => setExtendHousing(ev.target.checked)}
             />
             <span>
-              <span className="font-medium text-ink">Extend room {e.roomId} to the same date</span>
-              <span className="block text-muted">Keeps the housing assignment linked to the contract.</span>
+              <span className="font-medium text-ink">{t("Extend room {room} to the same date", { room: e.roomId })}</span>
+              <span className="block text-muted">{t("Keeps the housing assignment linked to the contract.")}</span>
             </span>
           </label>
         )}
         <div className="rounded-md border border-line px-3 py-2.5 text-[13px]">
           <div className="flex justify-between">
-            <span className="text-muted">New end date</span>
+            <span className="text-muted">{t("New end date")}</span>
             <span className="font-medium">{newEnd ? fmt(newEnd) : "—"}</span>
           </div>
           <div className="mt-1 flex justify-between">
-            <span className="text-muted">Contract language</span>
-            <span className="font-medium">{e.contract.language}</span>
+            <span className="text-muted">{t("Contract language")}</span>
+            <span className="font-medium">{t(`language:${e.contract.language}`)}</span>
           </div>
         </div>
       </div>
@@ -112,6 +114,7 @@ export function AssignRoomModal({
   onAddRoom?: () => void;
 }) {
   const { employees, rooms, assignRoom } = useStore();
+  const { t, fmt } = useI18n();
   const vacant = rooms.filter((r) => roomStatus(r, employees).status === "vacant");
   const unhoused = employees.filter((e) => !e.roomId);
   const [room, setRoom] = useState(roomId ?? vacant[0]?.id ?? "");
@@ -125,11 +128,11 @@ export function AssignRoomModal({
     <Modal
       open={open}
       onClose={onClose}
-      title="Assign room"
-      description="Housing is linked to the employee's contract dates."
+      title={t("Assign room")}
+      description={t("Housing is linked to the employee's contract dates.")}
       footer={
         <>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>{t("Cancel")}</Button>
           <Button
             variant="primary"
             disabled={!room || !emp}
@@ -138,35 +141,35 @@ export function AssignRoomModal({
               onClose();
             }}
           >
-            Assign room
+            {t("Assign room")}
           </Button>
         </>
       }
     >
       <div className="space-y-4">
-        <Field label="Employee">
+        <Field label={t("Employee")}>
           <Select value={emp} onChange={setEmp}>
-            {unhoused.length === 0 && <option value="">No unhoused employees</option>}
+            {unhoused.length === 0 && <option value="">{t("No unhoused employees")}</option>}
             {unhoused.map((e) => (
               <option key={e.id} value={e.id}>
-                {e.name} — {e.role}
+                {e.name} — {t(e.role)}
               </option>
             ))}
           </Select>
         </Field>
-        <Field label="Room">
+        <Field label={t("Room")}>
           <Select value={room} onChange={setRoom}>
-            {vacant.length === 0 && <option value="">No vacant rooms</option>}
+            {vacant.length === 0 && <option value="">{t("No vacant rooms")}</option>}
             {vacant.map((r) => (
               <option key={r.id} value={r.id}>
-                Room {r.id}, {r.type}, {r.building}, floor {r.floor}
+                {t("Room {room}, {type}, {building}, floor {floor}", { room: r.id, type: t(r.type).toLowerCase(), building: t(r.building), floor: r.floor })}
               </option>
             ))}
           </Select>
         </Field>
         {vacant.length === 0 && onAddRoom && (
           <p className="rounded bg-primary-soft px-3 py-2 text-[13px] text-primary-hover">
-            {rooms.length === 0 ? "You have not added any rooms yet." : "Every room is taken."}{" "}
+            {rooms.length === 0 ? t("You have not added any rooms yet.") : t("Every room is taken.")}{" "}
             <button
               type="button"
               className="font-medium underline"
@@ -175,13 +178,13 @@ export function AssignRoomModal({
                 onAddRoom();
               }}
             >
-              Add a room
+              {t("Add a room")}
             </button>
           </p>
         )}
         <Field
-          label="Checkout date"
-          hint={selected?.contract.end ? `Defaults to contract end (${fmt(selected.contract.end)})` : undefined}
+          label={t("Checkout date")}
+          hint={selected?.contract.end ? t("Defaults to contract end ({date})", { date: fmt(selected.contract.end) }) : undefined}
         >
           <input
             type="date"
@@ -192,7 +195,7 @@ export function AssignRoomModal({
         </Field>
         {selected?.contract.end && effectiveCheckout > selected.contract.end && (
           <p className="rounded-md bg-warning-soft px-3 py-2 text-[13px] text-warning">
-            Checkout is after the contract end date. A housing extension will need to be documented.
+            {t("Checkout is after the contract end date. A housing extension will need to be documented.")}
           </p>
         )}
       </div>
@@ -204,13 +207,16 @@ export function AssignRoomModal({
 
 function SingleRoomModal({ open, onClose, tabs }: { open: boolean; onClose: () => void; tabs: React.ReactNode }) {
   const { rooms, addRoom } = useStore();
+  const { t } = useI18n();
   const buildings = useMemo(() => Array.from(new Set(rooms.map((r) => r.building).filter(Boolean))).sort(), [rooms]);
   const [form, setForm] = useState({
     number: "",
     floor: "1",
     type: "Single" as "Single" | "Double",
-    building: buildings[0] ?? "Staff residence",
+    // Shown translated; saved under the existing building's name when it matches one.
+    building: t(buildings[0] ?? "Staff residence"),
   });
+  const buildingName = (shown: string) => buildings.find((b) => t(b) === shown) ?? shown;
   const [busy, setBusy] = useState(false);
   const [added, setAdded] = useState<string[]>([]);
   const exists = rooms.some((r) => r.id === form.number.trim());
@@ -219,7 +225,7 @@ function SingleRoomModal({ open, onClose, tabs }: { open: boolean; onClose: () =
     const number = form.number.trim();
     if (!number || exists) return;
     setBusy(true);
-    const ok = await addRoom({ number, floor: Number(form.floor) || 0, type: form.type, building: form.building.trim() || "Staff residence" });
+    const ok = await addRoom({ number, floor: Number(form.floor) || 0, type: form.type, building: buildingName(form.building.trim()) || "Staff residence" });
     setBusy(false);
     if (!ok) return;
     if (!another) return onClose();
@@ -233,16 +239,16 @@ function SingleRoomModal({ open, onClose, tabs }: { open: boolean; onClose: () =
     <Modal
       open={open}
       onClose={onClose}
-      title="Add room"
-      description="Add a staff room so you can assign employees to it."
+      title={t("Add room")}
+      description={t("Add a staff room so you can assign employees to it.")}
       footer={
         <>
-          <Button onClick={onClose}>{added.length ? "Done" : "Cancel"}</Button>
+          <Button onClick={onClose}>{added.length ? t("Done") : t("Cancel")}</Button>
           <Button disabled={busy || !form.number.trim() || exists} onClick={() => save(true)}>
-            Save and add another
+            {t("Save and add another")}
           </Button>
           <Button variant="primary" disabled={busy || !form.number.trim() || exists} onClick={() => save(false)}>
-            {busy ? "Saving" : "Add room"}
+            {busy ? t("Saving") : t("Add room")}
           </Button>
         </>
       }
@@ -256,42 +262,42 @@ function SingleRoomModal({ open, onClose, tabs }: { open: boolean; onClose: () =
         }}
       >
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Room number">
+          <Field label={t("Room number")}>
             <input
               autoFocus
               required
               className={inputClass}
               value={form.number}
               onChange={(e) => setForm({ ...form, number: e.target.value })}
-              placeholder="e.g. 204"
+              placeholder={t("e.g. {example}", { example: "204" })}
             />
           </Field>
-          <Field label="Floor">
+          <Field label={t("Floor")}>
             <input type="number" className={inputClass} value={form.floor} onChange={(e) => setForm({ ...form, floor: e.target.value })} />
           </Field>
-          <Field label="Type">
+          <Field label={t("Type")}>
             <Select value={form.type} onChange={(v) => setForm({ ...form, type: v as "Single" | "Double" })}>
-              <option>Single</option>
-              <option>Double</option>
+              <option value="Single">{t("Single")}</option>
+              <option value="Double">{t("Double")}</option>
             </Select>
           </Field>
-          <Field label="Building">
+          <Field label={t("Building")}>
             <input
               list="room-buildings"
               className={inputClass}
               value={form.building}
               onChange={(e) => setForm({ ...form, building: e.target.value })}
-              placeholder="e.g. Bloc A"
+              placeholder={t("e.g. {example}", { example: "Bloc A" })}
             />
             <datalist id="room-buildings">
               {buildings.map((b) => (
-                <option key={b} value={b} />
+                <option key={b} value={t(b)} />
               ))}
             </datalist>
           </Field>
         </div>
-        {exists && <p className="text-[13px] text-danger">Room {form.number.trim()} already exists.</p>}
-        {added.length > 0 && <p className="text-[13px] text-success">Added: room {added.join(", ")}</p>}
+        {exists && <p className="text-[13px] text-danger">{t("Room {room} already exists.", { room: form.number.trim() })}</p>}
+        {added.length > 0 && <p className="text-[13px] text-success">{t("Added: room {rooms}", { rooms: added.join(", ") })}</p>}
         <button type="submit" hidden />
       </form>
     </Modal>
@@ -313,6 +319,7 @@ export function planRooms(p: { building: string; floorFrom: number; floorTo: num
 
 export function BulkRoomsForm({ onSaved, footer }: { onSaved?: () => void; footer?: (save: React.ReactNode) => React.ReactNode }) {
   const { rooms, addRooms } = useStore();
+  const { t, rich } = useI18n();
   const [f, setF] = useState({ building: "", floorFrom: "1", floorTo: "2", roomFrom: "1", roomTo: "10", type: "Single" as "Single" | "Double" });
   const [busy, setBusy] = useState(false);
   const plan = planRooms({
@@ -339,50 +346,59 @@ export function BulkRoomsForm({ onSaved, footer }: { onSaved?: () => void; foote
         if (ok) onSaved?.();
       }}
     >
-      {busy ? "Adding" : `Add ${plan.length - clashes} rooms`}
+      {busy ? t("Adding") : t("Add {n} rooms", { n: plan.length - clashes })}
     </Button>
   );
 
   return (
     <div className="space-y-4">
-      <Field label="Building">
-        <input className={inputClass} value={f.building} onChange={(e) => setF({ ...f, building: e.target.value })} placeholder="e.g. Bloc A" />
+      <Field label={t("Building")}>
+        <input
+          className={inputClass}
+          value={f.building}
+          onChange={(e) => setF({ ...f, building: e.target.value })}
+          placeholder={t("e.g. {example}", { example: "Bloc A" })}
+        />
       </Field>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-        <Field label="Floors from">
+        <Field label={t("Floors from")}>
           <input type="number" min={0} className={inputClass} value={f.floorFrom} onChange={num("floorFrom")} />
         </Field>
-        <Field label="to">
+        <Field label={t("to")}>
           <input type="number" min={0} className={inputClass} value={f.floorTo} onChange={num("floorTo")} />
         </Field>
-        <Field label="Rooms per floor from">
+        <Field label={t("Rooms per floor from")}>
           <input type="number" min={0} className={inputClass} value={f.roomFrom} onChange={num("roomFrom")} />
         </Field>
-        <Field label="to">
+        <Field label={t("to")}>
           <input type="number" min={0} className={inputClass} value={f.roomTo} onChange={num("roomTo")} />
         </Field>
-        <Field label="Type">
+        <Field label={t("Type")}>
           <Select value={f.type} onChange={(v) => setF({ ...f, type: v as "Single" | "Double" })}>
-            <option>Single</option>
-            <option>Double</option>
+            <option value="Single">{t("Single")}</option>
+            <option value="Double">{t("Double")}</option>
           </Select>
         </Field>
       </div>
       <div className="rounded bg-sunken px-3 py-2.5 text-[13px] text-body">
         {tooMany ? (
-          <span className="text-danger">That is more than 500 rooms. Add one building at a time.</span>
+          <span className="text-danger">{t("That is more than 500 rooms. Add one building at a time.")}</span>
         ) : plan.length === 0 ? (
-          <span className="text-muted">Check the floor and room ranges.</span>
+          <span className="text-muted">{t("Check the floor and room ranges.")}</span>
         ) : (
           <>
-            Creates <span className="font-semibold">{plan.length} rooms</span>:{" "}
+            {rich("Creates {rooms}:", {
+              rooms: <span className="font-semibold">{t("{n} rooms", { n: plan.length })}</span>,
+            })}{" "}
             {Array.from(new Set(plan.map((r) => r.floor)))
               .map((fl) => {
                 const onFloor = plan.filter((r) => r.floor === fl);
                 return `${onFloor[0].number}–${onFloor[onFloor.length - 1].number}`;
               })
               .join(", ")}
-            {clashes > 0 && <span className="text-warning"> ({clashes} already exist and will be skipped)</span>}
+            {clashes > 0 && (
+              <span className="text-warning"> ({t("{n} already exist and will be skipped", { n: clashes })})</span>
+            )}
           </>
         )}
       </div>
@@ -393,6 +409,7 @@ export function BulkRoomsForm({ onSaved, footer }: { onSaved?: () => void; foote
 
 export function AddRoomModal({ open, onClose, initialMode = "one" }: { open: boolean; onClose: () => void; initialMode?: "one" | "many" }) {
   const [mode, setMode] = useState<"one" | "many">(initialMode);
+  const { t } = useI18n();
   const tabs = (
     <div className="mb-4 inline-flex rounded border border-line-strong p-0.5 text-[13px]">
       {(["one", "many"] as const).map((m) => (
@@ -402,14 +419,14 @@ export function AddRoomModal({ open, onClose, initialMode = "one" }: { open: boo
           onClick={() => setMode(m)}
           className={`rounded-[3px] px-3 py-1.5 font-medium ${mode === m ? "bg-navy text-white" : "text-body hover:bg-sunken"}`}
         >
-          {m === "one" ? "One room" : "Several rooms"}
+          {m === "one" ? t("One room") : t("Several rooms")}
         </button>
       ))}
     </div>
   );
   if (mode === "one") return <SingleRoomModal open={open} onClose={onClose} tabs={tabs} />;
   return (
-    <Modal open={open} onClose={onClose} title="Add rooms" description="Create a whole floor or building at once." width={620}>
+    <Modal open={open} onClose={onClose} title={t("Add rooms")} description={t("Create a whole floor or building at once.")} width={620}>
       {tabs}
       <BulkRoomsForm onSaved={onClose} />
     </Modal>
@@ -439,6 +456,7 @@ export function UploadDocumentModal({
   type?: DocType | null;
 }) {
   const { employees, documents, uploadDocument } = useStore();
+  const { t } = useI18n();
   const [emp, setEmp] = useState(employeeId ?? employees[0]?.id ?? "");
   const [docType, setDocType] = useState<DocType>(type ?? "Employment contract");
   const [expiresInput, setExpires] = useState<string | null>(null);
@@ -461,10 +479,10 @@ export function UploadDocumentModal({
     <Modal
       open={open}
       onClose={onClose}
-      title="Upload document"
+      title={t("Upload document")}
       footer={
         <>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>{t("Cancel")}</Button>
           <Button
             variant="primary"
             disabled={!emp || !file || tooBig || busy}
@@ -475,13 +493,13 @@ export function UploadDocumentModal({
               onClose();
             }}
           >
-            {busy ? "Uploading" : "Upload"}
+            {busy ? t("Uploading") : t("Upload")}
           </Button>
         </>
       }
     >
       <div className="space-y-4">
-        <Field label="Employee">
+        <Field label={t("Employee")}>
           <Select value={emp} onChange={setEmp}>
             {employees.map((e) => (
               <option key={e.id} value={e.id}>
@@ -490,7 +508,7 @@ export function UploadDocumentModal({
             ))}
           </Select>
         </Field>
-        <Field label="Document type">
+        <Field label={t("Document type")}>
           <Select
             value={docType}
             onChange={(v) => {
@@ -498,19 +516,21 @@ export function UploadDocumentModal({
               setExpires(null);
             }}
           >
-            {DOC_TYPES.map((t) => (
-              <option key={t}>{t}</option>
+            {DOC_TYPES.map((d) => (
+              <option key={d} value={d}>
+                {t(d)}
+              </option>
             ))}
           </Select>
         </Field>
-        <Field label="Expiry date" hint="Leave empty if the document does not expire.">
+        <Field label={t("Expiry date")} hint={t("Leave empty if the document does not expire.")}>
           <input type="date" className={inputClass} value={expires} onChange={(e) => setExpires(e.target.value)} />
         </Field>
         <label className="flex cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-line-strong bg-sunken px-4 py-6 text-center hover:border-primary">
           <Upload size={20} className="text-muted" />
-          <span className="mt-2 text-[13px] font-medium text-ink">{file?.name ?? "Choose a file"}</span>
+          <span className="mt-2 text-[13px] font-medium text-ink">{file?.name ?? t("Choose a file")}</span>
           <span className={tooBig ? "text-[12px] text-danger" : "text-[12px] text-muted"}>
-            {tooBig ? "This file is larger than 10 MB" : "PDF, JPG or PNG up to 10 MB"}
+            {tooBig ? t("This file is larger than 10 MB") : t("PDF, JPG or PNG up to 10 MB")}
           </span>
           <input
             type="file"
@@ -520,7 +540,7 @@ export function UploadDocumentModal({
           />
         </label>
         {docType === "Employment contract" && (
-          <p className="text-[12px] text-muted">Uploading the signed contract marks the contract as signed.</p>
+          <p className="text-[12px] text-muted">{t("Uploading the signed contract marks the contract as signed.")}</p>
         )}
       </div>
     </Modal>
@@ -535,6 +555,7 @@ const DEPARTMENTS: Department[] = [
 
 export function AddEmployeeModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { addEmployee, rooms, employees } = useStore();
+  const { t, fmt } = useI18n();
   const vacant = rooms.filter((r) => roomStatus(r, employees).status === "vacant");
   const [form, setForm] = useState({
     name: "",
@@ -563,11 +584,11 @@ export function AddEmployeeModal({ open, onClose }: { open: boolean; onClose: ()
       open={open}
       onClose={onClose}
       width={600}
-      title="Add employee"
-      description="Adds the person, their contract and, if they live on site, their room."
+      title={t("Add employee")}
+      description={t("Adds the person, their contract and, if they live on site, their room.")}
       footer={
         <>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>{t("Cancel")}</Button>
           <Button
             variant="primary"
             disabled={!valid || busy}
@@ -593,57 +614,77 @@ export function AddEmployeeModal({ open, onClose }: { open: boolean; onClose: ()
               onClose();
             }}
           >
-            Add employee
+            {t("Add employee")}
           </Button>
         </>
       }
     >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className={section}>Person</div>
-        <Field label="Full name">
-          <input className={inputClass} value={form.name} onChange={(e) => set("name")(e.target.value)} placeholder="e.g. Berta Camps" />
+        <div className={section}>{t("Person")}</div>
+        <Field label={t("Full name")}>
+          <input
+            className={inputClass}
+            value={form.name}
+            onChange={(e) => set("name")(e.target.value)}
+            placeholder={t("e.g. {example}", { example: "Berta Camps" })}
+          />
         </Field>
-        <Field label="Job title">
-          <input className={inputClass} value={form.role} onChange={(e) => set("role")(e.target.value)} placeholder="e.g. Room attendant" />
+        <Field label={t("Job title")}>
+          <input
+            className={inputClass}
+            value={form.role}
+            onChange={(e) => set("role")(e.target.value)}
+            placeholder={t("e.g. {example}", { example: t("Room attendant") })}
+          />
         </Field>
-        <Field label="Department">
+        <Field label={t("Department")}>
           <Select value={form.department} onChange={set("department")}>
             {DEPARTMENTS.map((d) => (
-              <option key={d}>{d}</option>
+              <option key={d} value={d}>
+                {t(d)}
+              </option>
             ))}
           </Select>
         </Field>
-        <Field label="Nationality">
-          <input className={inputClass} value={form.nationality} onChange={(e) => set("nationality")(e.target.value)} placeholder="e.g. Spanish" />
+        <Field label={t("Nationality")}>
+          <input
+            className={inputClass}
+            value={form.nationality}
+            onChange={(e) => set("nationality")(e.target.value)}
+            placeholder={t("e.g. {example}", { example: t("Spanish") })}
+          />
         </Field>
-        <Field label="Email">
+        <Field label={t("Email")}>
           <input className={inputClass} value={form.email} onChange={(e) => set("email")(e.target.value)} />
         </Field>
-        <Field label="Phone">
+        <Field label={t("Phone")}>
           <input className={inputClass} value={form.phone} onChange={(e) => set("phone")(e.target.value)} />
         </Field>
 
-        <div className={section}>Contract</div>
-        <Field label="Contract type">
+        <div className={section}>{t("Contract")}</div>
+        <Field label={t("Contract type")}>
           <Select value={form.type} onChange={set("type")}>
-            <option>Seasonal</option>
-            <option>Part-time</option>
-            <option>Fixed-term</option>
-            <option>Indefinite</option>
+            {(["Seasonal", "Part-time", "Fixed-term", "Indefinite"] as const).map((c) => (
+              <option key={c} value={c}>
+                {t(c)}
+              </option>
+            ))}
           </Select>
         </Field>
-        <Field label="Hours per week">
+        <Field label={t("Hours per week")}>
           <input type="number" className={inputClass} value={form.hours} onChange={(e) => set("hours")(e.target.value)} />
         </Field>
-        <Field label="Start date">
+        <Field label={t("Start date")}>
           <input type="date" className={inputClass} value={form.start} onChange={(e) => set("start")(e.target.value)} />
         </Field>
         {form.type !== "Indefinite" && (
-          <Field label="End date">
+          <Field label={t("End date")}>
             <input type="date" className={inputClass} value={form.end} onChange={(e) => set("end")(e.target.value)} />
           </Field>
         )}
-        {!datesValid && <p className="col-span-full -mt-2 text-[13px] text-danger">The end date must be after the start date.</p>}
+        {!datesValid && (
+          <p className="col-span-full -mt-2 text-[13px] text-danger">{t("The end date must be after the start date.")}</p>
+        )}
         <label className="col-span-full flex items-center gap-2.5 text-[13px] text-body">
           <input
             type="checkbox"
@@ -651,16 +692,25 @@ export function AddEmployeeModal({ open, onClose }: { open: boolean; onClose: ()
             checked={form.signed}
             onChange={(e) => setForm((f) => ({ ...f, signed: e.target.checked }))}
           />
-          The contract is already signed by both parties
+          {t("The contract is already signed by both parties")}
         </label>
 
-        <div className={section}>Staff housing</div>
-        <Field label="Room" hint={form.room ? `Checkout is set to the contract end${end ? ` (${fmt(end)})` : ""}.` : "Leave empty if they live off site."}>
+        <div className={section}>{t("Staff housing")}</div>
+        <Field
+          label={t("Room")}
+          hint={
+            form.room
+              ? end
+                ? t("Checkout is set to the contract end ({date}).", { date: fmt(end) })
+                : t("Checkout is set to the contract end.")
+              : t("Leave empty if they live off site.")
+          }
+        >
           <Select value={form.room} onChange={set("room")}>
-            <option value="">No room</option>
+            <option value="">{t("No room")}</option>
             {vacant.map((r) => (
               <option key={r.id} value={r.id}>
-                Room {r.id}, {r.type.toLowerCase()}, floor {r.floor}
+                {t("Room {room}, {type}, floor {floor}", { room: r.id, type: t(r.type).toLowerCase(), floor: r.floor })}
               </option>
             ))}
           </Select>
