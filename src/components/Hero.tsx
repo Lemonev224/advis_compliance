@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
+import { HeroLines } from "./HeroLines";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -49,29 +49,30 @@ export function Hero() {
       id="top"
       className="relative z-0 overflow-hidden bg-white pt-[96px] min-h-[640px] lg:min-h-[760px] flex items-center"
     >
-      {/* full-bleed wave — sized off its own aspect ratio (869x1200) instead of
-          object-cover, so it never gets crushed down to a thin cropped sliver.
-          w-[clamp(...)] scales it fluidly with the viewport at every breakpoint.
-          `sizes` tells Next.js the real rendered width so it serves a
-          correctly-sized source instead of upscaling a smaller one (= blur).
-          `quality={100}` avoids compression softness on the gradient. */}
+      {/* vector line-field background — crisp at every size, brand colours */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <Image
-          src="/blue-wave3.png"
-          alt=""
-          width={1791}
-          height={2400}
-          priority
-          quality={100}
-          sizes="(max-width: 750px) 600px, (max-width: 1500px) 80vw, 1200px"
-          className="absolute right-[-40%] md:right-[0%] top-[65%] md:top-1/2 -translate-y-1/2 w-[clamp(800px,140vw,1200px)] md:w-[clamp(600px,80vw,1200px)] h-auto max-w-none select-none opacity-25 md:opacity-100"
-        />
+        {/* phones/tablets: the card stacks under the copy and would hide the ribbon,
+            so it sits across the top half at reduced strength behind the headline.
+            Below lg the SVG keeps its own 4:3 shape, so nothing gets cropped.
+            Desktop: full-bleed, with the left fade keeping the copy clear. */}
+        <HeroLines className="top-[-2%] left-[-50%] w-[200%] h-auto aspect-[4/3] opacity-50 sm:left-[-30%] sm:w-[160%] sm:opacity-60 lg:top-0 lg:left-0 lg:w-full lg:h-full lg:aspect-auto lg:opacity-100" />
       </div>
 
-      {/* light fade on the left only, just enough for the copy to stay legible */}
+      {/* small screens: soften the lines right behind the copy, and fade the
+          ribbon out before it reaches the stacked card */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 -z-10 lg:hidden"
+        style={{
+          background:
+            "radial-gradient(ellipse 85% 22% at 30% 30%, rgba(255,255,255,0.75), rgba(255,255,255,0) 100%), linear-gradient(180deg, rgba(255,255,255,0) 35%, #ffffff 58%)",
+        }}
+      />
+
+      {/* desktop: light fade on the left only, just enough for the copy to stay legible */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 hidden lg:block"
         style={{
           background:
             "linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.85) 22%, rgba(255,255,255,0.35) 42%, rgba(255,255,255,0) 60%)",
