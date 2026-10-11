@@ -40,10 +40,20 @@ export async function generateMetadata({
       "andorra startup",
     ],
     authors: [{ name: "Advisorly" }],
+    // Tab icons are cropped tight to the logo mark so it fills the tab.
+    // icon.svg stays sharp at any size, favicon.ico covers older browsers,
+    // apple-icon.png has a white background because iOS fills transparency with black.
+    // The ?v= tag makes browsers fetch these fresh instead of showing an old
+    // cached favicon from another project on the same address; bump it when
+    // the icon changes.
     icons: {
-      icon: "/icon.png",
-      shortcut: "/icon.png",
-      apple: "/icon.png",
+      icon: [
+        { url: "/icon.svg?v=2", type: "image/svg+xml" },
+        { url: "/favicon.ico?v=2", sizes: "48x48" },
+        { url: "/icon-512.png?v=2", type: "image/png", sizes: "512x512" },
+      ],
+      shortcut: "/favicon.ico?v=2",
+      apple: [{ url: "/apple-icon.png?v=2", type: "image/png", sizes: "180x180" }],
     },
     alternates: {
       canonical: url,
