@@ -109,6 +109,12 @@ return (
         {/* pill button, ghost "Sign in" + solid dark "Get all-access" style */}
 
         <Link
+          href="/demo"
+          className="inline-flex items-center justify-center rounded-full border border-navy/15 px-5 py-2.5 text-[14px] font-semibold text-navy hover:bg-pale transition-colors"
+        >
+          {t("tryDemo")}
+        </Link>
+        <Link
           href="/#contact"
           className="inline-flex items-center justify-center rounded-full bg-navy px-5 py-2.5 text-[14px] font-semibold text-white hover:bg-navy/90 transition-colors"
         >
@@ -169,9 +175,17 @@ return (
             </div>
 
             <Link
+              href="/demo"
+              onClick={() => setOpen(false)}
+              className="mt-5 inline-flex items-center justify-center rounded-full border border-navy/15 px-5 py-3 text-[15px] font-semibold text-navy"
+            >
+              {t("tryDemo")}
+            </Link>
+
+            <Link
               href="/#contact"
               onClick={() => setOpen(false)}
-              className="mt-5 inline-flex items-center justify-center rounded-full bg-navy px-5 py-3 text-[15px] font-semibold text-white"
+              className="mt-2 inline-flex items-center justify-center rounded-full bg-navy px-5 py-3 text-[15px] font-semibold text-white"
             >
               {t("contact")}
             </Link>

@@ -1,0 +1,279 @@
+"use client";
+
+import Link from "next/link";
+import { useActionState, useEffect, useMemo, useState } from "react";
+import { Upload, UserPlus, Columns3, Send, MapPin, Download, X, ChevronLeft, ChevronRight, ArrowUpDown, FileSpreadsheet } from "lucide-react";
+import { Segmented, StatusPill, Avatar, Progress, Fact, cx } from "@/compliance/components/ui";
+import { WorkforceHeader } from "@/compliance/components/workforce/WorkforceHeader";
+import { Modal, ModalFooter, ResultNotice, useAfterSuccess } from "@/compliance/components/Modal";
+import { createWorker, importWorkersCsv, assignToSite } from "@/app/compliance-demo/workers/actions";
+import { SoonButton } from "@/compliance/components/Toast";
+import { downloadCsv } from "@/compliance/components/CsvButton";
+import type { PeopleData, PersonRow } from "@/compliance/lib/db/views";
+
+const PAGE = 10;
+const NATIONALITIES = ["Andorra", "Spain", "France", "Portugal", "Morocco", "Other"];
+
+type SortKey = "name" | "ends";
+
+export function PeopleView({ data }: { data: PeopleData }) {
+  const { workers } = data;
+  const [view, setView] = useState("all");
+  const [selId, setSelId] = useState<string | null>(workers.find((w) => w.status === "warn")?.id ?? workers[0]?.id ?? null);
+  const [checked, setChecked] = useState<Set<string>>(new Set());
+  const [q, setQ] = useState("");
+  const [company, setCompany] = useState("");
+  const [nat, setNat] = useState("");
+  const [status, setStatus] = useState("");
+  const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: "name", dir: 1 });
+  const [page, setPage] = useState(0);
+  const [dialog, setDialog] = useState<null | "add" | "csv" | "assign">(null);
+
+  const views = useMemo(() => [
+    { id: "all", label: "All workers", count: workers.length },
+    { id: "warn", label: "Expiring", count: workers.filter((w) => w.status === "warn").length },
+    { id: "bad", label: "Blocked & pending", count: workers.filter((w) => w.status === "bad" || w.status === "pending").length },
+    { id: "foreign", label: "Foreign company workers", count: workers.filter((w) => isForeign(w)).length },
+  ], [workers]);
+
+  const rows = useMemo(() => {
+    const endKey = (w: PersonRow) => (w.ends === "Permanent" ? Infinity : Date.parse(w.ends) || Infinity);
+    return workers
+      .filter((r) => view === "all" || (view === "warn" && r.status === "warn") || (view === "bad" && (r.status === "bad" || r.status === "pending")) || (view === "foreign" && isForeign(r)))
+      .filter((r) => !q || (r.name + " " + r.role).toLowerCase().includes(q.toLowerCase()))
+      .filter((r) => !company || r.companyId === company)
+      .filter((r) => !nat || (nat === "Other" ? !NATIONALITIES.slice(0, -1).includes(r.nat) : r.nat === nat))
+      .filter((r) => !status || r.status === status)
+      .sort((a, b) => sort.dir * (sort.key === "name" ? a.name.localeCompare(b.name) : endKey(a) - endKey(b)));
+  }, [workers, view, q, company, nat, status, sort]);
+
+  useEffect(() => setPage(0), [view, q, company, nat, status]);
+  const pages = Math.max(1, Math.ceil(rows.length / PAGE));
+  const pageRows = rows.slice(page * PAGE, page * PAGE + PAGE);
+
+  const s = workers.find((w) => w.id === selId) ?? rows[0];
+  const [have, need] = (s?.docs ?? "0/0").split("/").map(Number);
+  const toggle = (id: string) => setChecked((c) => { const n = new Set(c); if (n.has(id)) n.delete(id); else n.add(id); return n; });
+  const allOn = pageRows.length > 0 && pageRows.every((r) => checked.has(r.id));
+  const sortBtn = (key: SortKey, label: string) => (
+    <button onClick={() => setSort((p) => ({ key, dir: p.key === key ? (p.dir === 1 ? -1 : 1) : 1 }))} className={cx("inline-flex items-center gap-1 font-medium", sort.key === key && "text-ink")}>
+      {label} <ArrowUpDown className="size-3" aria-hidden />
+    </button>
+  );
+
+  return (
+    <>
+      <WorkforceHeader
+        counts={{ people: workers.length }}
+        description={`${workers.length} people across ${data.companies.length} compan${data.companies.length === 1 ? "y" : "ies"}`}
+        actions={data.canEdit && <>
+          <button className="btn-secondary" onClick={() => setDialog("csv")}><Upload className="size-4" aria-hidden />Import CSV</button>
+          <button className="btn-primary" onClick={() => setDialog("add")}><UserPlus className="size-4" aria-hidden />Add worker</button>
+        </>}
+      />
+
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_300px] 2xl:grid-cols-[minmax(0,1fr)_340px] items-start">
+        <section aria-label="Workers table" className="card min-w-0">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-3.5 pt-3 pb-2.5">
+            <Segmented label="Saved views" active={view} onSelect={setView} items={views.map((v) => ({ id: v.id, label: `${v.label} · ${v.count}` }))} />
+          </div>
+          <div className="flex flex-wrap items-center gap-2 border-b border-line px-3.5 py-3">
+            <label htmlFor="w-search" className="sr-only">Filter workers</label>
+            <input id="w-search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Filter by name or role" className="input-dense min-w-[160px] flex-1 basis-[160px]" />
+            <select aria-label="Company" className="input-dense" value={company} onChange={(e) => setCompany(e.target.value)}>
+              <option value="">All companies</option>
+              {data.companies.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+            <select aria-label="Nationality" className="input-dense" value={nat} onChange={(e) => setNat(e.target.value)}>
+              <option value="">All nationalities</option>
+              {NATIONALITIES.map((n) => <option key={n}>{n}</option>)}
+            </select>
+            <select aria-label="Status" className="input-dense" value={status} onChange={(e) => setStatus(e.target.value)}>
+              <option value="">Any status</option><option value="ok">Compliant</option><option value="warn">Expiring</option><option value="bad">Blocked</option><option value="pending">Pending</option>
+            </select>
+            <SoonButton feature="columns" className="btn-secondary btn-dense font-normal"><Columns3 className="size-4" aria-hidden />Columns</SoonButton>
+          </div>
+
+          {checked.size > 0 && (
+            <div className="flex flex-wrap items-center gap-3 border-b border-[#D3E6E8] bg-accent-tint px-3.5 py-2 text-sm">
+              <span className="font-medium">{checked.size} selected</span>
+              <SoonButton feature="reminders" className="btn-row btn-secondary border-accent-ring"><Send className="size-3.5" aria-hidden />Send reminder</SoonButton>
+              {data.canEdit && <button className="btn-row btn-secondary border-accent-ring" onClick={() => setDialog("assign")}><MapPin className="size-3.5" aria-hidden />Assign to site</button>}
+              <button className="btn-row btn-secondary border-accent-ring" onClick={() => downloadCsv("workers.csv", workers.filter((w) => checked.has(w.id)).map((w) => ({ Name: w.name, Role: w.role, Company: w.company, Nationality: w.nat, Site: w.site, "Contract ends": w.ends, Documents: w.docs, Status: { ok: "Compliant", warn: "Expiring", bad: "Blocked", pending: "Pending" }[w.status], "Needs attention": w.note })))}><Download className="size-3.5" aria-hidden />Export</button>
+              <button onClick={() => setChecked(new Set())} className="ml-auto inline-flex items-center gap-1 text-ink-soft hover:text-ink"><X className="size-3.5" aria-hidden />Clear</button>
+            </div>
+          )}
+
+          <div className="overflow-x-auto scroll-thin">
+            <table className="tbl tbl-hover min-w-[760px]">
+              <thead>
+                <tr>
+                  <th className="w-7"><input type="checkbox" aria-label="Select all on this page" checked={allOn} onChange={() => setChecked((c) => { const n = new Set(c); pageRows.forEach((r) => (allOn ? n.delete(r.id) : n.add(r.id))); return n; })} className="accent-accent" /></th>
+                  <th>{sortBtn("name", "Worker")}</th>
+                  <th>Company</th><th className="hidden 2xl:table-cell">Nationality</th><th>Site</th>
+                  <th>{sortBtn("ends", "Contract ends")}</th>
+                  <th>Docs</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pageRows.map((w) => (
+                  <tr key={w.id} onClick={() => setSelId(w.id)} className={cx("cursor-pointer", w.id === s?.id && "bg-accent-tint!")}>
+                    <td onClick={(e) => e.stopPropagation()}><input type="checkbox" aria-label={`Select ${w.name}`} checked={checked.has(w.id)} onChange={() => toggle(w.id)} className="accent-accent" /></td>
+                    <td>
+                      <div className="flex items-center gap-2.5">
+                        <Avatar name={w.name} />
+                        <div><div className="font-medium">{w.name}</div><div className="text-xs text-ink-muted">{w.role}</div></div>
+                      </div>
+                    </td>
+                    <td>{w.company}</td>
+                    <td className="hidden 2xl:table-cell">{w.nat}</td>
+                    <td className={cx(w.site === "Unassigned" && "text-ink-muted")}>{w.site}</td>
+                    <td className="num text-xs">{w.ends}</td>
+                    <td className="num text-xs">{w.docs}</td>
+                    <td><StatusPill status={w.status} /></td>
+                  </tr>
+                ))}
+                {pageRows.length === 0 && (
+                  <tr><td colSpan={8} className="py-12 text-center text-ink-muted">
+                    {workers.length === 0 ? <>No workers yet. {data.canEdit && <button className="font-medium text-accent" onClick={() => setDialog("add")}>Add the first one</button>}</> : "No workers match these filters."}
+                  </td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line-row px-3.5 py-2.5 text-sm text-ink-muted">
+            <span>{rows.length ? `Showing ${page * PAGE + 1}–${Math.min(rows.length, page * PAGE + PAGE)} of ${rows.length}` : "0 workers"}</span>
+            {pages > 1 && (
+              <div className="flex items-center gap-1.5">
+                <button className="btn-secondary btn-row" aria-label="Previous page" disabled={page === 0} onClick={() => setPage(page - 1)}><ChevronLeft className="size-4" aria-hidden /></button>
+                {Array.from({ length: pages }, (_, p) => (
+                  <button key={p} onClick={() => setPage(p)} aria-current={p === page ? "page" : undefined} className={cx("btn-row btn min-w-8 px-2", p === page ? "bg-accent-tint text-accent-hover font-semibold" : "text-ink-soft hover:bg-surface-muted")}>{p + 1}</button>
+                ))}
+                <button className="btn-secondary btn-row" aria-label="Next page" disabled={page === pages - 1} onClick={() => setPage(page + 1)}><ChevronRight className="size-4" aria-hidden /></button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {s && (
+          <aside aria-label="Selected worker" className="card min-w-0 xl:sticky xl:top-[88px]">
+            <div className="flex items-center gap-3 border-b border-line p-4">
+              <Avatar name={s.name} size={44} />
+              <div className="min-w-0 flex-1">
+                <div className="text-[16px] font-semibold">{s.name}</div>
+                <div className="truncate text-sm text-ink-muted">{s.role || "—"} · {s.company}</div>
+              </div>
+              <StatusPill status={s.status} />
+            </div>
+            <dl className="grid grid-cols-2 gap-3 border-b border-line px-4 py-3.5">
+              <Fact label="Site">{s.site}</Fact>
+              <Fact label="Nationality">{s.nat}</Fact>
+              <Fact label="Permit">{s.permit}</Fact>
+              <Fact label="Contract ends" mono>{s.ends}</Fact>
+            </dl>
+            <div className="border-b border-line px-4 py-3.5">
+              <div className="mb-1.5 text-xs text-ink-muted">What needs attention</div>
+              <div className="font-medium">{s.note}</div>
+            </div>
+            <div className="border-b border-line px-4 py-3.5">
+              <div className="mb-1.5 flex justify-between text-xs text-ink-muted"><span>Required documents</span><span className="num">{s.docs}</span></div>
+              <Progress value={need ? Math.round((have / need) * 100) : 0} />
+            </div>
+            <div className="flex flex-wrap gap-2 p-4">
+              <Link href={`/compliance-demo/workers/${s.id}`} className="btn-primary">Open full profile</Link>
+              <SoonButton feature="reminders" className="btn-secondary">Send reminder</SoonButton>
+            </div>
+          </aside>
+        )}
+      </div>
+
+      {dialog === "add" && <AddWorkerDialog open onClose={() => setDialog(null)} data={data} />}
+      {dialog === "csv" && <ImportCsvDialog open onClose={() => setDialog(null)} />}
+      {dialog === "assign" && <AssignDialog onClose={() => setDialog(null)} ids={[...checked]} sites={data.sites} onDone={() => setChecked(new Set())} />}
+    </>
+  );
+}
+
+const isForeign = (w: PersonRow) => w.foreignEmployer;
+
+function AddWorkerDialog({ open, onClose, data }: { open: boolean; onClose: () => void; data: PeopleData }) {
+  const [result, action, pending] = useActionState(createWorker, null);
+  useAfterSuccess(result, onClose);
+  return (
+    <Modal open={open} onClose={onClose} title="Add worker" description="Required documents are worked out from their nationality and employer.">
+      <form action={action}>
+        <div className="grid gap-4 px-5 py-4 sm:grid-cols-2">
+          <div className="sm:col-span-2"><label htmlFor="aw-name" className="label">Full name</label><input id="aw-name" name="full_name" required autoFocus className="input w-full" /></div>
+          <div><label htmlFor="aw-title" className="label">Role</label><input id="aw-title" name="job_title" placeholder="e.g. Electrician" className="input w-full" /></div>
+          <div>
+            <label htmlFor="aw-nat" className="label">Nationality</label>
+            <input id="aw-nat" name="nationality" required list="aw-nat-list" placeholder="e.g. Portugal" className="input w-full" />
+            <datalist id="aw-nat-list">{NATIONALITIES.slice(0, -1).map((n) => <option key={n} value={n} />)}</datalist>
+          </div>
+          <div>
+            <label htmlFor="aw-company" className="label">Employer</label>
+            <select id="aw-company" name="company_id" required className="input w-full" defaultValue="">
+              <option value="" disabled>Choose…</option>
+              {data.companies.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="aw-site" className="label">Site</label>
+            <select id="aw-site" name="site_id" className="input w-full" defaultValue="">
+              <option value="">Not assigned yet</option>
+              {data.sites.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+            </select>
+          </div>
+          {result && <div className="sm:col-span-2"><ResultNotice result={result} /></div>}
+        </div>
+        <ModalFooter onCancel={onClose} submitLabel="Add worker" pending={pending} />
+      </form>
+    </Modal>
+  );
+}
+
+function ImportCsvDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [result, action, pending] = useActionState(importWorkersCsv, null);
+  useAfterSuccess(result, onClose, 1600);
+  const template = "data:text/csv;charset=utf-8," + encodeURIComponent("name,role,nationality,company,site\nMaria Pons,Electrician,Andorra,Grupo Heracles,Encamp\n");
+  return (
+    <Modal open={open} onClose={onClose} title="Import workers from CSV" description="Columns: name, role, nationality, company, site. Company and site must already exist.">
+      <form action={action}>
+        <div className="flex flex-col gap-3 px-5 py-4">
+          <label className="flex cursor-pointer flex-col items-center gap-1.5 rounded-ctl border border-dashed border-line-dashed bg-surface-subtle px-4 py-6 text-center text-sm text-ink-soft hover:border-accent">
+            <FileSpreadsheet className="size-6 text-ink-muted" aria-hidden />
+            <span>Choose a .csv file</span>
+            <input type="file" name="file" accept=".csv,text/csv" required className="text-xs file:mr-3 file:rounded-ctl file:border file:border-line-input file:bg-surface file:px-3 file:py-1.5 file:text-sm" />
+            <span className="text-xs text-ink-muted">Comma or semicolon separated · up to 1,000 rows</span>
+          </label>
+          <a href={template} download="workers-template.csv" className="text-sm font-medium">Download a template</a>
+          <ResultNotice result={result} />
+        </div>
+        <ModalFooter onCancel={onClose} submitLabel="Import" pending={pending} />
+      </form>
+    </Modal>
+  );
+}
+
+function AssignDialog({ onClose, ids, sites, onDone }: { onClose: () => void; ids: string[]; sites: PeopleData["sites"]; onDone: () => void }) {
+  const [result, action, pending] = useActionState(assignToSite, null);
+  useAfterSuccess(result, () => { onDone(); onClose(); });
+  return (
+    <Modal open onClose={onClose} title={`Assign ${ids.length} worker${ids.length === 1 ? "" : "s"} to a site`} description="Their site access is checked against the rules straight away.">
+      <form action={action}>
+        <input type="hidden" name="ids" value={ids.join(",")} />
+        <div className="flex flex-col gap-3 px-5 py-4">
+          <div>
+            <label htmlFor="as-site" className="label">Site</label>
+            <select id="as-site" name="site_id" className="input w-full" defaultValue={sites[0]?.id ?? ""}>
+              {sites.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}
+              <option value="">Unassign from all sites</option>
+            </select>
+          </div>
+          <ResultNotice result={result} />
+        </div>
+        <ModalFooter onCancel={onClose} submitLabel="Assign" pending={pending} />
+      </form>
+    </Modal>
+  );
+}

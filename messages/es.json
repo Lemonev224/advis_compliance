@@ -6,7 +6,8 @@
     "company": "Empresa",
     "contact": "Contacto",
     "bookDemo": "Reservar una Demo",
-    "shiftcomply": "ShiftComply"
+    "shiftcomply": "ShiftComply",
+    "tryDemo": "Prueba la demo"
   },
   "hero": {
     "eyebrow": "Infraestructura de Cumplimiento",
@@ -389,5 +390,25 @@
       "note": "Todo lo que hay en la demo es inventado. Los cambios que hagas se quedan en tu navegador y no se guardan.",
       "back": "Sobre ShiftComply"
     }
+  },
+  "complianceDemo": {
+    "metaTitle": "Demo de Advisorly",
+    "title": "Prueba la demo de Advisorly",
+    "text": "Explora un grupo constructor de ejemplo con trabajadores en cuatro obras de Andorra. Introduce el código de acceso que te hemos dado.",
+    "label": "Código de acceso",
+    "placeholder": "Tu código",
+    "submit": "Abrir la demo",
+    "checking": "Comprobando",
+    "wrong": "Ese código no es correcto. Revísalo y vuelve a intentarlo.",
+    "failed": "No se ha podido comprobar el código. Vuelve a intentarlo.",
+    "noCode": "¿Aún no tienes código?",
+    "askUs": "Pídenos uno",
+    "points": {
+      "workers": "Trabajadores, contratos y permisos de un grupo y sus subcontratistas",
+      "documents": "Documentos con fechas de caducidad y recordatorios automáticos",
+      "sites": "Acceso a obra que bloquea a los trabajadores con papeles caducados"
+    },
+    "note": "Todo lo que hay en la demo es inventado. Nada de lo que hagas se guarda.",
+    "back": "Volver a Advisorly"
   }
 }

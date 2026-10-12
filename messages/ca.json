@@ -6,7 +6,8 @@
     "company": "Empresa",
     "contact": "Contacte",
     "bookDemo": "Reserva una Demo",
-    "shiftcomply": "ShiftComply"
+    "shiftcomply": "ShiftComply",
+    "tryDemo": "Prova la demo"
   },
   "hero": {
     "eyebrow": "Infraestructura de Compliment",
@@ -389,5 +390,25 @@
       "note": "Tot el que hi ha a la demo és inventat. Els canvis que facis es queden al teu navegador i no es desen.",
       "back": "Sobre ShiftComply"
     }
+  },
+  "complianceDemo": {
+    "metaTitle": "Demo d’Advisorly",
+    "title": "Prova la demo d’Advisorly",
+    "text": "Explora un grup constructor d’exemple amb treballadors a quatre obres d’Andorra. Introdueix el codi d’accés que t’hem donat.",
+    "label": "Codi d’accés",
+    "placeholder": "El teu codi",
+    "submit": "Obre la demo",
+    "checking": "Comprovant",
+    "wrong": "Aquest codi no és correcte. Revisa’l i torna-ho a provar.",
+    "failed": "No s’ha pogut comprovar el codi. Torna-ho a provar.",
+    "noCode": "Encara no tens codi?",
+    "askUs": "Demana’ns-en un",
+    "points": {
+      "workers": "Treballadors, contractes i permisos d’un grup i els seus subcontractistes",
+      "documents": "Documents amb dates de caducitat i recordatoris automàtics",
+      "sites": "Accés a obra que bloqueja els treballadors amb papers caducats"
+    },
+    "note": "Tot el que hi ha a la demo és inventat. Res del que hi facis es desa.",
+    "back": "Torna a Advisorly"
   }
 }

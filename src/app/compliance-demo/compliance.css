@@ -1,0 +1,276 @@
+/* Advisorly compliance demo. Tailwind v4, scoped to the demo's own files.
+   Roboto (variable) is self-hosted in /public/fonts. */
+@import 'tailwindcss' source(none);
+@source "../../compliance";
+@source "./";
+
+@theme {
+  --color-nav-bg: #0f1b2d;
+  --color-nav-active: #1f3150;
+  --color-nav-text: #c9d2de;
+  --color-nav-label: #8a97a8;
+  --color-nav-divider: #22344f;
+  --color-nav-brand: #3fc1c9;
+
+  --color-canvas: #f4f6f8;
+
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f8fafb;
+  --color-surface-muted: #f1f4f7;
+
+  --color-line: #e3e7ec;
+  --color-line-row: #eef1f4;
+  --color-line-input: #d5dbe2;
+  --color-line-strong: #c9d1da;
+  --color-line-dashed: #aeb8c4;
+
+  --color-ink: #0f1b2d;
+  --color-ink-muted: #5b6675;
+  --color-ink-soft: #46505e;
+  --color-ink-body: #2e3947;
+
+  --color-accent: #0e6f78;
+  --color-accent-hover: #0a5259;
+  --color-accent-tint: #eef6f7;
+  --color-accent-ring: #b9d6d9;
+
+  --color-chart: #3b6fb6;
+  --color-track: #e9edf1;
+
+  --color-ok-bg: #e7f4ec;
+  --color-ok-fg: #1a6b43;
+
+  --color-warn-bg: #fff1dc;
+  --color-warn-fg: #8a4b00;
+  --color-warn-soft: #fff8ec;
+  --color-warn-line: #f1d9ae;
+
+  --color-bad-bg: #fdecea;
+  --color-bad-fg: #a8201a;
+  --color-bad-dot: #c2372e;
+
+  --color-pending-bg: #eef1f5;
+  --color-pending-fg: #46505e;
+
+  --color-info-bg: #eaf1f9;
+  --color-info-fg: #1b3556;
+  --color-info-line: #c9daee;
+  --color-info-icon: #23466f;
+
+  --color-avatar-bg: #e6eef5;
+  --color-avatar-fg: #23466f;
+
+  --color-ev-contract: #e6eef9;
+  --color-ev-contractFg: #1f3f6e;
+  --color-ev-contractDot: #3b6fb6;
+  --color-ev-document: #fff1dc;
+  --color-ev-documentFg: #7a4200;
+  --color-ev-documentDot: #c77700;
+  --color-ev-permit: #f0eaf8;
+  --color-ev-permitFg: #4e3279;
+  --color-ev-permitDot: #6b4aa0;
+
+  --font-sans: 'Roboto Variable', Roboto, system-ui, sans-serif;
+  --font-mono: 'Roboto Variable', Roboto, system-ui, sans-serif;
+
+  --text-2xs: 11px;
+  --text-2xs--line-height: 16px;
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 13px;
+  --text-sm--line-height: 18px;
+  --text-base: 14px;
+  --text-base--line-height: 20px;
+
+  --radius-card: 8px;
+  --radius-ctl: 6px;
+
+  --height-ctl: 40px;
+  --height-ctl-dense: 36px;
+  --height-ctl-row: 32px;
+
+  --min-height-ctl: 40px;
+  --min-height-ctl-dense: 36px;
+  --min-height-ctl-row: 32px;
+
+  --shadow-seg: 0 1px 2px rgba(15, 27, 45, 0.12);
+  --shadow-pop: 0 8px 24px rgba(15, 27, 45, 0.12);
+}
+
+/* Tailwind v4 borders default to currentcolor; keep the v3 behaviour of a light default border. */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-line, currentcolor);
+  }
+}
+
+/* Surfaces */
+@utility card {
+  @apply bg-surface border border-line rounded-card;
+}
+
+@utility card-head {
+  @apply flex flex-wrap items-center justify-between gap-3 px-[18px] py-3.5 border-b border-line;
+}
+
+@utility card-title {
+  @apply m-0 text-[16px] leading-6 font-semibold;
+}
+
+@utility card-sub {
+  @apply text-sm text-ink-muted;
+}
+
+/* Buttons (40px default, 36 dense, 32 row) */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 h-ctl px-3.5 rounded-ctl font-medium text-base whitespace-nowrap transition-colors select-none disabled:opacity-50 disabled:pointer-events-none;
+}
+
+@utility btn-primary {
+  @apply btn bg-accent text-white hover:bg-accent-hover hover:text-white;
+}
+
+@utility btn-secondary {
+  @apply btn bg-surface text-ink border border-line-input hover:bg-surface-subtle hover:text-ink;
+}
+
+@utility btn-ghost {
+  @apply btn text-ink-soft hover:bg-surface-muted;
+}
+
+@utility btn-dashed {
+  @apply btn bg-transparent text-ink border border-dashed border-line-dashed hover:bg-surface-subtle;
+}
+
+@utility btn-dense {
+  @apply h-ctl-dense px-3 text-sm;
+}
+
+@utility btn-row {
+  @apply h-ctl-row px-2.5 text-sm;
+}
+
+/* Inputs */
+@utility input {
+  @apply h-ctl px-2.5 rounded-ctl border border-line-input bg-surface text-ink placeholder:text-ink-muted outline-hidden focus:border-accent focus:ring-2 focus:ring-accent/15;
+}
+
+@utility input-dense {
+  @apply input h-ctl-dense;
+}
+
+@utility label {
+  @apply block text-sm font-medium mb-1.5;
+}
+
+/* Tables */
+@utility tbl {
+  @apply w-full border-collapse text-sm;
+  & thead tr {
+    @apply bg-surface-subtle text-left text-ink-soft;
+  }
+  & th {
+    @apply px-2 py-2.5 font-medium whitespace-nowrap;
+  }
+  & td {
+    @apply px-2 py-2.5 border-t border-line-row align-middle;
+  }
+  & th:first-child {
+    @apply pl-[18px];
+  }
+  & td:first-child {
+    @apply pl-[18px];
+  }
+  & th:last-child {
+    @apply pr-[18px];
+  }
+  & td:last-child {
+    @apply pr-[18px];
+  }
+  & tbody tr {
+    @apply transition-colors;
+  }
+}
+
+@utility tbl-hover {
+  & tbody tr:hover {
+    @apply bg-surface-subtle;
+  }
+}
+
+/* Roboto with even-width digits, so columns of numbers line up */
+@utility num {
+  @apply font-medium tabular-nums;
+}
+
+@utility eyebrow {
+  @apply text-xs text-ink-muted font-medium;
+}
+
+@utility kbd {
+  @apply tabular-nums text-xs border border-line-input rounded-sm px-1.5 py-px text-ink-muted bg-surface;
+}
+
+@layer base {
+  @font-face {
+    font-family: 'Roboto Variable';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 100 900;
+    src: url(/fonts/roboto-latin-ext-wght-normal.woff2)
+      format('woff2-variations');
+    unicode-range:
+      U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+      U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+      U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: 'Roboto Variable';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 100 900;
+    src: url(/fonts/roboto-latin-wght-normal.woff2) format('woff2-variations');
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+      U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+}
+
+@layer base {
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+  /* Tailwind v4 gives buttons the default cursor; the app was designed with pointers. */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body { @apply bg-canvas text-ink text-base; font-family: "Roboto Variable", Roboto, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { @apply text-accent hover:text-accent-hover; }
+  :focus-visible { outline: 2px solid #0E6F78; outline-offset: 2px; border-radius: 4px; }
+  ::selection { background: #CDE6E8; }
+}
+
+select.input, select.input-dense {
+  appearance: none;
+  padding-right: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235B6675' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  cursor: pointer;
+}
+
+.scroll-thin::-webkit-scrollbar { height: 8px; width: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: #D5DBE2; border-radius: 8px; }
