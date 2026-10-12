@@ -6,7 +6,8 @@
     "company": "Company",
     "contact": "Contact",
     "bookDemo": "Book a Demo",
-    "shiftcomply": "ShiftComply"
+    "shiftcomply": "ShiftComply",
+    "tryDemo": "Try the demo"
   },
   "hero": {
     "eyebrow": "Compliance Infrastructure",
@@ -389,5 +390,25 @@
       "note": "Everything in the demo is made up. Changes you make stay in your browser and are not saved.",
       "back": "About ShiftComply"
     }
+  },
+  "complianceDemo": {
+    "metaTitle": "Advisorly demo",
+    "title": "Try the Advisorly demo",
+    "text": "Explore a sample construction group with workers on four Andorran sites. Enter the access code you were given.",
+    "label": "Access code",
+    "placeholder": "Your code",
+    "submit": "Open the demo",
+    "checking": "Checking",
+    "wrong": "That code is not right. Check it and try again.",
+    "failed": "The code could not be checked. Try again.",
+    "noCode": "No code yet?",
+    "askUs": "Ask us for one",
+    "points": {
+      "workers": "Workers, contracts and permits for a group and its subcontractors",
+      "documents": "Documents with expiry dates and automatic reminders",
+      "sites": "Site access that blocks workers whose papers have lapsed"
+    },
+    "note": "Everything in the demo is made up. Nothing you do in it is saved.",
+    "back": "Back to Advisorly"
   }
 }

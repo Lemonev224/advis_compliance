@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/shiftcomply-demo"],
+      disallow: ["/shiftcomply-demo", "/compliance-demo"],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

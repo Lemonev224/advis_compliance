@@ -5,5 +5,6 @@ export default createMiddleware(routing);
 
 export const config = {
   // shiftcomply-demo is the ShiftComply demo app. It has its own layout and its own translations (src/shiftcomply/lib/i18n.tsx).
-  matcher: ["/((?!api|_next|_vercel|shiftcomply-demo|.*\\..*).*)"],
+  // compliance-demo is the Advisorly compliance demo app (English only, src/compliance).
+  matcher: ["/((?!api|_next|_vercel|shiftcomply-demo|compliance-demo|.*\\..*).*)"],
 };
