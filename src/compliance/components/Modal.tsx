@@ -5,10 +5,12 @@ import { navDone } from "@/compliance/components/shell/NavProgress";
 import { useToast } from "@/compliance/components/Toast";
 import { X, CheckCircle2, AlertTriangle } from "lucide-react";
 import type { ActionResult } from "@/app/compliance-demo/workers/actions";
+import { useT } from "@/compliance/components/I18nProvider";
 
 export function Modal({ open, onClose, title, description, children, width = 520 }: {
   open: boolean; onClose: () => void; title: string; description?: string; children: ReactNode; width?: number;
 }) {
+  const { t } = useT();
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const d = ref.current;
@@ -32,7 +34,7 @@ export function Modal({ open, onClose, title, description, children, width = 520
               <h2 className="text-[16px] font-semibold">{title}</h2>
               {description && <p className="mt-0.5 text-sm text-ink-muted">{description}</p>}
             </div>
-            <button type="button" onClick={onClose} aria-label="Close" className="inline-flex size-8 items-center justify-center rounded-ctl text-ink-muted hover:bg-surface-muted hover:text-ink">
+            <button type="button" onClick={onClose} aria-label={t("Close")} className="inline-flex size-8 items-center justify-center rounded-ctl text-ink-muted hover:bg-surface-muted hover:text-ink">
               <X className="size-4" aria-hidden />
             </button>
           </div>
@@ -60,10 +62,11 @@ export function ResultNotice({ result }: { result: ActionResult }) {
 }
 
 export function ModalFooter({ onCancel, submitLabel, pending }: { onCancel: () => void; submitLabel: string; pending: boolean }) {
+  const { t } = useT();
   return (
     <div className="flex justify-end gap-2 border-t border-line-row px-5 py-3.5">
-      <button type="button" className="btn-secondary" onClick={onCancel}>Cancel</button>
-      <button type="submit" className="btn-primary" disabled={pending}>{pending ? "Saving…" : submitLabel}</button>
+      <button type="button" className="btn-secondary" onClick={onCancel}>{t("Cancel")}</button>
+      <button type="submit" className="btn-primary" disabled={pending}>{pending ? t("Saving…") : submitLabel}</button>
     </div>
   );
 }

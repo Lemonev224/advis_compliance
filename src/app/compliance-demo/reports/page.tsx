@@ -1,8 +1,11 @@
-import { BarChart3, Users, CalendarClock, IdCard, HardHat, FileWarning, ArrowRight } from "lucide-react";
+import { BarChart3, Users, CalendarClock, IdCard, HardHat, FileWarning } from "lucide-react";
 import { PageHeader } from "@/compliance/components/ui";
-import { SoonButton } from "@/compliance/components/Toast";
+import { getT } from "@/compliance/lib/i18n-server";
 
-export const metadata = { title: "Reports" };
+export async function generateMetadata() {
+  const t = await getT();
+  return { title: t("Reports") };
+}
 
 const reports = [
   { icon: BarChart3, title: "Compliance over time", text: "Share of fully compliant workers per site, week by week." },
@@ -13,18 +16,18 @@ const reports = [
   { icon: FileWarning, title: "Unconfirmed dates", text: "Uploads whose dates were read automatically and still need a person to confirm." },
 ];
 
-export default function ReportsPage() {
+export default async function ReportsPage() {
+  const t = await getT();
   return (
     <>
-      <PageHeader section="Compliance" title="Reports" description="Exportable views for management, clients and inspectors" actions={<SoonButton feature="reports" className="btn-secondary">Schedule a report</SoonButton>} />
+      <PageHeader section={t("Compliance")} title={t("Reports")} description={t("Exportable views for management, clients and inspectors")} />
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-3">
         {reports.map((r) => (
-          <SoonButton key={r.title} feature="reports" title={r.title} className="card group flex flex-col items-start gap-2 p-5 text-left transition-colors hover:border-line-strong">
+          <div key={r.title} className="card flex flex-col items-start gap-2 p-5">
             <span className="inline-flex size-9 items-center justify-center rounded-ctl bg-accent-tint text-accent"><r.icon className="size-[18px]" aria-hidden /></span>
-            <span className="text-[15px] font-semibold">{r.title}</span>
-            <span className="text-sm text-ink-muted">{r.text}</span>
-            <span className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-accent">Open <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden /></span>
-          </SoonButton>
+            <span className="text-[15px] font-semibold">{t(r.title)}</span>
+            <span className="text-sm text-ink-muted">{t(r.text)}</span>
+          </div>
         ))}
       </div>
     </>

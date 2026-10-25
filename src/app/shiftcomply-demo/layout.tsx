@@ -15,7 +15,16 @@ export const metadata: Metadata = {
   title: "ShiftComply demo",
   description: "Try ShiftComply with a sample seasonal hotel.",
   robots: { index: false, follow: false },
-  icons: { icon: "/icon.png" },
+  // Same tab icons as the website (see src/app/[locale]/layout.tsx), so the logo fills the tab.
+  icons: {
+    icon: [
+      { url: "/icon.svg?v=2", type: "image/svg+xml" },
+      { url: "/favicon.ico?v=2", sizes: "48x48" },
+      { url: "/icon-512.png?v=2", type: "image/png", sizes: "512x512" },
+    ],
+    shortcut: "/favicon.ico?v=2",
+    apple: [{ url: "/apple-icon.png?v=2", type: "image/png", sizes: "180x180" }],
+  },
 };
 
 // The ShiftComply demo runs on sample data in the visitor's browser.

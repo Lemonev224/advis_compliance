@@ -2,6 +2,8 @@
 // The full app (with Supabase) lives in its own project; this file keeps only its sample-data branches.
 import { notFound } from "next/navigation";
 import * as sample from "@/compliance/lib/data";
+import { getLang, getT } from "@/compliance/lib/i18n-server";
+import { demoToday, longDate } from "@/compliance/lib/i18n";
 import type { PeopleData, ProfileData, CheckRow, ContractsData, SettingsData, DashboardData, QueueItem } from "./views";
 
 /* ───────────────────────────── People ───────────────────────────── */
@@ -18,10 +20,11 @@ export async function getPeopleData(): Promise<PeopleData> {
 /* ───────────────────────────── Worker profile ───────────────────────────── */
 
 export async function getWorkerProfileData(id: string): Promise<ProfileData> {
-  return sampleProfile(id);
+  return sampleProfile(id, await getT());
 }
 
-function sampleProfile(id: string): ProfileData {
+// Sentences built from several values are translated here; single labels are translated where they are shown.
+function sampleProfile(id: string, t: (text: string, vars?: Record<string, string | number>) => string): ProfileData {
   const w = sample.workers.find((x) => x.id === id);
   if (!w) notFound();
   const stateOf = (st: sample.Status): CheckRow["state"] => (st === "warn" ? "expiring" : st === "bad" ? "expired" : "valid");
@@ -29,10 +32,10 @@ function sampleProfile(id: string): ProfileData {
     live: false,
     worker: { ...w, companyId: w.company, siteId: w.site, foreignEmployer: w.company !== "Grupo Heracles" },
     facts: {
-      permitType: w.permit === "Foreign company worker" ? "Temporary · foreign company worker" : w.permit,
-      permitValidUntil: "20 Dec 2026",
-      socialSecurity: `${w.nat} · posting forms`,
-      accessUntil: w.status === "bad" ? "Blocked" : "12 Oct 2026",
+      permitType: t(w.permit === "Foreign company worker" ? "Temporary · foreign company worker" : w.permit),
+      permitValidUntil: t("20 Dec 2026"),
+      socialSecurity: t("{country} · posting forms", { country: t(w.nat) }),
+      accessUntil: t(w.status === "bad" ? "Blocked" : "12 Oct 2026"),
       accessTone: w.status === "bad" ? "bad" : "warn",
     },
     ruleSets: ["Portugal · foreign company worker · construction"],
@@ -40,8 +43,8 @@ function sampleProfile(id: string): ProfileData {
     validCount: 9,
     requiredCount: 10,
     contracts: [
-      { title: "Employment contract · fixed term", parties: `${w.company} → ${w.name} · signed 2 Jun 2026`, range: "2 Jun 2026 – 20 Dec 2026", progress: 52 },
-      { title: "Subcontract · formwork, La Massana residential block", parties: `Grupo Heracles → ${w.company}`, range: "1 Jun 2026 – 31 Dec 2026", progress: 61 },
+      { title: t("Employment contract · fixed term"), parties: t("{from} → {to} · signed {date}", { from: w.company, to: w.name, date: t("2 Jun 2026") }), range: `${t("2 Jun 2026")} – ${t("20 Dec 2026")}`, progress: 52 },
+      { title: t("Subcontract · formwork, La Massana residential block"), parties: `Grupo Heracles → ${w.company}`, range: `${t("1 Jun 2026")} – ${t("31 Dec 2026")}`, progress: 61 },
     ],
     access: {
       items: [
@@ -51,14 +54,14 @@ function sampleProfile(id: string): ProfileData {
         { label: "Immigration permit", date: "20 Dec 2026", day: 73, binding: false },
       ],
       horizon: 80,
-      endLabel: "27 Dec",
-      message: `Access to ${w.site} will be blocked automatically on 12 Oct unless a new medical certificate is uploaded and its dates are confirmed.`,
+      endLabel: t("27 Dec"),
+      message: t("Access to {site} will be blocked automatically on 12 Oct unless a new medical certificate is uploaded and its dates are confirmed.", { site: w.site }),
     },
     history: sample.profileHistory,
-    employer: { name: w.company, contact: "No contact on file", email: null },
+    employer: { name: w.company, contact: t("No contact on file"), email: null },
     canEdit: true,
     options: { companies: sample.COMPANIES.map((c) => ({ id: c, name: c })), sites: sample.SITES.map((x) => ({ id: x, name: x })) },
-    today: { allowed: w.status !== "bad", site: w.site, lastCheckIn: "07:41 by Ana Soler" },
+    today: { allowed: w.status !== "bad", site: w.site, lastCheckIn: t("07:41 by {name}", { name: "Ana Soler" }) },
   };
 }
 
@@ -104,9 +107,10 @@ function sampleQueue(): QueueItem[] {
 }
 
 export async function getDashboardData(): Promise<DashboardData> {
+  const t = await getT();
   return {
     live: false,
-    subtitle: `Grupo Heracles · All sites · ${sample.TODAY_LABEL}`,
+    subtitle: `Grupo Heracles · ${t("All sites")} · ${longDate(await getLang(), demoToday())}`,
     kpis: sample.kpis.map((k) => ({ ...k })),
     queue: sampleQueue(),
     sites: sample.siteCompliance,

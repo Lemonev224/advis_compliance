@@ -1,8 +1,13 @@
+"use client";
+
+import { useT } from "@/compliance/components/I18nProvider";
+
 // Shown instantly while a page's data loads on the server.
 export default function Loading() {
+  const { t } = useT();
   const bar = "animate-pulse rounded-sm bg-track";
   return (
-    <div aria-busy="true" aria-label="Loading" className="flex flex-col gap-4">
+    <div aria-busy="true" aria-label={t("Loading")} className="flex flex-col gap-4">
       <div className="flex items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <div className={`${bar} h-3 w-20`} />

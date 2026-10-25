@@ -2,6 +2,7 @@
 
 import { Download } from "lucide-react";
 import { useToast } from "@/compliance/components/Toast";
+import { useT } from "@/compliance/components/I18nProvider";
 
 export function toCsv(rows: Record<string, string | number | null | undefined>[]): string {
   if (!rows.length) return "";
@@ -21,15 +22,16 @@ export function downloadCsv(filename: string, rows: Record<string, string | numb
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function CsvButton({ rows, filename, label = "Export", className = "btn-secondary" }: { rows: Record<string, string | number | null | undefined>[]; filename: string; label?: string; className?: string }) {
+export function CsvButton({ rows, filename, label, className = "btn-secondary" }: { rows: Record<string, string | number | null | undefined>[]; filename: string; label?: string; className?: string }) {
   const notify = useToast();
+  const { t } = useT();
   return (
     <button type="button" className={className} onClick={() => {
-      if (!rows.length) return notify({ title: "Nothing to export" });
+      if (!rows.length) return notify({ title: t("Nothing to export") });
       downloadCsv(filename, rows);
-      notify({ title: `Exported ${rows.length} row${rows.length === 1 ? "" : "s"}`, body: filename, tone: "success" });
+      notify({ title: rows.length === 1 ? t("Exported 1 row") : t("Exported {n} rows", { n: rows.length }), body: filename, tone: "success" });
     }}>
-      <Download className="size-4" aria-hidden />{label}
+      <Download className="size-4" aria-hidden />{label ?? t("Export")}
     </button>
   );
 }

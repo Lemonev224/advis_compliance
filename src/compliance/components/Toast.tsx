@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { CheckCircle2, Info, AlertTriangle, X } from "lucide-react";
 import { cx } from "@/compliance/components/ui";
+import { useT } from "@/compliance/components/I18nProvider";
 
 type Tone = "info" | "success" | "error";
 type Toast = { id: number; title: string; body?: string; tone: Tone };
@@ -32,6 +33,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 }
 
 function ToastCard({ toast, onClose }: { toast: Toast; onClose: () => void }) {
+  const { t } = useT();
   const [shown, setShown] = useState(false);
   useEffect(() => { const r = requestAnimationFrame(() => setShown(true)); return () => cancelAnimationFrame(r); }, []);
   const Icon = toast.tone === "success" ? CheckCircle2 : toast.tone === "error" ? AlertTriangle : Info;
@@ -45,7 +47,7 @@ function ToastCard({ toast, onClose }: { toast: Toast; onClose: () => void }) {
         <div className="text-sm font-medium">{toast.title}</div>
         {toast.body && <div className="mt-0.5 text-sm text-ink-muted">{toast.body}</div>}
       </div>
-      <button onClick={onClose} aria-label="Dismiss" className="inline-flex size-6 flex-none items-center justify-center rounded-sm text-ink-muted hover:bg-surface-muted hover:text-ink"><X className="size-3.5" aria-hidden /></button>
+      <button onClick={onClose} aria-label={t("Dismiss")} className="inline-flex size-6 flex-none items-center justify-center rounded-sm text-ink-muted hover:bg-surface-muted hover:text-ink"><X className="size-3.5" aria-hidden /></button>
     </div>
   );
 }
@@ -66,7 +68,7 @@ const ROADMAP = {
   notifications: "Notification settings are coming soon.",
   pdf: "Viewing contract PDFs is coming soon.",
   columns: "Choosing table columns is coming soon.",
-  language: "Català, Español, Français and Português are coming soon.",
+  language: "Català, Français and Português are coming soon.",
   account: "In Advisorly, each person signs in with their own access key. Admins manage keys in Settings → Users & roles.",
   help: "Questions about what you see? Book a walkthrough from the banner at the top.",
 } as const;
@@ -74,12 +76,20 @@ export type Feature = keyof typeof ROADMAP;
 
 export function useSoon() {
   const notify = useToast();
-  return useCallback((feature: Feature, title = "Not connected yet") => notify({ title, body: ROADMAP[feature] }), [notify]);
+  const { t } = useT();
+  // Callers pass titles already translated; the default title and the roadmap text are translated here.
+  return useCallback((feature: Feature, title?: string) => notify({ title: title ?? t("Not connected yet"), body: t(ROADMAP[feature]) }), [notify, t]);
 }
 
-/** A button for a designed-but-not-built feature: it explains instead of doing nothing. */
+/**
+ * A button for a designed-but-not-built feature. Hidden for now so presentations only show what works.
+ * Set SHOW_COMING_SOON to true to bring them back: they then explain the feature instead of doing nothing.
+ */
+const SHOW_COMING_SOON = false;
+
 export function SoonButton({ feature, className, children, title, ...rest }: { feature: Feature; className?: string; children: ReactNode; title?: string } & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "type">) {
   const soon = useSoon();
+  if (!SHOW_COMING_SOON) return null;
   return (
     <button type="button" className={className} onClick={() => soon(feature, title)} {...rest}>{children}</button>
   );

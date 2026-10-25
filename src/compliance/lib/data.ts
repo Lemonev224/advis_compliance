@@ -3,7 +3,8 @@
 
 export type Status = "ok" | "warn" | "bad" | "pending";
 
-export const TODAY_LABEL = "Thursday 8 October 2026";
+// The sample data was written as if today were Thursday 8 October 2026. The demo moves every date so that
+// "today" is the real date: see demoDate() and shiftDates() in ./i18n.ts.
 export const SITES = ["Escaldes-Engordany", "La Massana", "Andorra la Vella", "Encamp"] as const;
 export const COMPANIES = ["Grupo Heracles", "Grues Pirineu SL", "Obras Lusitânia Lda", "BTP Ariège SARL"] as const;
 
@@ -57,7 +58,7 @@ export const activity = [
   { ini: "SY", text: "Access blocked automatically for Antoni Vidal (contract ended)", time: "Today, 07:00", system: true },
   { ini: "SR", text: "Sandra Ruiz submitted a permit application for Mehdi Benali", time: "Yesterday, 16:18" },
   { ini: "CM", text: "Carlos Méndez checked in 11 workers at Escaldes-Engordany", time: "Yesterday, 07:35" },
-  { ini: "SY", text: "Reminder sent to Obras Lusitânia Lda for 2 missing documents", time: "Mon, 08:00", system: true },
+  { ini: "SY", text: "Reminder sent to Obras Lusitânia Lda for 2 missing documents", time: "5 Oct, 08:00", system: true },
 ];
 
 /* ---------------- Workers ---------------- */
@@ -246,7 +247,7 @@ export const users = [
   { name: "Sandra Ruiz", email: "Access key", role: "Compliance", sites: "All", last: "Today" },
   { name: "Ana Soler", email: "Access key", role: "Site manager", sites: "La Massana", last: "Today" },
   { name: "Carlos Méndez", email: "Access key", role: "Site manager", sites: "Escaldes-Engordany", last: "Yesterday" },
-  { name: "Obras Lusitânia Lda", email: "Access key", role: "Subcontractor", sites: "La Massana, Encamp", last: "Mon" },
+  { name: "Obras Lusitânia Lda", email: "Access key", role: "Subcontractor", sites: "La Massana, Encamp", last: "5 Oct" },
 ];
 
 export const permissions = [
@@ -280,7 +281,7 @@ export const inbox = [
   { title: "Access blocked: Antoni Vidal", body: "Contract ended 3 Oct · Encamp", time: "07:00", tone: "bad" as Status },
   { title: "Medical check expiring", body: "Rui Carvalho · in 4 days", time: "Yesterday", tone: "warn" as Status },
   { title: "Obras Lusitânia uploaded 2 documents", body: "Awaiting date confirmation", time: "Yesterday", tone: "pending" as Status },
-  { title: "Permit submitted", body: "Mehdi Benali · Residence and work", time: "Tue", tone: "pending" as Status },
+  { title: "Permit submitted", body: "Mehdi Benali · Residence and work", time: "6 Oct", tone: "pending" as Status },
 ];
 
 /* ---------------- Contracts (not yet designed — derived from data model) ---------------- */
