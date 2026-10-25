@@ -853,4 +853,18 @@ export const es: Record<string, string> = {
   "Applies to {n} workers": "Se aplica a {n} trabajadores",
   "(Sample key: it doesn’t work in the demo.)": "(Clave de ejemplo: no funciona en la demo.)",
   "Hide this message": "Ocultar este aviso",
+
+  /* ---------- Changes made in the demo ---------- */
+  "Contract saved for {name}. Site access is updated everywhere.": "Contrato guardado para {name}. El acceso a obra se actualiza en todas partes.",
+  "End date is in the past.": "La fecha de fin ya ha pasado.",
+  "Reset sample data": "Restablecer datos de ejemplo",
+  "Notifications, {n} unread": "Notificaciones, {n} sin leer",
+  "Demo admin renewed the contract of {name}": "El admin de la demo ha renovado el contrato de {name}",
+  "Just now": "Ahora mismo",
+  "Contract renewed. Nothing else to do.": "Contrato renovado. Nada más que hacer.",
+  "PRL certificate expires 15 Oct.": "El certificado de PRL caduca el 15 oct.",
+  "contract renewed": "contrato renovado",
+  "2 contracts · 3 documents · 1 permit": "2 contratos · 3 documentos · 1 permiso",
+  "10 of 12 workers · 1 blocked": "10 de 12 trabajadores · 1 bloqueado",
+  "12 of 13 workers · 1 expiring": "12 de 13 trabajadores · 1 caduca pronto",
 };

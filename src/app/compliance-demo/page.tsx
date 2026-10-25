@@ -108,7 +108,7 @@ export default async function DashboardPage() {
               <li key={i} className="flex gap-2.5 border-b border-line-row py-2.5 last:border-b-0">
                 <Avatar name={a.name} size={28} system={a.system} />
                 <div className="min-w-0">
-                  <div className="text-sm">{t(a.text)}</div>
+                  <div className="text-sm">{t(a.text, a.vars)}</div>
                   <div className="text-xs text-ink-muted">{t(a.time)}</div>
                 </div>
               </li>

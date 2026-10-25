@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, FileText, FileBadge, IdCard } from "lucide-react";
 import { PageHeader, cx } from "@/compliance/components/ui";
-import { calendarEvents, type EventType } from "@/compliance/lib/data";
+import { type EventType } from "@/compliance/lib/data";
+import { useDemo } from "@/compliance/components/DemoState";
 import { useShellUser } from "@/compliance/components/shell/UserContext";
 import { useT } from "@/compliance/components/I18nProvider";
 import { WEEKDAYS_SHORT, dayMonth, dayMonthYear, dayShort, demoDate, demoToday, monthYear } from "@/compliance/lib/i18n";
@@ -22,13 +23,14 @@ export default function CalendarPage() {
   const { live } = useShellUser();
   const { t, lang } = useT();
   const today = demoToday().getTime();
+  const { calendarEvents } = useDemo().data;
 
   // Sample events were written for October 2026; demoDate() moves them to the same distance from today.
   const events = useMemo(
     () => Object.entries(calendarEvents)
       .flatMap(([d, list]) => list.map((e) => ({ ...e, day: demoDate(2026, 9, Number(d)).getTime() })))
       .sort((a, b) => a.day - b.day),
-    [],
+    [calendarEvents],
   );
 
   const firstUpcoming = events.find((e) => e.day >= today)?.day ?? today;

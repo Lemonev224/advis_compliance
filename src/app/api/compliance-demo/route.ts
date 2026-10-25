@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { DEFAULT_DEMO_CODE, DEMO_COOKIE, DEMO_DAYS } from "@/compliance/lib/demo";
+import { RENEWALS_COOKIE } from "@/compliance/lib/demo-state";
 
 // Checks the Advisorly demo access code and lets the visitor into /compliance-demo.
 // The demo only ever shows sample data. Set ADVISORLY_DEMO_CODE in your hosting settings to choose the code.
@@ -29,5 +30,7 @@ export async function POST(request: NextRequest) {
 export async function DELETE() {
   const res = NextResponse.json({ ok: true });
   res.cookies.set(DEMO_COOKIE, "", { path: "/", maxAge: 0 });
+  // Changes made during the visit start fresh next time.
+  res.cookies.set(RENEWALS_COOKIE, "", { path: "/", maxAge: 0 });
   return res;
 }

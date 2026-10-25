@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { UserPlus, MapPin } from "lucide-react";
 import { PageHeader, Segmented, Avatar, StatusText, StatusPill, Progress, cx } from "@/compliance/components/ui";
-import { siteBoard, workerHref } from "@/compliance/lib/data";
+import { workerHref } from "@/compliance/lib/data";
+import { useDemo } from "@/compliance/components/DemoState";
 import { demoToday, longDate } from "@/compliance/lib/i18n";
 import { useShellUser } from "@/compliance/components/shell/UserContext";
 import { useT } from "@/compliance/components/I18nProvider";
@@ -14,6 +15,7 @@ const order = { bad: 0, pending: 1, warn: 2, ok: 3 };
 export default function SiteAccessPage() {
   const { live } = useShellUser();
   const { t, lang } = useT();
+  const { siteBoard, accessSummary: sum } = useDemo().data;
   const hrefFor = (name: string) => (live ? "/compliance-demo/workers" : workerHref(name));
   const [view, setView] = useState("board");
   const flat = siteBoard.flatMap((s) => s.workers.map((w) => ({ ...w, site: s.name })));
@@ -31,10 +33,10 @@ export default function SiteAccessPage() {
       />
 
       <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-        <span className="inline-flex items-center gap-2"><span className="num">45</span><span className="text-ink-muted">{t("assigned")}</span></span>
-        <span className="inline-flex items-center gap-2"><StatusText status="ok">{t("{n} allowed", { n: 39 })}</StatusText></span>
-        <span className="inline-flex items-center gap-2"><StatusText status="warn">{t("{n} allowed, expiring soon", { n: 4 })}</StatusText></span>
-        <span className="inline-flex items-center gap-2"><StatusText status="bad">{t("{n} blocked", { n: 3 })}</StatusText></span>
+        <span className="inline-flex items-center gap-2"><span className="num">{sum.assigned}</span><span className="text-ink-muted">{t("assigned")}</span></span>
+        <span className="inline-flex items-center gap-2"><StatusText status="ok">{t("{n} allowed", { n: sum.ok })}</StatusText></span>
+        <span className="inline-flex items-center gap-2"><StatusText status="warn">{t("{n} allowed, expiring soon", { n: sum.warn })}</StatusText></span>
+        <span className="inline-flex items-center gap-2"><StatusText status="bad">{t("{n} blocked", { n: sum.bad })}</StatusText></span>
       </div>
 
       {view === "board" ? (

@@ -5,6 +5,8 @@ import "./compliance.css";
 import { Shell } from "@/compliance/components/shell/Shell";
 import { ShellUserProvider } from "@/compliance/components/shell/UserContext";
 import { LangProvider } from "@/compliance/components/I18nProvider";
+import { DemoStateProvider } from "@/compliance/components/DemoState";
+import { RENEWALS_COOKIE, parseRenewals } from "@/compliance/lib/demo-state";
 import { DEMO_COOKIE } from "@/compliance/lib/demo";
 import { getLang } from "@/compliance/lib/i18n-server";
 import { makeT } from "@/compliance/lib/i18n";
@@ -41,9 +43,11 @@ export default async function ComplianceDemoLayout({ children }: Readonly<{ chil
     <html lang={lang}>
       <body>
         <LangProvider lang={lang}>
-          <ShellUserProvider>
-            <Shell>{children}</Shell>
-          </ShellUserProvider>
+          <DemoStateProvider renewals={parseRenewals(jar.get(RENEWALS_COOKIE)?.value)}>
+            <ShellUserProvider>
+              <Shell>{children}</Shell>
+            </ShellUserProvider>
+          </DemoStateProvider>
         </LangProvider>
       </body>
     </html>

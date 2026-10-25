@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, ChevronDown, Search, Menu, X, Check, Users, FileText, IdCard, CornerDownLeft, LogOut, Languages, Globe } from "lucide-react";
+import { Bell, ChevronDown, Search, Menu, X, Check, Users, FileText, IdCard, CornerDownLeft, LogOut, Languages, Globe, RotateCcw } from "lucide-react";
 import { cx, StatusText } from "@/compliance/components/ui";
 import { SidebarNav } from "./Sidebar";
-import { COMPANIES, inbox, workers, documents, permits } from "@/compliance/lib/data";
+import { COMPANIES, documents } from "@/compliance/lib/data";
+import { useDemo } from "@/compliance/components/DemoState";
 import { useShellUser } from "./UserContext";
 import { NavProgress } from "./NavProgress";
 import { Suspense } from "react";
@@ -69,6 +70,7 @@ function CompanySwitcher() {
 function Notifications() {
   const me = useShellUser();
   const { t } = useT();
+  const { inbox } = useDemo().data;
   const [open, setOpen] = useState(false);
   // "Mark all read" only lasts for this visit, like everything else in the demo.
   const [read, setRead] = useState(false);
@@ -76,7 +78,7 @@ function Notifications() {
   const ref = useOutside<HTMLDivElement>(open, () => setOpen(false));
   return (
     <div ref={ref} className="relative">
-      <button onClick={() => setOpen((o) => !o)} aria-label={unread ? t("Notifications, 9 unread") : t("Notifications")} aria-expanded={open} className="btn-secondary relative w-10 px-0">
+      <button onClick={() => setOpen((o) => !o)} aria-label={unread ? t("Notifications, {n} unread", { n: inbox.length }) : t("Notifications")} aria-expanded={open} className="btn-secondary relative w-10 px-0">
         <Bell className="size-[18px]" strokeWidth={1.75} aria-hidden />
         {unread && <span className="absolute right-[9px] top-[9px] size-2 rounded-full bg-bad-dot ring-2 ring-white" />}
       </button>
@@ -138,6 +140,7 @@ export async function leaveDemo() {
 function AccountMenu() {
   const me = useShellUser();
   const { t, lang, setLang } = useT();
+  const demo = useDemo();
   const [open, setOpen] = useState(false);
   const ref = useOutside<HTMLDivElement>(open, () => setOpen(false));
   return (
@@ -157,6 +160,9 @@ function AccountMenu() {
             </button>
           ))}
           <div className="my-1 border-t border-line-row" />
+          {demo.changed && (
+            <button onClick={() => { setOpen(false); demo.reset(); }} className="flex w-full items-center gap-2.5 rounded-ctl px-2.5 py-2 text-left hover:bg-surface-subtle"><RotateCcw className="size-4 text-ink-muted" aria-hidden />{t("Reset sample data")}</button>
+          )}
           <button onClick={leaveDemo} className="flex w-full items-center gap-2.5 rounded-ctl px-2.5 py-2 text-left hover:bg-surface-subtle"><LogOut className="size-4 text-ink-muted" aria-hidden />{t("Leave demo")}</button>
         </Popover>
       )}
@@ -166,6 +172,7 @@ function AccountMenu() {
 
 function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t } = useT();
+  const { workers, permits } = useDemo().data;
   const [q, setQ] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => { if (open) { setQ(""); setTimeout(() => inputRef.current?.focus(), 0); } }, [open]);

@@ -1,6 +1,8 @@
 // Sample data for the public demo at /compliance-demo. Nothing here reads or writes a database.
 // The full app (with Supabase) lives in its own project; this file keeps only its sample-data branches.
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
+import { RENEWALS_COOKIE, demoData, parseRenewals } from "@/compliance/lib/demo-state";
 import * as sample from "@/compliance/lib/data";
 import { getLang, getT } from "@/compliance/lib/i18n-server";
 import { demoToday, longDate } from "@/compliance/lib/i18n";
@@ -8,10 +10,16 @@ import type { PeopleData, ProfileData, CheckRow, ContractsData, SettingsData, Da
 
 /* ───────────────────────────── People ───────────────────────────── */
 
+/** The sample data with the changes the visitor made in this visit (e.g. renewed contracts). */
+async function demo() {
+  return demoData(parseRenewals((await cookies()).get(RENEWALS_COOKIE)?.value));
+}
+
 export async function getPeopleData(): Promise<PeopleData> {
+  const d = await demo();
   return {
     live: false, canEdit: true,
-    workers: sample.workers.map((w) => ({ ...w, companyId: w.company, siteId: w.site, foreignEmployer: w.company !== "Grupo Heracles" })),
+    workers: d.workers.map((w) => ({ ...w, companyId: w.company, siteId: w.site, foreignEmployer: w.company !== "Grupo Heracles" })),
     companies: sample.COMPANIES.map((c) => ({ id: c, name: c })),
     sites: sample.SITES.map((s) => ({ id: s, name: s })),
   };
@@ -20,12 +28,12 @@ export async function getPeopleData(): Promise<PeopleData> {
 /* ───────────────────────────── Worker profile ───────────────────────────── */
 
 export async function getWorkerProfileData(id: string): Promise<ProfileData> {
-  return sampleProfile(id, await getT());
+  return sampleProfile(id, await getT(), (await demo()).workers);
 }
 
 // Sentences built from several values are translated here; single labels are translated where they are shown.
-function sampleProfile(id: string, t: (text: string, vars?: Record<string, string | number>) => string): ProfileData {
-  const w = sample.workers.find((x) => x.id === id);
+function sampleProfile(id: string, t: (text: string, vars?: Record<string, string | number>) => string, workers: sample.Worker[]): ProfileData {
+  const w = workers.find((x) => x.id === id);
   if (!w) notFound();
   const stateOf = (st: sample.Status): CheckRow["state"] => (st === "warn" ? "expiring" : st === "bad" ? "expired" : "valid");
   return {
@@ -68,9 +76,10 @@ function sampleProfile(id: string, t: (text: string, vars?: Record<string, strin
 /* ───────────────────────────── Contracts ───────────────────────────── */
 
 export async function getContractsData(): Promise<ContractsData> {
+  const d = await demo();
   return {
     live: false, canEdit: true,
-    contracts: sample.contracts.map((c, i) => ({ id: String(i), worker: c.worker, workerId: sample.workers.find((w) => w.name === c.worker)?.id ?? null, type: c.type, parties: c.parties, start: c.start, end: c.end, status: c.status, label: c.label })),
+    contracts: d.contracts.map((c, i) => ({ id: String(i), worker: c.worker, workerId: sample.workers.find((w) => w.name === c.worker)?.id ?? null, type: c.type, parties: c.parties, start: c.start, end: c.end, status: c.status, label: c.label })),
     summary: { active: 61, endingSoon: 6, endedAssigned: 1, subcontracts: 3 },
     workers: sample.workers.map((w) => ({ id: w.id, name: w.name })),
   };
@@ -97,8 +106,8 @@ export async function getSettingsData(): Promise<SettingsData> {
 
 /* ───────────────────────────── Dashboard ───────────────────────────── */
 
-function sampleQueue(): QueueItem[] {
-  return sample.actionQueue.map((q, i) => {
+function sampleQueue(queue: sample.QueueItem[]): QueueItem[] {
+  return queue.map((q, i) => {
     const w = sample.workers.find((x) => x.name === q.worker);
     const profile = w ? `/compliance-demo/workers/${w.id}` : "/compliance-demo/workers";
     const href = q.kind === "Contract" ? `/compliance-demo/workers/contracts?new=${w?.id ?? ""}` : q.kind === "Permit" ? "/compliance-demo/permits" : profile;
@@ -108,14 +117,15 @@ function sampleQueue(): QueueItem[] {
 
 export async function getDashboardData(): Promise<DashboardData> {
   const t = await getT();
+  const d = await demo();
   return {
     live: false,
     subtitle: `Grupo Heracles · ${t("All sites")} · ${longDate(await getLang(), demoToday())}`,
-    kpis: sample.kpis.map((k) => ({ ...k })),
-    queue: sampleQueue(),
-    sites: sample.siteCompliance,
-    averagePct: 86,
+    kpis: d.kpis.map((k) => ({ ...k })),
+    queue: sampleQueue(d.actionQueue),
+    sites: d.siteCompliance,
+    averagePct: d.averagePct,
     weeks: sample.expiryWeeks,
-    activity: sample.activity.map((a) => ({ name: a.ini, text: a.text, time: a.time, system: Boolean(a.system) })),
+    activity: d.activity.map((a) => ({ name: a.ini, text: a.text, vars: a.vars, time: a.time, system: a.system })),
   };
 }

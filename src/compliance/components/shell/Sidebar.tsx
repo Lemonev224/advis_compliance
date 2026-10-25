@@ -8,6 +8,7 @@ import {
 import { cx } from "@/compliance/components/ui";
 import { useShellUser } from "./UserContext";
 import { useT } from "@/compliance/components/I18nProvider";
+import { useDemo } from "@/compliance/components/DemoState";
 
 type Item = { href: string; label: string; icon: LucideIcon; badge?: number; match?: (p: string) => boolean };
 
@@ -70,6 +71,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const me = useShellUser();
   const { t } = useT();
+  const { data } = useDemo();
   return (
     <div className="flex h-full flex-col gap-[18px]">
       <Logo />
@@ -77,7 +79,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
         {NAV.map((g) => (
           <div key={g.group} className="flex flex-col gap-0.5">
             <div className="px-2.5 pb-1.5 text-xs font-medium text-nav-label">{t(g.group)}</div>
-            {g.items.map((it) => <NavLink key={it.href} item={me.live && it.badge !== undefined ? { ...it, badge: undefined } : it} pathname={pathname} onNavigate={onNavigate} />)}
+            {g.items.map((it) => <NavLink key={it.href} item={it.badge === undefined ? it : me.live ? { ...it, badge: undefined } : { ...it, badge: data.actionQueue.length }} pathname={pathname} onNavigate={onNavigate} />)}
           </div>
         ))}
       </div>

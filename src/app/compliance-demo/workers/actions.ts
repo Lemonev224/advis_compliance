@@ -4,7 +4,11 @@
 // then confirm without saving anything: the public demo only ever shows sample data.
 
 import { parseCsv } from "@/compliance/lib/csv";
+import { cookies } from "next/headers";
 import { getT } from "@/compliance/lib/i18n-server";
+import { workers } from "@/compliance/lib/data";
+import { demoToday } from "@/compliance/lib/i18n";
+import { RENEWALS_COOKIE, parseRenewals, serializeRenewals, toSampleLabel } from "@/compliance/lib/demo-state";
 
 export type ActionResult = { ok: true; message: string; details?: string[] } | { ok: false; error: string; details?: string[] } | null;
 
@@ -67,12 +71,20 @@ export async function createContract(_prev: ActionResult, fd: FormData): Promise
   const t = await getT();
   const starts_on = text(fd, "starts_on");
   const ends_on = text(fd, "ends_on");
-  if (!text(fd, "worker_id")) return { ok: false, error: t("Choose a worker.") };
+  const worker = workers.find((w) => w.id === text(fd, "worker_id"));
+  if (!worker) return { ok: false, error: t("Choose a worker.") };
   if (!text(fd, "title")) return { ok: false, error: t("Give the contract a title.") };
   if (!isDate(starts_on)) return { ok: false, error: t("Start date is required.") };
   if (ends_on && !isDate(ends_on)) return { ok: false, error: t("End date is not valid.") };
   if (ends_on && ends_on < starts_on) return { ok: false, error: t("End date is before the start date.") };
-  return { ok: true, message: `${t("Contract checked. In the real app, site access dates are recalculated now.")} ${t("This is a demo, so nothing is saved.")}` };
+  if (ends_on && ends_on < demoToday().toISOString().slice(0, 10)) return { ok: false, error: t("End date is in the past.") };
+
+  // Kept for this visit only, so the whole demo shows the new contract: status, site access, action queue.
+  const jar = await cookies();
+  const renewals = parseRenewals(jar.get(RENEWALS_COOKIE)?.value);
+  renewals[worker.id] = { start: toSampleLabel(starts_on), end: ends_on ? toSampleLabel(ends_on) : null };
+  jar.set(RENEWALS_COOKIE, serializeRenewals(renewals), { path: "/", sameSite: "lax" });
+  return { ok: true, message: t("Contract saved for {name}. Site access is updated everywhere.", { name: worker.name }) };
 }
 
 /* ───────── Edit worker ───────── */

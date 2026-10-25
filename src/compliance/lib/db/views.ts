@@ -131,5 +131,5 @@ export type DashboardData = {
   sites: { name: string; pct: number; detail: string }[];
   averagePct: number;
   weeks: { n: number; label: string }[];
-  activity: { name: string; text: string; time: string; system: boolean }[];
+  activity: { name: string; text: string; vars?: Record<string, string>; time: string; system: boolean }[];
 };

@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { PageHeader, InfoBanner, Avatar, cx } from "@/compliance/components/ui";
-import { permits, permitStages, permitChecklist, workerHref } from "@/compliance/lib/data";
+import { permitChecklist, workerHref } from "@/compliance/lib/data";
+import { useDemo } from "@/compliance/components/DemoState";
 import { useT } from "@/compliance/components/I18nProvider";
 
 const stageStyle: Record<string, string> = {
@@ -18,6 +19,7 @@ const steps = ["Worker", "Permit type", "Documents", "Review"];
 
 export default function PermitsPage() {
   const { t } = useT();
+  const { permits, permitStages } = useDemo().data;
   const [stage, setStage] = useState("all");
   const rows = permits.filter((r) => stage === "all" || r.key === stage);
   const missing = permitChecklist.filter((c) => !c.done).length;
