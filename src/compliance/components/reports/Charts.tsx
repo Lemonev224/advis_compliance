@@ -48,8 +48,8 @@ export function Legend({ items }: { items: { label: string; color: string; shape
       {items.map((it) => (
         <span key={it.label} className="inline-flex items-center gap-1.5">
           {it.shape === "line"
-            ? <span aria-hidden className="inline-block h-[2px] w-4 rounded-full" style={{ background: it.color }} />
-            : <span aria-hidden className="inline-block size-2.5 rounded-[2px]" style={{ background: it.color }} />}
+            ? <svg aria-hidden width="16" height="2"><rect width="16" height="2" rx="1" fill={it.color} /></svg>
+            : <svg aria-hidden width="10" height="10"><rect width="10" height="10" rx="2" fill={it.color} /></svg>}
           {it.label}
         </span>
       ))}
@@ -247,7 +247,11 @@ export function Bars({ rows, max, unit = "", color = SERIES }: {
             {r.sub && <div className="truncate text-xs text-ink-muted">{r.sub}</div>}
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-4 rounded-r-[4px] transition-opacity" style={{ width: `${Math.max(0.5, (r.value / max) * 85)}%`, background: r.muted ? REFERENCE : color, opacity: hover === null || hover === i ? 1 : 0.55 }} />
+            {/* Drawn as SVG, not a coloured box: browsers drop background colours when printing without "Background graphics". */}
+            <svg aria-hidden className="h-4 transition-opacity" style={{ width: `${Math.max(0.5, (r.value / max) * 85)}%`, opacity: hover === null || hover === i ? 1 : 0.55 }} preserveAspectRatio="none">
+              <rect x="0" y="0" width="100%" height="16" rx="4" fill={r.muted ? REFERENCE : color} />
+              <rect x="0" y="0" width="8" height="16" fill={r.muted ? REFERENCE : color} />
+            </svg>
             <span className="num whitespace-nowrap text-sm font-semibold">{r.value}{unit}</span>
           </div>
         </li>

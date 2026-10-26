@@ -277,6 +277,8 @@ select.input, select.input-dense {
 
 /* Printing / "Save as PDF": keep each chart and its card on one page. Charts scale to the page width on their own. */
 @media print {
+  /* Print the demo's colours (status badges, highlights) even when "Background graphics" is off. */
+  main, main * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .print-keep { break-inside: avoid; page-break-inside: avoid; }
   [role="status"] { display: none !important; }
   /* Tables use the page width instead of scrolling sideways (a scroll area would cut them off on paper). */
