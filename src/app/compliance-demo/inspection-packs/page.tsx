@@ -1,6 +1,8 @@
-import { FileArchive, Check } from "lucide-react";
+import Link from "next/link";
+import { FileArchive, Check, ArrowRight, ShieldCheck } from "lucide-react";
 import { PageHeader, Card } from "@/compliance/components/ui";
 import { getT } from "@/compliance/lib/i18n-server";
+import { INSPECTION_SITES } from "@/compliance/lib/inspection";
 
 export async function generateMetadata() {
   const t = await getT();
@@ -8,9 +10,9 @@ export async function generateMetadata() {
 }
 
 const packs = [
-  { name: "Encamp · weekly pack", site: "Encamp", by: "Sandra Ruiz", date: "5 Oct 2026", workers: 12, size: "18.4 MB" },
-  { name: "La Massana · labour inspection", site: "La Massana", by: "Demo admin", date: "22 Sep 2026", workers: 12, size: "16.1 MB" },
-  { name: "All sites · Q3 audit", site: "All sites", by: "Sandra Ruiz", date: "30 Sep 2026", workers: 52, size: "71.9 MB" },
+  { name: "Encamp · weekly pack", site: "Encamp", id: "encamp", by: "Sandra Ruiz", date: "5 Oct 2026", workers: 12, size: "18.4 MB" },
+  { name: "La Massana · labour inspection", site: "La Massana", id: "la-massana", by: "Demo admin", date: "22 Sep 2026", workers: 12, size: "16.1 MB" },
+  { name: "All sites · Q3 audit", site: "All sites", id: null, by: "Sandra Ruiz", date: "30 Sep 2026", workers: 52, size: "71.9 MB" },
 ];
 
 const contents = ["Worker list with roles and employers", "Valid contracts and subcontracts", "Immigration permits and posting forms", "PRL training and medical certificates", "Site check-in log for the period", "Audit trail of access overrides"];
@@ -28,20 +30,34 @@ export default async function InspectionPacksPage() {
         <Card title={t("Recent packs")} subtitle={t("Kept for 12 months")}>
           <div className="overflow-x-auto scroll-thin">
             <table className="tbl tbl-hover min-w-[640px]">
-              <thead><tr><th>{t("Pack")}</th><th>{t("Generated")}</th><th>{t("Workers")}</th><th>{t("Size")}</th></tr></thead>
+              <thead><tr><th>{t("Pack")}</th><th>{t("Generated")}</th><th>{t("Workers")}</th><th>{t("Size")}</th><th><span className="sr-only">{t("Action")}</span></th></tr></thead>
               <tbody>
                 {packs.map((p) => (
                   <tr key={p.name}>
-                    <td><div className="flex items-center gap-2.5"><span className="inline-flex size-8 items-center justify-center rounded-ctl bg-accent-tint text-accent"><FileArchive className="size-4" aria-hidden /></span><div><div className="font-medium">{t(p.name)}</div><div className="text-xs text-ink-muted">{t("by {name}", { name: t(p.by) })}</div></div></div></td>
+                    <td><div className="flex items-center gap-2.5"><span className="inline-flex size-8 items-center justify-center rounded-ctl bg-accent-tint text-accent"><FileArchive className="size-4" aria-hidden /></span><div><div className="font-medium">{p.id ? <Link href={`/compliance-demo/inspection-packs/pack?site=${p.id}`} className="text-ink no-underline hover:text-accent">{t(p.name)}</Link> : t(p.name)}</div><div className="text-xs text-ink-muted">{t("by {name}", { name: t(p.by) })}</div></div></div></td>
                     <td className="num text-xs">{t(p.date)}</td>
                     <td className="num text-xs">{p.workers}</td>
                     <td className="num text-xs">{p.size}</td>
+                    <td className="text-right">{p.id && <Link href={`/compliance-demo/inspection-packs/pack?site=${p.id}`} className="btn-secondary btn-row font-normal">{t("Open")}</Link>}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         </Card>
+        <div className="flex flex-col gap-4">
+        <section aria-labelledby="new-pack" className="card border-accent/40">
+          <div className="card-head"><div><h2 id="new-pack" className="card-title flex items-center gap-2"><ShieldCheck className="size-4 text-accent" aria-hidden />{t("New pack")}</h2><div className="card-sub">{t("Built in seconds from today's data")}</div></div></div>
+          <form action="/compliance-demo/inspection-packs/pack" className="flex flex-col gap-3 px-[18px] py-4">
+            <div>
+              <label htmlFor="pack-site" className="label">{t("Site")}</label>
+              <select id="pack-site" name="site" className="input w-full" defaultValue="encamp">
+                {INSPECTION_SITES.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
+            </div>
+            <button type="submit" className="btn-primary w-full">{t("Generate pack")}<ArrowRight className="size-4" aria-hidden /></button>
+          </form>
+        </section>
         <Card title={t("What a pack contains")} subtitle={t("Generated per site and period, as one PDF")}>
           <div className="flex flex-col gap-3 px-[18px] py-4">
             <div>
@@ -51,6 +67,7 @@ export default async function InspectionPacksPage() {
             </div>
           </div>
         </Card>
+        </div>
       </div>
     </>
   );

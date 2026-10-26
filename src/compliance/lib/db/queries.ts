@@ -111,7 +111,7 @@ function sampleQueue(queue: sample.QueueItem[]): QueueItem[] {
   return queue.map((q, i) => {
     const w = sample.workers.find((x) => x.name === q.worker);
     const profile = w ? `/compliance-demo/workers/${w.id}` : "/compliance-demo/workers";
-    const href = q.kind === "Contract" ? `/compliance-demo/workers/contracts?new=${w?.id ?? ""}` : q.kind === "Permit" ? "/compliance-demo/permits" : profile;
+    const href = q.kind === "Contract" ? `/compliance-demo/workers/contracts?new=${w?.id ?? ""}` : q.kind === "Permit" ? `/compliance-demo/permits?open=${w?.id ?? ""}` : profile;
     return { id: String(i), worker: q.worker, workerId: w?.id ?? null, issue: q.issue, site: q.site, company: q.company, when: q.when, severity: q.severity, kind: q.kind, action: q.action, href };
   });
 }

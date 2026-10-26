@@ -45,7 +45,7 @@ function CheckAction({ row, workerId }: { row: CheckRow; workerId: string }) {
       : <Link href="/compliance-demo/workers/contracts" className="btn-secondary btn-row font-normal"><Eye className="size-3.5" aria-hidden />{t("View")}</Link>;
   }
   if (row.kind === "permit") {
-    return <Link href="/compliance-demo/permits" className={needsWork ? "btn-primary btn-row" : "btn-secondary btn-row font-normal"}>{row.state === "awaiting_decision" ? t("View application") : needsWork ? t("Start renewal") : t("View")}</Link>;
+    return <Link href={`/compliance-demo/permits?open=${workerId}`} className={needsWork ? "btn-primary btn-row" : "btn-secondary btn-row font-normal"}>{row.state === "awaiting_decision" ? t("View application") : needsWork ? t("Start renewal") : t("View")}</Link>;
   }
   switch (row.state) {
     case "valid": return <SoonButton feature="pdf" className="btn-secondary btn-row font-normal"><Eye className="size-3.5" aria-hidden />{t("View")}</SoonButton>;

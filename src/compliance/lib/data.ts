@@ -122,13 +122,33 @@ export const permitStages = [
 ];
 
 export const permits = [
-  { name: "Tiago Sousa", company: "Obras Lusitânia Lda", nat: "Portugal", type: "Temporary · foreign company worker", stage: "Draft", key: "draft", valid: "—", next: "Collect 2 documents from employer" },
-  { name: "Mehdi Benali", company: "Grupo Heracles", nat: "Morocco", type: "Residence and work", stage: "Submitted", key: "submitted", valid: "—", next: "Awaiting Govern decision" },
-  { name: "Lucas Bernard", company: "BTP Ariège SARL", nat: "France", type: "Temporary · foreign company worker", stage: "Submitted", key: "submitted", valid: "—", next: "Awaiting Govern decision" },
-  { name: "Rui Carvalho", company: "Obras Lusitânia Lda", nat: "Portugal", type: "Temporary · foreign company worker", stage: "Approved", key: "approved", valid: "20 Dec 2026", next: "None" },
-  { name: "Élodie Martin", company: "BTP Ariège SARL", nat: "France", type: "Temporary · foreign company worker", stage: "Approved", key: "approved", valid: "15 Feb 2027", next: "None" },
-  { name: "Carlos Méndez", company: "Grupo Heracles", nat: "Spain", type: "Residence and work", stage: "Renewal due", key: "renewal", valid: "30 Nov 2026", next: "Start renewal before 31 Oct" },
-  { name: "Antoni Vidal", company: "Grues Pirineu SL", nat: "Spain", type: "Temporary · foreign company worker", stage: "Renewal due", key: "renewal", valid: "3 Oct 2026", next: "Extend with new contract" },
+  { id: "tiago-sousa", name: "Tiago Sousa", company: "Obras Lusitânia Lda", nat: "Portugal", type: "Temporary · foreign company worker", stage: "Draft", key: "draft", valid: "—", next: "Collect 2 documents from employer" },
+  { id: "mehdi-benali", name: "Mehdi Benali", company: "Grupo Heracles", nat: "Morocco", type: "Residence and work", stage: "Submitted", key: "submitted", valid: "—", next: "Awaiting Govern decision" },
+  { id: "lucas-bernard", name: "Lucas Bernard", company: "BTP Ariège SARL", nat: "France", type: "Temporary · foreign company worker", stage: "Submitted", key: "submitted", valid: "—", next: "Awaiting Govern decision" },
+  { id: "rui-carvalho", name: "Rui Carvalho", company: "Obras Lusitânia Lda", nat: "Portugal", type: "Temporary · foreign company worker", stage: "Approved", key: "approved", valid: "20 Dec 2026", next: "None" },
+  { id: "elodie-martin", name: "Élodie Martin", company: "BTP Ariège SARL", nat: "France", type: "Temporary · foreign company worker", stage: "Approved", key: "approved", valid: "15 Feb 2027", next: "None" },
+  { id: "carlos-mendez", name: "Carlos Méndez", company: "Grupo Heracles", nat: "Spain", type: "Residence and work", stage: "Renewal due", key: "renewal", valid: "30 Nov 2026", next: "Start renewal before 31 Oct" },
+  { id: "antoni-vidal", name: "Antoni Vidal", company: "Grues Pirineu SL", nat: "Spain", type: "Temporary · foreign company worker", stage: "Renewal due", key: "renewal", valid: "3 Oct 2026", next: "Extend with new contract" },
+];
+
+/** What happened to each application so far (sample-data dates), shown when a permit is opened. */
+export const permitTimeline: Record<string, { time: string; text: string }[]> = {
+  "tiago-sousa": [{ time: "6 Oct 2026", text: "Draft started by Sandra Ruiz" }, { time: "7 Oct 2026", text: "Obras Lusitânia Lda asked for 2 documents" }],
+  "mehdi-benali": [{ time: "7 Oct 2026", text: "Submitted to the Govern by Sandra Ruiz" }, { time: "23 Oct 2026", text: "Expected decision" }],
+  "lucas-bernard": [{ time: "18 Sep 2026", text: "Submitted to the Govern by Sandra Ruiz" }, { time: "2 Oct 2026", text: "Govern asked for the site address; sent the same day" }],
+  "rui-carvalho": [{ time: "9 Jun 2026", text: "Submitted to the Govern by Sandra Ruiz" }, { time: "14 Jul 2026", text: "Approved, valid until 20 Dec 2026" }],
+  "elodie-martin": [{ time: "28 Jul 2026", text: "Submitted to the Govern by Sandra Ruiz" }, { time: "1 Sep 2026", text: "Approved, valid until 15 Feb 2027" }],
+  "carlos-mendez": [{ time: "20 Mar 2025", text: "Approved, valid until 30 Nov 2026" }, { time: "8 Oct 2026", text: "Renewal window open: submit by 31 Oct" }],
+  "antoni-vidal": [{ time: "8 Apr 2026", text: "Approved, tied to the contract with Grues Pirineu SL" }, { time: "3 Oct 2026", text: "Contract ended, so the permit lapsed with it" }],
+};
+
+/** Documents a renewal needs. All are already on file in the demo, which is the point: nothing to chase. */
+export const renewalChecklist = [
+  { name: "Renewal application form", note: "Filled in from the current permit" },
+  { name: "Passport", note: "Valid until 2031" },
+  { name: "Employment contract in force", note: "Until 31 Mar 2027" },
+  { name: "CASS social security registration", note: "Up to date" },
+  { name: "Current residence and work permit", note: "Valid until 30 Nov 2026" },
 ];
 
 export const permitChecklist = [

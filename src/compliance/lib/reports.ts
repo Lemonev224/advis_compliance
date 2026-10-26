@@ -3,7 +3,7 @@
 // 8 Oct 2026); the translate step moves them to the real date like everywhere else in the demo.
 // Safe to import from server and client code.
 
-import { demoData, type Renewals } from "./demo-state";
+import { demoData, PERMIT_KEY, type Renewals } from "./demo-state";
 import { demoOffsetDays } from "./i18n";
 
 export type ReportId = "compliance" | "expiries" | "access" | "subcontractors" | "permits" | "unconfirmed";
@@ -177,7 +177,13 @@ export function permitsReport(r: Renewals) {
     "Carlos Méndez": { submitted: "12 Feb 2025", decided: "20 Mar 2025", days: 36 },
     "Antoni Vidal": { submitted: "10 Mar 2026", decided: "8 Apr 2026", days: 29 },
   };
-  const rows = d.permits.map((p) => ({ ...p, ...extra[p.name] }));
+  // Steps taken in the demo happen "today"; they are left out of the average decision time.
+  const rows = d.permits.map((p) => {
+    const step = r[PERMIT_KEY + p.id]?.start;
+    if (step === "submitted") return { ...p, submitted: "8 Oct 2026", decided: "—", days: 0 };
+    if (step === "approved") return { ...p, ...extra[p.name], decided: "8 Oct 2026", days: null };
+    return { ...p, ...extra[p.name] };
+  });
   const decided = rows.filter((p) => p.decided && p.decided !== "—" && p.days !== null);
   const avgDays = Math.round(decided.reduce((a, p) => a + (p.days ?? 0), 0) / Math.max(1, decided.length));
   const waiting = rows.filter((p) => p.key === "submitted").length;

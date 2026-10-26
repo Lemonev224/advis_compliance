@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { UserPlus, MapPin } from "lucide-react";
+import { UserPlus, ShieldCheck, MapPin } from "lucide-react";
 import { PageHeader, Segmented, Avatar, StatusText, StatusPill, Progress, cx } from "@/compliance/components/ui";
 import { workerHref } from "@/compliance/lib/data";
 import { useDemo } from "@/compliance/components/DemoState";
@@ -28,6 +28,7 @@ export default function SiteAccessPage() {
         description={<>{longDate(lang, demoToday())} · {t("access is granted only while contract, permit and site documents are all valid")}</>}
         actions={<>
           <Segmented tone="strong" label={t("View")} active={view} onSelect={setView} items={[{ id: "board", label: t("Board") }, { id: "table", label: t("Table") }]} />
+          <Link href="/compliance-demo/inspection-packs" className="btn-secondary"><ShieldCheck className="size-4" aria-hidden />{t("Inspection pack")}</Link>
           <Link href="/compliance-demo/workers" className="btn-primary"><UserPlus className="size-4" aria-hidden />{t("Assign workers")}</Link>
         </>}
       />
