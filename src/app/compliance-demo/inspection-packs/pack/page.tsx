@@ -17,9 +17,9 @@ export async function generateMetadata() {
 
 const STATUS_LABEL: Record<Status, string> = { ok: "Compliant", warn: "Expiring", bad: "Blocked", pending: "Pending" };
 
-function Section({ n, id, title, sub, children, breakBefore }: { n: number; id: string; title: string; sub?: string; children: React.ReactNode; breakBefore?: boolean }) {
+function Section({ n, id, title, sub, children, breakBefore, keep }: { n: number; id: string; title: string; sub?: string; children: React.ReactNode; breakBefore?: boolean; keep?: boolean }) {
   return (
-    <section id={id} aria-labelledby={`${id}-h`} className={cx("card min-w-0 scroll-mt-24", breakBefore && "print:break-before-page")}>
+    <section id={id} aria-labelledby={`${id}-h`} className={cx("card min-w-0 scroll-mt-24", breakBefore && "print:break-before-page", keep && "print-keep")}>
       <div className="card-head">
         <div>
           <h2 id={`${id}-h`} className="card-title"><span className="num mr-2 text-ink-muted">{n}</span>{title}</h2>
@@ -145,7 +145,7 @@ export default async function InspectionPackPage({ searchParams }: { searchParam
           ? <p className="flex items-center gap-2 px-[18px] py-4 text-sm text-ok-fg"><Check className="size-4" aria-hidden />{t("No open issues on this site.")}</p>
           : (
             <div className="overflow-x-auto scroll-thin">
-              <table className="tbl min-w-[720px]">
+              <table className="tbl print-fit min-w-[720px]">
                 <thead><tr><th>{t("Worker")}</th><th>{t("Issue")}</th><th>{t("When")}</th><th>{t("Action taken")}</th></tr></thead>
                 <tbody>
                   {openIssues.map((q) => (
@@ -164,7 +164,8 @@ export default async function InspectionPackPage({ searchParams }: { searchParam
 
       <Section n={2} id="register" title={contents[1].title} sub={t("{n} workers assigned to {site}", { n: totals.workers, site: site.name })} breakBefore>
         <div className="overflow-x-auto scroll-thin">
-          <table className="tbl min-w-[980px] text-[13px]">
+          <table className="tbl print-fit min-w-[980px] text-[13px]">
+            <colgroup><col className="print:w-[15%]" /><col className="print:w-[12%]" /><col className="print:w-[9%]" /><col className="print:w-[10%]" /><col className="print:w-[10%]" /><col className="print:w-[10%]" /><col className="print:w-[9%]" /><col className="print:w-[9%]" /><col className="print:w-[16%]" /></colgroup>
             <thead><tr><th>{t("Worker")}</th><th>{t("Employer")}</th><th>{t("Nationality")}</th><th>{t("Contract until")}</th><th>{t("Permit until")}</th><th>{t("PRL training")}</th><th>{t("Medical")}</th><th>{t("Induction")}</th><th>{t("Status")}</th></tr></thead>
             <tbody>
               {register.map((w) => (
@@ -180,7 +181,7 @@ export default async function InspectionPackPage({ searchParams }: { searchParam
                   <td className="num">{t(w.prl)}</td>
                   <td className="num">{t(w.medical)}</td>
                   <td className="num">{t(w.induction)}</td>
-                  <td><StatusPill status={w.status}>{t(STATUS_LABEL[w.status])}</StatusPill>{w.issue && <div className="mt-1 max-w-[220px] text-xs text-ink-muted">{t(w.issue)}</div>}</td>
+                  <td><StatusPill status={w.status} className="pill-fit">{t(STATUS_LABEL[w.status])}</StatusPill>{w.issue && <div className="mt-1 max-w-[220px] text-xs text-ink-muted print:max-w-none print:text-[9px]">{t(w.issue)}</div>}</td>
                 </tr>
               ))}
             </tbody>
@@ -188,9 +189,9 @@ export default async function InspectionPackPage({ searchParams }: { searchParam
         </div>
       </Section>
 
-      <Section n={3} id="employers" title={contents[2].title} sub={t("Subcontractors are checked like our own staff")}>
+      <Section n={3} id="employers" title={contents[2].title} sub={t("Subcontractors are checked like our own staff")} keep>
         <div className="overflow-x-auto scroll-thin">
-          <table className="tbl min-w-[860px]">
+          <table className="tbl print-fit min-w-[860px]">
             <thead><tr><th>{t("Employer")}</th><th>{t("Tax ID")}</th><th className="text-right">{t("Workers")}</th><th>{t("Social security")}</th><th>{t("Liability and accident insurance")}</th><th className="text-right">{t("Documents valid")}</th></tr></thead>
             <tbody>
               {employers.map((e) => (

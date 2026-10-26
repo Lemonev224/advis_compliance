@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useRef, useState } from "react";
-import { Check, ChevronRight, Send, FileCheck2, Gavel, ArrowRight } from "lucide-react";
+import { Check, Send, FileCheck2, Gavel, ArrowRight } from "lucide-react";
 import { PageHeader, InfoBanner, Avatar, cx } from "@/compliance/components/ui";
 import { permitChecklist, permitTimeline, renewalChecklist, workerHref } from "@/compliance/lib/data";
 import { useDemo } from "@/compliance/components/DemoState";
@@ -76,11 +76,10 @@ export function PermitsView({ initialOpen }: { initialOpen: string | null }) {
         {permitStages.map((s) => {
           const on = s.id === stage;
           return (
-            <button key={s.id} aria-pressed={on} onClick={() => setStage(on && s.id !== "all" ? "all" : s.id)}
-              className={cx("card flex flex-col items-start gap-1 px-4 py-3.5 text-left transition-colors", on ? "border-accent bg-accent-tint ring-1 ring-accent" : "hover:border-line-strong hover:bg-surface-muted")}>
-              <span className={cx("flex w-full items-center justify-between text-sm", on ? "font-medium text-accent" : "text-ink-soft")}>
+            <button key={s.id} aria-pressed={on} onClick={() => setStage(s.id)}
+              className={cx("card flex flex-col items-start gap-1 px-4 py-3.5 text-left transition-colors", on ? "border-accent ring-1 ring-accent" : "hover:border-line-strong")}>
+              <span className="flex w-full items-center justify-between text-sm text-ink-soft">
                 {t(s.label)}
-                {s.id === "renewal" && s.count > 0 && <span className="size-2 rounded-full bg-warn-fg" aria-hidden />}
               </span>
               <span className="num text-[26px] leading-8">{s.count}</span>
             </button>
@@ -92,13 +91,12 @@ export function PermitsView({ initialOpen }: { initialOpen: string | null }) {
         <section className="card min-w-0">
           <div className="card-head">
             <div><h2 className="card-title">{t("Applications & permits")}</h2><div className="card-sub">{t(permitStages.find((s) => s.id === stage)!.label)} · {t("{n} shown", { n: rows.length })}</div></div>
-            {stage !== "all" && <button type="button" className="btn-secondary h-[32px] px-3 text-sm" onClick={() => setStage("all")}>{t("Show all")}</button>}
           </div>
           <div className="overflow-x-auto scroll-thin">
-            <table className="tbl tbl-hover min-w-[720px]">
-              <thead><tr><th>{t("Worker")}</th><th>{t("Permit type")}</th><th>{t("Stage")}</th><th>{t("Valid until")}</th><th>{t("Next step")}</th><th><span className="sr-only">{t("Action")}</span></th></tr></thead>
+            <table className="tbl tbl-hover min-w-[780px]">
+              <thead><tr><th>{t("Worker")}</th><th>{t("Permit type")}</th><th>{t("Stage")}</th><th>{t("Valid until")}</th><th>{t("Next step")}</th></tr></thead>
               <tbody>
-                {rows.length === 0 && <tr><td colSpan={6} className="py-8 text-center text-ink-muted">{t("Nothing at this stage.")}</td></tr>}
+                {rows.length === 0 && <tr><td colSpan={5} className="py-8 text-center text-ink-muted">{t("Nothing at this stage.")}</td></tr>}
                 {rows.map((r) => {
                   const a = nextAction(r);
                   return (
@@ -112,11 +110,13 @@ export function PermitsView({ initialOpen }: { initialOpen: string | null }) {
                       <td>{t(r.type)}</td>
                       <td><span className={cx("inline-flex rounded-full px-2 py-0.5 text-xs font-medium", stageStyle[r.key])}>{t(r.stage)}</span></td>
                       <td className={cx("num text-xs", r.key === "renewal" && "text-warn-fg")}>{t(r.valid)}</td>
-                      <td className="text-ink-body">{t(r.next)}</td>
-                      <td className="text-right" onClick={(e) => e.stopPropagation()}>
+                      <td className="text-ink-body">
+                        {/* The next step is the action: click it to do it. */}
                         {a.href
-                          ? <Link href={a.href} className="btn-primary btn-row">{t(a.label)}</Link>
-                          : <button type="button" onClick={() => act(r)} className={a.primary ? "btn-primary btn-row" : "btn-secondary btn-row font-normal"}>{t(a.label)}{!a.primary && <ChevronRight className="size-3.5" aria-hidden />}</button>}
+                          ? <Link href={a.href} onClick={(e) => e.stopPropagation()} className="font-medium text-accent no-underline hover:underline">{t(r.next)}</Link>
+                          : a.primary
+                            ? <button type="button" onClick={(e) => { e.stopPropagation(); act(r); }} className="text-left font-medium text-accent hover:underline">{t(r.next)}</button>
+                            : t(r.next)}
                       </td>
                     </tr>
                   );

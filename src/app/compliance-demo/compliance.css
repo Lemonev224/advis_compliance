@@ -284,4 +284,10 @@ select.input, select.input-dense {
   /* Tables use the page width instead of scrolling sideways (a scroll area would cut them off on paper). */
   main .overflow-x-auto { overflow: visible !important; }
   main table { min-width: 0 !important; width: 100%; }
+  /* Wide tables (e.g. the inspection pack's worker register): fixed columns and tighter cells so they fit the page. */
+  main table.print-fit { table-layout: fixed; font-size: 9.5px !important; }
+  main table.print-fit th, main table.print-fit td { padding: 5px 4px !important; overflow-wrap: anywhere; vertical-align: top; }
+  main table.print-fit th { font-size: 9px !important; }
+  main table.print-fit .text-xs { font-size: 8.5px !important; line-height: 1.3; }
+  main table.print-fit .pill-fit { font-size: 9px; padding: 1px 5px; white-space: nowrap; }
 }
