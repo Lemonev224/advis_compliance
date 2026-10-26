@@ -4,6 +4,7 @@
 // every value is also in the table under each chart, so the tooltip never gates a number.
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 
 const INK_MUTED = "#5b6675";
 const GRID = "#eef1f4";
@@ -12,15 +13,30 @@ const SURFACE = "#ffffff";
 export const SERIES = "#3b6fb6";
 export const REFERENCE = "#aeb8c4";
 
+// Width of a printed A4 page's content area in CSS pixels, roughly (default browser margins).
+const PRINT_WIDTH = 700;
+
+/** The chart's width in pixels. Just before printing it switches to the width the chart will have on paper,
+ *  so lines, bars and text are drawn for the page instead of being shrunk from the screen. */
 function useWidth<T extends HTMLElement>() {
   const ref = useRef<T>(null);
   const [width, setWidth] = useState(0);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const ro = new ResizeObserver(([e]) => setWidth(Math.floor(e.contentRect.width)));
+    let printing = false;
+    const ro = new ResizeObserver(([e]) => { if (!printing) setWidth(Math.floor(e.contentRect.width)); });
     ro.observe(el);
-    return () => ro.disconnect();
+    const before = () => {
+      printing = true;
+      const main = el.closest("main") ?? document.body;
+      const share = el.getBoundingClientRect().width / (main.getBoundingClientRect().width || 1);
+      flushSync(() => setWidth(Math.floor(Math.min(1, share) * PRINT_WIDTH)));
+    };
+    const after = () => { printing = false; setWidth(Math.floor(el.getBoundingClientRect().width)); };
+    window.addEventListener("beforeprint", before);
+    window.addEventListener("afterprint", after);
+    return () => { ro.disconnect(); window.removeEventListener("beforeprint", before); window.removeEventListener("afterprint", after); };
   }, []);
   return [ref, width] as const;
 }
@@ -83,8 +99,10 @@ function Panel({ labels, panel, reference, referenceLabel, min, max, unit }: {
 }) {
   const [ref, width] = useWidth<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
+  // Drawn in a coordinate space as wide as the box on screen, then scaled to fit (printing, resizing, before measuring).
+  const W = width || 520;
   const H = 150, L = 30, R = 36, T = 10, B = 22;
-  const w = Math.max(0, width - L - R);
+  const w = Math.max(0, W - L - R);
   const n = labels.length;
   const x = (i: number) => L + (n === 1 ? 0 : (i / (n - 1)) * w);
   const y = (v: number) => T + (1 - (v - min) / (max - min)) * (H - T - B);
@@ -103,11 +121,12 @@ function Panel({ labels, panel, reference, referenceLabel, min, max, unit }: {
       </div>
       {panel.sub && <div className="mb-1 text-xs text-ink-muted">{panel.sub}</div>}
       <div ref={ref} className="relative" onPointerLeave={() => setHover(null)}>
-        {width > 0 && (
-          <svg width={width} height={H} role="img" aria-label={`${panel.name}: ${first}${unit} → ${last}${unit}`}
+        {(
+          <svg viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full overflow-visible" role="img" aria-label={`${panel.name}: ${first}${unit} → ${last}${unit}`}
             onPointerMove={(e) => {
               const box = e.currentTarget.getBoundingClientRect();
-              const i = Math.round(((e.clientX - box.left - L) / (w || 1)) * (n - 1));
+              const px = ((e.clientX - box.left) * W) / (box.width || 1);
+              const i = Math.round(((px - L) / (w || 1)) * (n - 1));
               setHover(Math.max(0, Math.min(n - 1, i)));
             }}>
             {ticks.map((v) => (
@@ -126,7 +145,7 @@ function Panel({ labels, panel, reference, referenceLabel, min, max, unit }: {
           </svg>
         )}
         {hover !== null && (
-          <Tip x={x(hover)} y={y(panel.values[hover]) - 50} width={width}>
+          <Tip x={x(hover)} y={y(panel.values[hover]) - 50} width={W}>
             <div className="text-white/70">{labels[hover]}</div>
             <div className="flex items-center gap-1.5"><span className="h-[2px] w-3" style={{ background: "#8fb3e6" }} /><span className="font-semibold">{panel.values[hover]}{unit}</span> {panel.name}</div>
             <div className="flex items-center gap-1.5"><span className="h-[2px] w-3" style={{ background: REFERENCE }} /><span className="font-semibold">{reference[hover]}{unit}</span> {referenceLabel}</div>
@@ -147,8 +166,9 @@ export function Columns({ rows, series, height = 220, totalLabel }: {
 }) {
   const [ref, width] = useWidth<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
+  const W = width || 720;
   const L = 28, R = 8, T = 18, B = 24;
-  const w = Math.max(0, width - L - R);
+  const w = Math.max(0, W - L - R);
   const totals = rows.map((r) => series.reduce((a, s) => a + (r.values[s.key] ?? 0), 0));
   const step = niceStep(Math.max(1, ...totals));
   const top = Math.ceil(Math.max(1, ...totals) / step) * step;
@@ -163,8 +183,8 @@ export function Columns({ rows, series, height = 220, totalLabel }: {
     <div className="flex flex-col gap-2">
       {series.length > 1 && <Legend items={series.map((s) => ({ label: s.label, color: s.color, shape: "rect" }))} />}
       <div ref={ref} className="relative" onPointerLeave={() => setHover(null)}>
-        {width > 0 && (
-          <svg width={width} height={height} role="img" aria-label={rows.map((r, i) => `${r.label}: ${totals[i]}`).join(", ")}>
+        {(
+          <svg viewBox={`0 0 ${W} ${height}`} className="block h-auto w-full" role="img" aria-label={rows.map((r, i) => `${r.label}: ${totals[i]}`).join(", ")}>
             {ticks.map((v) => (
               <g key={v}>
                 <line x1={L} x2={L + w} y1={y(v)} y2={y(v)} stroke={v === 0 ? BASELINE : GRID} strokeWidth={1} />
@@ -196,7 +216,7 @@ export function Columns({ rows, series, height = 220, totalLabel }: {
           </svg>
         )}
         {hover !== null && (
-          <Tip x={L + band * hover + band / 2} y={y(totals[hover]) - 10} width={width}>
+          <Tip x={L + band * hover + band / 2} y={y(totals[hover]) - 10} width={W}>
             <div className="text-white/70">{rows[hover].label}{rows[hover].note ? ` · ${rows[hover].note}` : ""}</div>
             <div><span className="font-semibold">{totals[hover]}</span> {totalLabel}</div>
             {series.length > 1 && series.map((s) => (

@@ -274,3 +274,12 @@ select.input, select.input-dense {
 
 .scroll-thin::-webkit-scrollbar { height: 8px; width: 8px; }
 .scroll-thin::-webkit-scrollbar-thumb { background: #D5DBE2; border-radius: 8px; }
+
+/* Printing / "Save as PDF": keep each chart and its card on one page. Charts scale to the page width on their own. */
+@media print {
+  .print-keep { break-inside: avoid; page-break-inside: avoid; }
+  [role="status"] { display: none !important; }
+  /* Tables use the page width instead of scrolling sideways (a scroll area would cut them off on paper). */
+  main .overflow-x-auto { overflow: visible !important; }
+  main table { min-width: 0 !important; width: 100%; }
+}

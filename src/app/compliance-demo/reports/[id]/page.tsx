@@ -34,7 +34,7 @@ function Tile({ label, value, note, tone }: { label: string; value: string; note
   );
 }
 
-const Tiles = ({ children }: { children: React.ReactNode }) => <div className="grid grid-cols-2 gap-3 md:grid-cols-4">{children}</div>;
+const Tiles = ({ children }: { children: React.ReactNode }) => <div className="print-keep grid grid-cols-2 gap-3 md:grid-cols-4">{children}</div>;
 const Finding = ({ children }: { children: React.ReactNode }) => <p className="max-w-3xl text-[15px] leading-6">{children}</p>;
 const WorkerLink = ({ name }: { name: string }) => {
   const href = workerHref(name);
@@ -88,7 +88,7 @@ function build(id: ReportId, t: TFunction, renewals: ReturnType<typeof parseRene
               <Tile label={t("Weakest site")} value={`${w.values[12]}%`} note={w.name} tone="bad" />
               <Tile label={t("Weeks shown")} value="13" note={`${weeks[0]} – ${weeks[12]}`} />
             </Tiles>
-            <Card title={t("Fully compliant workers per site, weekly")} subtitle={t("Same scale on every site; the gray line is the average across sites")} bodyClass="p-[18px]">
+            <Card title={t("Fully compliant workers per site, weekly")} subtitle={t("Same scale on every site; the gray line is the average across sites")} className="print-keep" bodyClass="p-[18px]">
               <SmallMultiples labels={weeks} panels={d.sites.map((s) => ({ name: s.name, values: s.values, sub: t(s.detail) }))} reference={d.group} seriesLabel={t("Site")} referenceLabel={t("Average across sites")} min={70} max={100} />
             </Card>
             <Card title={t("Weekly figures")} bodyClass="overflow-x-auto scroll-thin">
@@ -122,7 +122,7 @@ function build(id: ReportId, t: TFunction, renewals: ReturnType<typeof parseRene
               <Tile label={t("Contracts")} value={String(count("contract"))} />
               <Tile label={t("Documents and permits")} value={String(count("document") + count("permit"))} />
             </Tiles>
-            <Card title={t("Expiries per week, next 13 weeks")} subtitle={t("By type")} bodyClass="p-[18px]">
+            <Card title={t("Expiries per week, next 13 weeks")} subtitle={t("By type")} className="print-keep" bodyClass="p-[18px]">
               <Columns totalLabel={t("items")} series={(["contract", "document", "permit"] as const).map((k) => ({ key: k, label: typeLabel[k], color: TYPE_COLORS[k] }))}
                 rows={weeks.map((w) => ({ label: t(w.label), values: { contract: w.contract, document: w.document, permit: w.permit } }))} />
             </Card>
@@ -167,7 +167,7 @@ function build(id: ReportId, t: TFunction, renewals: ReturnType<typeof parseRene
               <Tile label={t("Access overrides")} value={String(overrides)} note={t("Each with a reason")} tone="warn" />
               <Tile label={t("Sites")} value="4" />
             </Tiles>
-            <Card title={t("Check-ins per day, all sites")} subtitle={t("Last 14 days")} bodyClass="p-[18px]">
+            <Card title={t("Check-ins per day, all sites")} subtitle={t("Last 14 days")} className="print-keep" bodyClass="p-[18px]">
               <Columns height={200} totalLabel={t("check-ins")} series={[{ key: "n", label: t("Check-ins"), color: "#3b6fb6" }]}
                 rows={days.map((d) => ({ label: t(d.label), values: { n: d.n }, note: d.today ? t("Today") : d.weekend ? t("Weekend") : undefined }))} />
             </Card>
@@ -216,7 +216,7 @@ function build(id: ReportId, t: TFunction, renewals: ReturnType<typeof parseRene
               <Tile label={t("Documents expired")} value={String(subs.reduce((a, s) => a + s.expired, 0))} tone={subs.some((s) => s.expired) ? "bad" : undefined} />
               <Tile label={t("Slowest to respond")} value={t("{n} days", { n: dec(slowest.days) })} note={slowest.company} tone="warn" />
             </Tiles>
-            <Card title={t("Required documents valid, by employer")} subtitle={t("Lowest first; your own staff in gray for comparison")} bodyClass="p-[18px]">
+            <Card title={t("Required documents valid, by employer")} subtitle={t("Lowest first; your own staff in gray for comparison")} className="print-keep" bodyClass="p-[18px]">
               <Bars max={100} unit="%" rows={[...subs, own].map((r) => ({ label: r.company, value: r.pct, sub: r.own ? t("Your own staff") : t("{n} workers", { n: r.workers }), muted: r.own }))} />
             </Card>
             <Card title={t("Scorecard")} bodyClass="overflow-x-auto scroll-thin">
@@ -255,7 +255,7 @@ function build(id: ReportId, t: TFunction, renewals: ReturnType<typeof parseRene
               <Tile label={t("Renewal due")} value={String(d.stages.find((s) => s.id === "renewal")?.count ?? 0)} tone="warn" />
               <Tile label={t("Approved")} value={String(d.stages.find((s) => s.id === "approved")?.count ?? 0)} tone="ok" />
             </Tiles>
-            <Card title={t("Permits by stage")} subtitle={t("All workers who need one")} bodyClass="p-[18px]">
+            <Card title={t("Permits by stage")} subtitle={t("All workers who need one")} className="print-keep" bodyClass="p-[18px]">
               <Bars max={Math.max(...d.stages.map((s) => s.count))} rows={d.stages.map((s) => ({ label: t(s.label), value: s.count }))} />
             </Card>
             <Card title={t("Applications")} bodyClass="overflow-x-auto scroll-thin">
