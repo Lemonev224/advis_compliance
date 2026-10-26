@@ -35,7 +35,7 @@ export function Shell({ children }: { children: ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar />
         {banner && (
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-info-line bg-info-bg px-4 py-2 text-sm text-info-fg sm:px-7">
+          <div className="print:hidden flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-info-line bg-info-bg px-4 py-2 text-sm text-info-fg sm:px-7">
             <FlaskConical className="size-4 flex-none" aria-hidden />
             <span className="min-w-0 flex-1">
               <span className="sm:hidden">{t("Demo with sample data. Nothing is saved.")}</span>

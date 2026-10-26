@@ -3,6 +3,7 @@
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { RENEWALS_COOKIE, demoData, parseRenewals } from "@/compliance/lib/demo-state";
+import { expiryWeeks } from "@/compliance/lib/reports";
 import * as sample from "@/compliance/lib/data";
 import { getLang, getT } from "@/compliance/lib/i18n-server";
 import { demoToday, longDate } from "@/compliance/lib/i18n";
@@ -125,7 +126,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     queue: sampleQueue(d.actionQueue),
     sites: d.siteCompliance,
     averagePct: d.averagePct,
-    weeks: sample.expiryWeeks,
+    weeks: expiryWeeks(parseRenewals((await cookies()).get(RENEWALS_COOKIE)?.value)).map((w) => ({ n: w.n, label: w.label })),
     activity: d.activity.map((a) => ({ name: a.ini, text: a.text, vars: a.vars, time: a.time, system: a.system })),
   };
 }

@@ -25,7 +25,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <Ctx.Provider value={notify}>
       {children}
-      <div aria-live="polite" className="pointer-events-none fixed bottom-4 right-4 z-60 flex w-[min(380px,calc(100vw-32px))] flex-col gap-2">
+      <div aria-live="polite" className="print:hidden pointer-events-none fixed bottom-4 right-4 z-60 flex w-[min(380px,calc(100vw-32px))] flex-col gap-2">
         {list.map((t) => <ToastCard key={t.id} toast={t} onClose={() => dismiss(t.id)} />)}
       </div>
     </Ctx.Provider>

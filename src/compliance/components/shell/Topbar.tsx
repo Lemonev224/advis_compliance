@@ -238,7 +238,7 @@ export function Topbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex flex-wrap items-center gap-3 border-b border-line bg-surface/95 px-4 py-3 backdrop-blur-sm sm:px-7">
+      <header className="sticky top-0 z-30 print:hidden flex flex-wrap items-center gap-3 border-b border-line bg-surface/95 px-4 py-3 backdrop-blur-sm sm:px-7">
         <Suspense fallback={null}><NavProgress /></Suspense>
         <button onClick={() => setDrawer(true)} aria-label={t("Open navigation")} className="btn-secondary w-10 px-0 lg:hidden"><Menu className="size-[18px]" aria-hidden /></button>
         <CompanySwitcher />

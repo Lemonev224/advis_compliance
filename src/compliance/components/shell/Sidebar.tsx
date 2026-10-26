@@ -101,7 +101,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 export function Sidebar() {
   const { t } = useT();
   return (
-    <div className="hidden lg:block w-[232px] flex-none bg-nav-bg">
+    <div className="hidden lg:block w-[232px] flex-none bg-nav-bg print:hidden">
       <nav aria-label={t("Main navigation")} className="sticky top-0 h-screen px-3 py-5 text-nav-text">
         <SidebarNav />
       </nav>
