@@ -409,6 +409,8 @@
       "sites": "Acceso a obra que bloquea a los trabajadores con papeles caducados"
     },
     "note": "Todo lo que hay en la demo es inventado. Nada de lo que hagas se guarda.",
-    "back": "Volver a Advisorly"
+    "back": "Volver a Advisorly",
+    "termsLead": "Al abrir la demo aceptas nuestras",
+    "termsLink": "Condiciones de uso"
   }
 }

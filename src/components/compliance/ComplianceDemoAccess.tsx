@@ -92,7 +92,7 @@ export function ComplianceDemoAccess() {
             </li>
           ))}
         </ul>
-        <p className="mt-6 px-1 text-[12.5px] leading-[1.6] text-navy/40">{t("note")}</p>
+        <p className="mt-6 px-1 text-[12.5px] leading-[1.6] text-navy/40">{t("note")}{" "}{t("termsLead")}{" "}<Link href="/terms" className="underline hover:text-navy/70">{t("termsLink")}</Link>.</p>
       </div>
     </section>
   );

@@ -409,6 +409,8 @@
       "sites": "Site access that blocks workers whose papers have lapsed"
     },
     "note": "Everything in the demo is made up. Nothing you do in it is saved.",
-    "back": "Back to Advisorly"
+    "back": "Back to Advisorly",
+    "termsLead": "By opening the demo you agree to our",
+    "termsLink": "Terms of Use"
   }
 }

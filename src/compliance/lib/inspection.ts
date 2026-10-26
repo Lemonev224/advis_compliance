@@ -18,10 +18,10 @@ export const INSPECTION_SITES = [
 export type InspectionSiteId = (typeof INSPECTION_SITES)[number]["id"];
 
 export const EMPLOYERS: Record<string, { taxId: string; country: string; foreign: boolean; insurer: string; insurance: string; social: string }> = {
-  "Grupo Heracles": { taxId: "NRT L-712345-A", country: "Andorra", foreign: false, insurer: "Andorra Assegurances", insurance: "31 Dec 2026", social: "CASS certificate, 1 Oct 2026" },
-  "Obras Lusitânia Lda": { taxId: "NIF PT 509 381 274", country: "Portugal", foreign: true, insurer: "Fidelidade", insurance: "30 Jun 2027", social: "Posting forms P/AND-2 and P/AND-3" },
-  "Grues Pirineu SL": { taxId: "NIF ES B-25614398", country: "Spain", foreign: true, insurer: "Mapfre", insurance: "31 Mar 2027", social: "Posting forms P/AND-2 and P/AND-3" },
-  "BTP Ariège SARL": { taxId: "SIRET FR 812 455 903 00017", country: "France", foreign: true, insurer: "AXA France", insurance: "31 Jan 2027", social: "Posting form SE 130-01" },
+  "Grupo Heracles": { taxId: "NRT L-712345-A", country: "Andorra", foreign: false, insurer: "Assegurances Valira", insurance: "31 Dec 2026", social: "CASS certificate, 1 Oct 2026" },
+  "Obras Lusitânia Lda": { taxId: "NIF PT 509 381 274", country: "Portugal", foreign: true, insurer: "Seguros Atlântico", insurance: "30 Jun 2027", social: "Posting forms P/AND-2 and P/AND-3" },
+  "Grues Pirineu SL": { taxId: "NIF ES B-25614398", country: "Spain", foreign: true, insurer: "Seguros Montsec", insurance: "31 Mar 2027", social: "Posting forms P/AND-2 and P/AND-3" },
+  "BTP Ariège SARL": { taxId: "SIRET FR 812 455 903 00017", country: "France", foreign: true, insurer: "Assurances Garonne", insurance: "31 Jan 2027", social: "Posting form SE 130-01" },
 };
 
 type Doc = { name: string; until: string; status: Status; note?: string };

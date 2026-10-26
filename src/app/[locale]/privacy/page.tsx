@@ -9,13 +9,13 @@ export default function PrivacyPage() {
         <h1 className="text-[36px] font-semibold tracking-[-0.015em] text-navy">
           Privacy Policy
         </h1>
-        <p className="mt-3 text-[14px] text-navy/45">Last updated: [10/08/2026]</p>
+        <p className="mt-3 text-[14px] text-navy/45">Last updated: 26 October 2026</p>
 
         <div className="mt-10 space-y-8 text-[15.5px] leading-[1.75] text-navy/70">
           <p>
             This Privacy Policy explains how Advisorly (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;)
             collects, uses, and protects information when you visit
-            [advisorly.tech] (the &quot;Site&quot;). Advisorly acts as the data
+            advisorly.tech (the &quot;Site&quot;). Advisorly acts as the data
             controller for the information described below.
           </p>
 
@@ -37,10 +37,28 @@ export default function PrivacyPage() {
               </li>
             </ul>
             <p className="mt-2">
-              We do not currently use tracking or advertising cookies on this
-              Site. If that changes, this policy will be updated and, where
-              required, we will ask for your consent.
+              We do not use tracking or advertising cookies on this Site. If
+              that changes, this policy will be updated and, where required, we
+              will ask for your consent.
             </p>
+            <p className="mt-2">
+              <span className="font-medium text-navy">Product demos:</span>{" "}
+              our demos run on invented sample data and do not collect personal
+              data. Anything you change in a demo stays in your own browser and
+              is not sent to or stored by us.
+            </p>
+            <p className="mt-2">
+              The Site only uses the following cookies and browser storage,
+              which are needed for it to work or to remember your choices. They
+              do not track you and are not shared with anyone:
+            </p>
+            <ul className="list-disc pl-5 mt-2 space-y-1">
+              <li><span className="font-medium text-navy">NEXT_LOCALE</span>: remembers the language you chose for the Site.</li>
+              <li><span className="font-medium text-navy">adv_demo, sc_demo</span>: keep you signed in to a demo after you enter the access code; expire after 7 days or when you leave the demo.</li>
+              <li><span className="font-medium text-navy">adv_lang, sc_lang</span>: remember the language you chose inside a demo; expire after 1 year.</li>
+              <li><span className="font-medium text-navy">adv_renewals</span>: holds the changes you make in the compliance demo during your visit; cleared when you reset or leave the demo.</li>
+              <li><span className="font-medium text-navy">Browser storage</span>: remembers small display choices in a demo, such as a notice you closed. It stays on your device.</li>
+            </ul>
           </div>
 
           <div>

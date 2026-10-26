@@ -409,6 +409,8 @@
       "sites": "Accés a obra que bloqueja els treballadors amb papers caducats"
     },
     "note": "Tot el que hi ha a la demo és inventat. Res del que hi facis es desa.",
-    "back": "Torna a Advisorly"
+    "back": "Torna a Advisorly",
+    "termsLead": "En obrir la demo acceptes les nostres",
+    "termsLink": "Condicions d'ús"
   }
 }
